@@ -1,0 +1,21 @@
+{
+  "name": "codice-server",
+  "version": "1.0.0",
+  "description": "Server side of codice application",
+  "main": "index.js",
+  "author": "eochoa3@ucol.mx",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon",
+    "eslint": "eslint"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.9.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "@babel/register": "^7.8.6"
+  }
+}
