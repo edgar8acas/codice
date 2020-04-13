@@ -1,0 +1,7 @@
+DROP DATABASE IF EXISTS codice1;
+
+CREATE DATABASE codice1;
+
+CREATE TABLE IF NOT EXISTS texts (
+    title varchar NOT NULL
+);
