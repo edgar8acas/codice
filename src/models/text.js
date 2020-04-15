@@ -1,32 +1,38 @@
-import { connection } from './index';
-//import { DataTypes, Model } from 'sequelize';
-
-//class Text extends Model {}
-
-export default function(sequelize, DataTypes) {
-  return sequelize.define(
+module.exports = function(sequelize, DataTypes) {
+  const Text = sequelize.define(
     'Text',
     {
+      textId: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
       title: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      category: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      addedBy: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      grade: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      rawContent: {
+        type: DataTypes.STRING,
+        allowNull: true,
       }
     },
     {
       tableName: 'texts',
-      freezeTableNames: true
+      freezeTableNames: true,
+      underscored: true
     }
   )
+  return Text
 }
-
-/*Text.init({
-  title: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  }
-}, {
-  connection,
-  modelName: 'texts'
-})*/
-
-
