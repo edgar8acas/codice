@@ -26,3 +26,15 @@ test('should save a new text', async t => {
   t.not(body.data, undefined);
 })
 
+test('should save raw content of an existing text', async t => {
+  const text = t.context.texts[0];
+
+  const res = await t.context.agent
+    .post('/api/texts/:id/content')
+    .attach('rawContent', path.resolve(__dirname, '../data/aeropuerto.txt'))
+    .field('textId', text.textId);
+  
+    const { body, statusCode } = res;
+    t.is(statusCode, 200);
+    t.not(body.data.rawContent, null);
+})
