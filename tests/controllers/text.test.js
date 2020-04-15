@@ -38,3 +38,15 @@ test('should save raw content of an existing text', async t => {
     t.is(statusCode, 200);
     t.not(body.data.rawContent, null);
 })
+
+test('should get single text from database', async t => {
+  t.plan(2);
+  let textId = t.context.texts[1].textId;
+
+  const res = await t.context.agent
+    .get(`/api/texts/${textId}`);
+  
+  const { body, statusCode } = res;
+  t.is(statusCode, 200);
+  t.is(body.data.textId, textId);
+})

@@ -9,8 +9,23 @@ export default router
   .get('/', (req, res) => {
     
   })
-  .get('/:id', (req, res) => {
-
+  .get('/:id', async (req, res) => {
+    const { 
+      params: { id: textId }
+    } = req
+    try {
+      const item = await Text.findByPk(textId);
+      
+      return res
+        .status(200)
+        .json({ data: item })
+    
+      } catch(error) {
+      
+      return res
+        .status(500)
+        .json({ error })
+    }
   })
   .post('/', async (req, res) => {
     const { body } = req;
