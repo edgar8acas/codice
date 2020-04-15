@@ -8,5 +8,17 @@ module.exports = {
         }
       }
     ]
+  ],
+  plugins: [
+    [
+      require.resolve('babel-plugin-module-resolver'),
+      {
+        root: ['./'],
+        alias: {
+          "@models": './src/models',
+          "@config": './src/config',
+        }
+      }
+    ]
   ]
 }
