@@ -1,3 +1,6 @@
+import Sequelize from 'sequelize';
+const Op = Sequelize.Op;
+
 module.exports = function(sequelize, DataTypes) {
   const Text = sequelize.define(
     'Text',
@@ -34,5 +37,25 @@ module.exports = function(sequelize, DataTypes) {
       underscored: true
     }
   )
+
+  Text.getTextsToProcess = async textId => {
+    try {
+      const { grade, category } = await Text.findOne({
+        where: {
+          textId: textId
+        }
+      });
+      const texts = await Text.findAll({
+        where: {
+          grade,
+          category
+        }
+      })
+      return texts;
+    } catch (err) {
+      return err;
+    }
+
+  }
   return Text
 }
