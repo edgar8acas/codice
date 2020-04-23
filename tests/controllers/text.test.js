@@ -6,7 +6,7 @@ import { insertTexts, deleteTexts } from './../helpers/initialization.js';
 
 test.before('prepare database', async t => {
   t.context.agent = supertest(app);
-  t.context.texts = await insertTexts();
+  t.context.texts = await insertTexts(0, 3);
 })
 
 test.after.always('clean up database', async t => {
