@@ -17,6 +17,7 @@ module.exports = {
         alias: {
           "@models": './src/models',
           "@config": './src/config',
+          "@processing": './src/processing'
         }
       }
     ]

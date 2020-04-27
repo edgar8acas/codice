@@ -1,0 +1,65 @@
+{
+  "texts1": {
+    "1": [],
+    "2": [],
+    "3": []
+  },
+  "words1" : [
+    {
+      "word":"auto",
+      "definition": "Test word"
+    }, 
+    {
+      "word":"casa",
+      "definition": "Test word" 
+    }, 
+    {
+      "word":"cocina",
+      "definition": "Test word" 
+    }, 
+    {
+      "word":"refrigerador",
+      "definition": "Test word" 
+    }, 
+    {
+      "word":"mesa",
+      "definition": "Test word" 
+    }
+  ],
+  "words2" : [
+    {
+      "word":"auto",
+      "definition": "Test word"
+    }, 
+    {
+      "word":"casa",
+      "definition": "Test word" 
+    }, 
+    {
+      "word":"laptop",
+      "definition": "Test word" 
+    }
+  ],
+  "words3": [
+    {
+      "word": "auto",
+      "conflicts": [
+        {
+          "definition": "Test word"
+        }
+      ]
+    },
+    {
+      "word": "casa",
+      "conflicts": [
+        {
+          "definition": "Test word"
+        }
+      ]
+    },
+    {
+      "word": "laptop",
+      "definition": "Test word"
+    }
+  ]
+}

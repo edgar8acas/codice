@@ -13,7 +13,7 @@ test.after.always('clean up database', async t => {
   await deleteTexts();
 })
 
-test('should save a new text', async t => {
+test.skip('should save a new text', async t => {
   t.plan(2);
   const text = require('./../fixtures/texts.json')[3];
 
@@ -26,7 +26,7 @@ test('should save a new text', async t => {
   t.not(body.data, undefined);
 })
 
-test('should save raw content of an existing text', async t => {
+test.skip('should save raw content of an existing text', async t => {
   const text = t.context.texts[0];
 
   const res = await t.context.agent
@@ -39,7 +39,7 @@ test('should save raw content of an existing text', async t => {
     t.not(body.data.rawContent, null);
 })
 
-test('should get single text from database', async t => {
+test.skip('should get single text from database', async t => {
   t.plan(2);
   let textId = t.context.texts[1].textId;
 

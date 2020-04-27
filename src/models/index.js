@@ -10,6 +10,7 @@ const sequelize = new Sequelize(database, username, password, {
 });
 
 const Text = sequelize.import('./text.js');
+const Word = sequelize.import('./word.js');
 
 sequelize.authenticate()
   .then(() => {
@@ -22,5 +23,6 @@ sequelize.authenticate()
 export {
   sequelize,
   Sequelize,
-  Text
+  Text,
+  Word
 };

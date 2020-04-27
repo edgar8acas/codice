@@ -1,0 +1,23 @@
+#! /usr/bin/Rscript
+args <- commandArgs(TRUE)
+library(tm)
+library(hunspell)
+library(tokenizers)
+library(syllable)
+
+
+
+
+
+
+
+
+
+
+
+#zz <- file("io/ex.data", "w")  # open an output file connection
+#cat("TITLE extra line", "2 3 5 7", "", "11 13 17", file = zz, sep = "\n")
+#cat("One more line\n", file = zz)
+#close(zz)
+#print(c(3, 4, 5))
+#args - 1
