@@ -44,7 +44,7 @@ export async function insertWords(fixture) {
 }
 
 export async function deleteWords(definition = 'Test%') {
-  await Text.destroy({
+  await Word.destroy({
     where: {
       definition: {
         [Op.like]: definition
@@ -53,13 +53,4 @@ export async function deleteWords(definition = 'Test%') {
   })
 }
 
-//Will push words already in the database to the expected result
-export async function injectWords(expected, saved) {
-  const expectedWords = expected.conflicts.map(conflict => conflict.word);
-  const savedWords = saved.map(s => s.word);
-  const intersection = expectedWords.filter(e => savedWords.includes(e));
 
-  intersection.forEach(word => {
-    expected.conflicts.push(saved.filter(s => s[word]));
-  });
-}

@@ -40,26 +40,19 @@
       "definition": "Test word" 
     }
   ],
-  "words3": [
-    {
-      "word": "auto",
-      "conflicts": [
-        {
-          "definition": "Test word"
-        }
+  "words3": {
+    "conflicts": {
+      "auto": [
+        { "word": "auto", "definition": "Test word" }
+      ],
+      "casa": [
+        { "word": "casa", "definition": "Test word" }
       ]
     },
-    {
-      "word": "casa",
-      "conflicts": [
-        {
-          "definition": "Test word"
-        }
+    "ready": {
+      "laptop": [
+        { "word": "laptop", "definition": "Test word" }
       ]
-    },
-    {
-      "word": "laptop",
-      "definition": "Test word"
     }
-  ]
+  }
 }
