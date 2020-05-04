@@ -6,8 +6,20 @@ const router = express.Router();
 const upload = multer();
 
 export default router
-  .get('/', (req, res) => {
-    
+  .get('/', async (req, res) => {
+    try {
+      const items = await Text.findAll();
+
+      return res
+        .status(200)
+        .json({ data: items })
+
+    } catch(error) {
+
+      return res
+        .status(500)
+        .json({ error })
+    }
   })
   .get('/:id', async (req, res) => {
     const { 

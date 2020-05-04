@@ -50,3 +50,12 @@ test.skip('should get single text from database', async t => {
   t.is(statusCode, 200);
   t.is(body.data.textId, textId);
 })
+
+test('should get all texts from database', async t => {
+  const res = await t.context.agent
+    .get('/api/texts');
+
+  const { body, statusCode } = res;
+  t.is(statusCode, 200);
+  t.not(body.data, undefined);
+})
