@@ -48,7 +48,10 @@ module.exports = function(sequelize, DataTypes) {
       const texts = await Text.findAll({
         where: {
           grade,
-          category
+          category,
+          rawContent: {
+            [Op.not]: null
+          }
         }
       })
       return texts;

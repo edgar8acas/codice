@@ -13,7 +13,7 @@ test.after.always('clean up database', async t => {
   await deleteTexts();
 })
 
-test.skip('should save a new text', async t => {
+test('should save a new text', async t => {
   t.plan(2);
   const text = require('./../fixtures/texts.json')[3];
 
@@ -23,10 +23,10 @@ test.skip('should save a new text', async t => {
   
   const { body, statusCode } = res;
   t.is(statusCode, 201);
-  t.not(body.data, undefined);
+  t.not(body, undefined);
 })
 
-test.skip('should save raw content of an existing text', async t => {
+test('should save raw content of an existing text', async t => {
   const text = t.context.texts[0];
 
   const res = await t.context.agent
@@ -36,11 +36,10 @@ test.skip('should save raw content of an existing text', async t => {
   
     const { body, statusCode } = res;
     t.is(statusCode, 200);
-    t.not(body.data.rawContent, null);
+    t.truthy(body.rawContent);
 })
 
-test.skip('should get single text from database', async t => {
-  t.plan(2);
+test('should get single text from database', async t => {
   let textId = t.context.texts[1].textId;
 
   const res = await t.context.agent
@@ -48,7 +47,7 @@ test.skip('should get single text from database', async t => {
   
   const { body, statusCode } = res;
   t.is(statusCode, 200);
-  t.is(body.data.textId, textId);
+  t.is(body.textId, textId);
 })
 
 test('should get all texts from database', async t => {
@@ -57,5 +56,5 @@ test('should get all texts from database', async t => {
 
   const { body, statusCode } = res;
   t.is(statusCode, 200);
-  t.not(body.data, undefined);
+  t.is(body.length, 3);
 })

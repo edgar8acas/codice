@@ -30,7 +30,7 @@ export default router
       
       return res
         .status(200)
-        .json({ data: item })
+        .json(item)
     
       } catch(error) {
       
@@ -54,7 +54,7 @@ export default router
 
     return res
       .status(201)
-      .json({ data: item });
+      .json(item);
   })
   .put('/:id', (req, res) => {
 
@@ -76,7 +76,7 @@ export default router
 
       return res
         .status(200)
-        .json({ data: item })
+        .json(item)
     } catch (error) {
       
       return res
