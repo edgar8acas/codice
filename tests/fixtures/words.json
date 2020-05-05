@@ -54,5 +54,77 @@
         { "word": "laptop", "definition": "Test word" }
       ]
     }
-  }
+  },
+  "words4": [
+    {
+      "textId": 1164,
+      "essentialWords": [
+        "general",
+        "conocimientos",
+        "además",
+        "día",
+        "personas",
+        "podemos",
+        "decir",
+        "clases",
+        "etc",
+        "tipo",
+        "recursos",
+        "dentro",
+        "encontramos",
+        "bancos",
+        "banco",
+        "instituciones",
+        "operaciones",
+        "dinero",
+        "capital"
+      ]
+    },
+    {
+      "textId": 1165,
+      "essentialWords": [
+        "ser",
+        "además",
+        "día",
+        "personas",
+        "cuenta",
+        "etc",
+        "cine",
+        "recursos",
+        "ciencia",
+        "gran",
+        "documentales",
+        "arte",
+        "película",
+        "importante",
+        "películas",
+        "dentro",
+        "encontramos",
+        "cinematográfica",
+        "realización"
+      ]
+    },
+    {
+      "textId": 1166,
+      "essentialWords": [
+        "colegios",
+        "colegio",
+        "ser",
+        "alumnos",
+        "general",
+        "conocimientos",
+        "además",
+        "día",
+        "personas",
+        "podemos",
+        "decir",
+        "cuenta",
+        "clases",
+        "sala",
+        "etc",
+        "instalaciones",
+        "tipo"
+      ]
+    }
+  ]
 }

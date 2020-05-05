@@ -7,8 +7,8 @@ async function spawnGoffman() {
       const script = __dirname + '/r/goffman';
       const dir = __dirname + '/r';
       const child = spawn(script, { 
-        cwd: dir, 
-        shell: true 
+        cwd: dir,
+        shell: true
       });
 
       child.on('exit', (code, signal) => {
@@ -22,16 +22,28 @@ async function spawnGoffman() {
       });
       
       child.stderr.on('data', (err) => {
-        console.error('\x1b[31m%s\x1b[0m',`R: ${err}`);
+        console.log('\x1b[31m%s\x1b[0m',`R: ${err}`);
         reject(err.toString());
       });
     }
   )
 }
 
+async function readOutput() {
+  const path = __dirname + '/r/io/output.json';
+  return fs
+    .readFile(path)
+    .then(data => {
+      return data
+    })
+    .catch(err => {
+      return err
+    })
+}
+
 export async function processTexts(texts) {
   const inputData = texts.map(text => {
-    return { doc_id: text.textId, text: text.rawContent }
+    return { doc_id: 'id' + text.textId, text: text.rawContent }
   });
 
   const inputName = __dirname + '/r/io/input.json';
@@ -39,31 +51,20 @@ export async function processTexts(texts) {
   try {
     //TODO: make filename unique
     await fs.writeFile(inputName, JSON.stringify(inputData));
-    //TODO: implement file processing
-    //const output = await spawnGoffman();
-    return tempMocking;
+    await spawnGoffman();
+    const output = await readOutput();
+    const parsedOutput = JSON.parse(output.toString());
+    const essentialWords = Object
+                            .entries(parsedOutput)
+                            .sort((a, b) => a[0].localeCompare(b[0]))
+                            .map(entry => {
+                              return { textId: Number(entry[0].substring(2)), essentialWords: entry[1] }
+                            });
+    return essentialWords;
   } catch (err) {
     return err;
   } finally {
-    //delete file
-    await fs.unlink(inputName);
+    //TODO: Delete file, left for debug
+    //await fs.unlink(inputName);
   }
 }
-
-const tempMocking = [
-  {
-    textId: "575",
-    words: ["colegios", "escuela", "establecimiento", "educación"],
-    lecturability: null
-  },
-  {
-    textId: "576",
-    words: ["cine", "largo", "tiempo", "humano"],
-    lecturability: null
-  },
-  {
-    textId: "577",
-    words: ["bancos", "institución", "financiera", "encarga"],
-    lecturability: null
-  },
-]

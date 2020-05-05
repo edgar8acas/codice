@@ -1,6 +1,6 @@
 import test from 'ava';
 import { insertTexts, insertRawContent, deleteTexts } from './../helpers/initialization.js';
-import { extractIds } from './../helpers/utils.js';
+import { extractIds, prepareEssentialWords } from './../helpers/utils.js';
 import { Text } from '@models';
 import { processTexts } from '@processing';
 
@@ -28,9 +28,9 @@ test('should get the default group of texts to process a new text, given its id'
 test.skip('should get the essential words for a single text, given its id', async t => {
   const textIds = extractIds(t.context.texts, 'text')
   const texts = await Text.getTextsToProcess(textIds[0]);
-  const words = await processTexts(texts);
   
-  //TODO: Define structure
-  const expectedWords = require('./../fixtures/words.json');
-  t.deepEqual(words, expectedWords);
+  const actual = await processTexts(texts);
+  const expected = await prepareEssentialWords(require('./../fixtures/words.json')["words4"], t.context.texts);
+  
+  t.deepEqual(actual, expected);
 })

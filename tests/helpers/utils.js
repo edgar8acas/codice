@@ -17,3 +17,11 @@ export function prepareWordsToChoose(fixture, saved) {
   });
   return fixture;
 }
+
+//Will push ids of texts already in the database to the expected result
+export function prepareEssentialWords(fixture, saved) {
+  fixture.forEach((expected, index) => {
+    expected.textId = saved[index].textId
+  })
+  return fixture;
+}
