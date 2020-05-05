@@ -12,7 +12,7 @@ export default router
 
       return res
         .status(200)
-        .json({ data: items })
+        .json(items)
 
     } catch(error) {
 
