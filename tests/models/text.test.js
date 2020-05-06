@@ -1,11 +1,11 @@
 import test from 'ava';
-import { insertTexts, insertRawContent, deleteTexts } from './../helpers/initialization.js';
+import { insertTexts, insertRawContent, cleanupDatabase } from './../helpers/initialization.js';
 import { extractIds, prepareEssentialWords } from './../helpers/utils.js';
 import { Text } from '@models';
 import { processTexts } from '@processing';
 
 test.before('prepare database', async t => {
-  t.context.texts = await insertTexts(-3);
+  t.context.texts = await insertTexts(require('./../fixtures/texts.json').slice(4,7));
   let files = [
     'bancos.txt',
     'cine.txt',
@@ -15,7 +15,7 @@ test.before('prepare database', async t => {
 })
 
 test.after.always('clean up database', async t => {
-  await deleteTexts('test%');
+  await cleanupDatabase();
 })
 
 test('should get the default group of texts to process a new text, given its id', async t => {

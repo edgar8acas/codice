@@ -1,16 +1,10 @@
-import { Text, Word } from '@models';
+import { Text, Word, sequelize } from '@models';
 import Sequelize from 'sequelize';
 import { promises as fs} from 'fs';
 const Op = Sequelize.Op;
 
-export async function insertTexts(begin, end) {
-  let texts;
-  if (end) {
-    texts = require('./../fixtures/texts.json').slice(begin,end);
-  } else {
-    texts = require('./../fixtures/texts.json').slice(begin);
-  }
-  return await Text.bulkCreate(texts);
+export async function insertTexts(texts) {
+  return Text.bulkCreate(texts);
 }
 
 export async function deleteTexts(title = 'Test%') {
@@ -21,6 +15,10 @@ export async function deleteTexts(title = 'Test%') {
       }
     }
   })
+}
+
+export async function cleanupDatabase() {
+  await sequelize.query(`TRUNCATE TABLE texts, words, dictionary_words, template_words, users RESTART IDENTITY;`);
 }
 
 export async function insertRawContent(file, text) {
