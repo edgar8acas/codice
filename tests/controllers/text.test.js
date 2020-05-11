@@ -16,7 +16,7 @@ test.afterEach.always('cleanup', async t => {
   await cleanupDatabase();
 });
 
-test.serial('should save a new text', async t => {
+test.skip('should save a new text', async t => {
   const text = require('./../fixtures/texts.json')[0];
 
   const res = await t.context.agent
@@ -28,7 +28,7 @@ test.serial('should save a new text', async t => {
   t.is(body.title, text.title);
 })
 
-test.serial('should save raw content of an existing text', async t => {
+test.skip('should save raw content of an existing text', async t => {
   const text = require('./../fixtures/texts.json')[0];  
   const saved = await insertTexts([text]);
 
@@ -42,7 +42,7 @@ test.serial('should save raw content of an existing text', async t => {
   t.truthy(body.rawContent);
 })
 
-test.serial('should get single text from database', async t => {
+test.skip('should get single text from database', async t => {
   const text = require('./../fixtures/texts.json')[0];
   const saved = await insertTexts([text]);
 
@@ -54,7 +54,7 @@ test.serial('should get single text from database', async t => {
   t.is(body.textId, saved[0].textId);
 })
 
-test.serial('should get all texts from database', async t => {
+test.skip('should get all texts from database', async t => {
   const texts = require('./../fixtures/texts.json').slice(0,3);
   const saved = await insertTexts(texts);
 
