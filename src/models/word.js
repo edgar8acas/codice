@@ -64,6 +64,25 @@ module.exports = function(sequelize, DataTypes) {
 
     return result;
   }
+
+  Word.saveChoosen = async function(choosen) {
+    let selected = Object
+                          .entries(choosen)
+                          // [ ["word", [{},{}]], ...]
+                          .map(c => c[1] 
+                          // [{}, {}]
+                            .find(w => w.selected)
+                          );
+    return await Promise.all(
+      selected.map(
+        sel => Word.findOrCreate({
+          where: {
+            wordId: sel.wordId || null
+          },
+          defaults: {...sel}
+        })
+    ));
+  }
   
   return Word; 
 }

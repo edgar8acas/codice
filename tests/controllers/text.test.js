@@ -83,4 +83,14 @@ test.serial('should go through the steps to process a new text', async t => {
   t.deepEqual(toChoose, expectedToChoose);
   t.is(statusCode, 200)
   
+  const finalResponse = await t.context.agent
+    .post(`/api/texts/${ texts[0].textId }/process/save`)
+    .send(toChoose)
+
+  const { body: saved, statusCode: statusCode2 } = finalResponse;
+  t.is(
+    saved.length, 
+    Object.keys(expectedToChoose.ready).length
+  );
+  t.is(statusCode2, 200)
 })

@@ -1,7 +1,8 @@
 import express from 'express';
 import multer from 'multer';
-import { Text } from '@models';
+import { Text, Word } from '@models';
 import { processTexts } from '@processing';
+import { isObjectEmpty } from '@utils';
 
 const router = express.Router();
 const upload = multer();
@@ -111,6 +112,32 @@ export default router
       return res
         .status(200)
         .json({textId, ...conflicts});
+    } catch (error) {
+      return res
+        .status(500)
+        .json(error)
+    }
+  })
+  .post('/:id/process/save', async (req, res) => {
+    const {
+      body: {
+        conflicts,
+        ready
+      },
+      params: { id: textId }
+    } = req
+
+    if(!isObjectEmpty(conflicts))
+      return res
+        .status(400)
+        .json({msg: 'No es posible guardar si aún existen conflictos'})
+    
+    try {
+      const saved = await Word.saveChoosen(ready);
+
+      return res
+        .status(200)
+        .json(saved);
     } catch (error) {
       return res
         .status(500)
