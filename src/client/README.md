@@ -1,4 +1,8 @@
-# client
+# Codice client (Single Page Application)
+Client side of Codice project built, aimed at aiding deaf people to improve their vocabulary through interactive readings.  Built with Vue JS.
+
+## Requirements
+Node >= 10 
 
 ## Project setup
 ```
