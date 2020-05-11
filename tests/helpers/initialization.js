@@ -7,6 +7,15 @@ export async function insertTexts(texts) {
   return Text.bulkCreate(texts);
 }
 
+export async function insertTextsWithContent(texts) {
+  const files = [ 'bancos.txt', 'cine.txt', 'colegios.txt' ];
+  const saved = await insertTexts(texts);
+  return await Promise.all(
+    saved.map(
+      (text, index) => insertRawContent(files[index], text)
+    ));
+}
+
 export async function deleteTexts(title = 'Test%') {
   await Text.destroy({
     where: {

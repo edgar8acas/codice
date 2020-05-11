@@ -42,24 +42,23 @@ module.exports = function(sequelize, DataTypes) {
     let query = {
       where: {
         word: {
-          [Op.in]: processed.map(p => p.word)
+          [Op.in]: processed
         }
       }
     }
     
     let foundConflicts = await Word.findAll(query)
 
-    processed.forEach(pWord => {
-      let word = pWord.word;
+    processed.forEach(word => {
 
       let conflicts = foundConflicts
         .filter(c => c.word === word)
         .map(c => c.dataValues);
       
       if(conflicts.length > 0) {
-        result.conflicts[word] = [...conflicts, pWord];
+        result.conflicts[word] = [...conflicts, {word}];
       } else {
-        result.ready[word] = [pWord];
+        result.ready[word] = [{word, selected: true }];
       }
     });
 

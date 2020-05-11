@@ -4,54 +4,63 @@
     "2": [],
     "3": []
   },
-  "words1" : [
+  "words1": [
     {
-      "word":"auto",
+      "word": "auto",
       "definition": "Test word"
-    }, 
+    },
     {
-      "word":"casa",
-      "definition": "Test word" 
-    }, 
+      "word": "casa",
+      "definition": "Test word"
+    },
     {
-      "word":"cocina",
-      "definition": "Test word" 
-    }, 
+      "word": "cocina",
+      "definition": "Test word"
+    },
     {
-      "word":"refrigerador",
-      "definition": "Test word" 
-    }, 
+      "word": "refrigerador",
+      "definition": "Test word"
+    },
     {
-      "word":"mesa",
-      "definition": "Test word" 
+      "word": "mesa",
+      "definition": "Test word"
     }
   ],
-  "words2" : [
+  "words2": [
     {
-      "word":"auto",
+      "word": "auto",
       "definition": "Test word"
-    }, 
+    },
     {
-      "word":"casa",
-      "definition": "Test word" 
-    }, 
+      "word": "casa",
+      "definition": "Test word"
+    },
     {
-      "word":"laptop",
-      "definition": "Test word" 
+      "word": "laptop",
+      "definition": "Test word"
     }
   ],
   "words3": {
     "conflicts": {
       "auto": [
-        { "word": "auto", "definition": "Test word" }
+        {
+          "word": "auto",
+          "definition": "Test word"
+        }
       ],
       "casa": [
-        { "word": "casa", "definition": "Test word" }
+        {
+          "word": "casa",
+          "definition": "Test word"
+        }
       ]
     },
     "ready": {
       "laptop": [
-        { "word": "laptop", "definition": "Test word" }
+        {
+          "word": "laptop",
+          "definition": "Test word"
+        }
       ]
     }
   },
@@ -126,5 +135,67 @@
         "tipo"
       ]
     }
-  ]
+  ],
+  "wordsToChoose1": {
+    "conflicts": {},
+    "ready": {
+      "bancos": [
+        { "word": "bancos", "selected": true }
+      ],
+      "banco": [
+        { "word": "banco", "selected": true }
+      ],
+      "además": [
+        { "word": "además", "selected": true }
+      ],
+      "instituciones": [
+        { "word": "instituciones", "selected": true }
+      ],
+      "dentro": [
+        { "word": "dentro", "selected": true }
+      ],
+      "podemos": [
+        { "word": "podemos", "selected": true }
+      ],
+      "operaciones": [
+        { "word": "operaciones", "selected": true }
+      ],
+      "encontramos": [
+        { "word": "encontramos", "selected": true }
+      ],
+      "recursos": [
+        { "word": "recursos", "selected": true }
+      ],
+      "decir": [
+        { "word": "decir", "selected": true }
+      ],
+      "dinero": [
+        { "word": "dinero", "selected": true }
+      ],
+      "personas": [
+        { "word": "personas", "selected": true }
+      ],
+      "tipo": [
+        { "word": "tipo", "selected": true }
+      ],
+      "clases": [
+        { "word": "clases", "selected": true }
+      ],
+      "capital": [
+        { "word": "capital", "selected": true }
+      ],
+      "general": [
+        { "word": "general", "selected": true }
+      ],
+      "conocimientos": [
+        { "word": "conocimientos", "selected": true }
+      ],
+      "etc": [
+        { "word": "etc", "selected": true }
+      ],
+      "día": [
+        { "word": "día", "selected": true }
+      ]
+    }
+  }
 }

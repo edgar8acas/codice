@@ -2,7 +2,11 @@ import supertest from 'supertest';
 import app from './../../server.js';
 import test from 'ava';
 import path from 'path';
-import { insertTexts, cleanupDatabase } from './../helpers/initialization.js';
+import { 
+  insertTexts, 
+  cleanupDatabase, 
+  insertTextsWithContent 
+} from './../helpers/initialization.js';
 
 test.before('prepare database', async t => {
   t.context.agent = supertest(app);
@@ -60,4 +64,23 @@ test.serial('should get all texts from database', async t => {
   const { body, statusCode } = res;
   t.is(statusCode, 200);
   t.is(body.length, saved.length);
+})
+
+test.serial('should go through the steps to process a new text', async t => {
+  const toSave = require('./../fixtures/texts.json').slice(4,7);
+  const texts = await insertTextsWithContent(toSave);
+  
+  // Process texts
+  const processed = await t.context.agent
+    .post(`/api/texts/${ texts[0].textId }/process`)
+
+  const { body: toChoose, statusCode } = processed;
+  const expectedToChoose = {
+    ...require('./../fixtures/words.json')['wordsToChoose1'], 
+    textId: String(texts[0].textId)
+  };
+  
+  t.deepEqual(toChoose, expectedToChoose);
+  t.is(statusCode, 200)
+  
 })

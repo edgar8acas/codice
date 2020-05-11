@@ -1,6 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import { Text } from '@models';
+import { processTexts } from '@processing';
 
 const router = express.Router();
 const upload = multer();
@@ -82,5 +83,37 @@ export default router
       return res
         .status(500)
         .json({ error })
+    }
+  })
+  .post('/:id/process', async (req, res) => {
+    const {
+      params: { id: textId }
+    } = req
+
+    try {
+      const item = await Text.findByPk(textId);
+      if(item === null)
+        return res
+          .status(404)
+          .json({ msg: 'Texto no encontrado'})
+      
+      if(item.status === 'PROCESSED' || !item.rawContent) {
+        return res
+          .status(500)
+          .json({ msg: 'Este texto ya fue procesado o el contenido no ha sido proporcionado'});
+      } 
+
+      const texts = await Text.getTextsToProcess(item.textId);
+      const processed = await processTexts(texts);
+      const conflicts = await Word.compareBeforeSaving(
+        processed.find(processed => processed.textId === Number(textId)).essentialWords
+      );
+      return res
+        .status(200)
+        .json({textId, ...conflicts});
+    } catch (error) {
+      return res
+        .status(500)
+        .json(error)
     }
   })
