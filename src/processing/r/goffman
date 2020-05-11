@@ -3,7 +3,6 @@
 #suppressWarnings("all")
 #suppressPackageStartupMessages("all")
 # suppressMessages("all")
-
 suppressPackageStartupMessages( library(tm))
 suppressPackageStartupMessages(library(hunspell))
 suppressPackageStartupMessages(library(tokenizers))
@@ -50,10 +49,11 @@ transp_qdfm_df <- as.data.frame(transp_qdfm)
 
 
 #obtain the sum of each word in the whole collection
+columns <- ncol(transp_qdfm_df) + 1
 collection_freq <- 
         transp_qdfm_df %>%
         rownames_to_column('words') %>%
-        mutate(sum = rowSums(.[2:4])) %>%
+        mutate(sum = rowSums(.[2:columns])) %>%
         column_to_rownames('words')
 
 #total words
@@ -144,7 +144,6 @@ for(doc_id in  input$doc_id) {
 con_out <- file("./io/output.json", open = "wb")
 converted <- toJSON(output)
 write(converted, con_out)
-
 
 # x <- data.frame(driver = c("Bowser", "Peach"), occupation = c("Koopa", "Princess"))
 # x$vehicle <- data.frame(model = c("Piranha Prowler", "Royal Racer"))
