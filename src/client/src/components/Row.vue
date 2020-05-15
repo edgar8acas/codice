@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <router-link :to="{ name: 'TextDetails', params: { id: textId } }">{{ textId }}</router-link>
-    | {{ text.title }} | {{ text.category }} | {{ isRawContentNull }}
+    | {{ text.title }} | {{ text.category }} | {{ isRawContentNull }} | {{ isProcessed }}
   </div>
 </template>
 
@@ -22,6 +22,9 @@ export default {
     },
     isRawContentNull: function() {
       return this.text.rawContent ? this.text.rawContent.substring(0, 10) + '...' : 'Sin contenido';
+    },
+    isProcessed: function() {
+      return this.text.status === 'PROCESSED' ? 'Si' : 'No';
     }
   }
 }

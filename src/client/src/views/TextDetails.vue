@@ -6,21 +6,23 @@
       <span class="detail-label">Título</span>: {{ text.title }} <br>
       <span class="detail-label">Categoría</span>: {{ text.category }} <br>
       <span class="detail-label">Grado</span>: {{ text.grade }} <br>
-      <span class="detail-label">Estado</span>: {{ text.state }} <br>
-      <span class="detail-label">Añadido por</span>: {{ text.addedBy }} <br>
+      <span class="detail-label">Estado</span>: {{ status }} <br>
+      <span class="detail-label">Añadido por</span>: {{ text.addedBy }} <br> <br>
+      <span class="detail-label">Palabras</span> <br>
       <router-link 
         :to="{ name: 'ProcessText', params: { id: textId }}"
         v-slot="{ href, navigate }"
-        >
-        <a :href="href" @click="navigate" class="btn-primary"> Procesar </a>
+        v-if="!processed">
+        <a :href="href" @click="navigate" class="btn-primary"> Obtener </a>
       </router-link>
+      <a class="btn-primary" @click.prevent="save" v-if="processed">Ver</a>
     </p>
     
   </div>
 </template>
 
 <script>
-import store from '@/store';
+
 export default {
   data() {
     return {
@@ -29,9 +31,27 @@ export default {
   },
   computed: {
     text() {
-      return store.state.texts.find(
+      return this.$store.state.texts.find(
         text => text.textId === this.textId
       )
+    },
+    processed() {
+      return this.text.status === 'processed' ||
+             this.text.status === 'incomplete' 
+             ? true : false
+    },
+    status() {
+      console.log(this.text.status)
+      switch(this.text.status) {
+        case 'processed': 
+          return 'Con palabras';
+        case 'unprocessed': 
+          return 'Sin palabras';
+        case 'incomplete': 
+          return 'Falta multimedia';
+        default:
+          return 'Desconocido'
+      }
     }
   }
 }

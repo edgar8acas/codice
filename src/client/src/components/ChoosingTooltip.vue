@@ -1,8 +1,8 @@
 <template>
   <div>
     <select v-model="selected">
-      <option v-for="option in options" :value="option.textId" :key="option.textId">
-        {{ option.word }} {{ option.textId }}
+      <option v-for="option in options" :value="option.wordId" :key="option.wordId">
+        {{ option.word }} ID: {{ option.wordId }}
       </option>
     </select>
   </div>
@@ -18,17 +18,26 @@ export default {
       selected: null
     }
   },
+  mounted() {
+    this.selected = this.options.find(option => option.selected).wordId
+  },
   watch: {
     selected: function() {
-      this.$emit('selectedChanged', this.selectedOption)
+      this.$emit('selectedChanged', this.selectedOption);
     }
   },
   computed: {
     selectedOption() {
       return this.options.map(option => {
-        if(option.textId === this.selected)
-          return {...option, selected: true}
-        return {...option}
+        //delete option.selected
+        console.log(option.wordId, this.selected)
+        if(option.wordId !== this.selected) {
+          
+          delete option.selected;
+          return {...option}
+        } else {
+          return {...option, selected: true }
+        }
       })
     } 
   }

@@ -22,9 +22,17 @@ export default new Vuex.Store({
     setWordsToChoose (state, words) {
       state.wordsToChoose = words
     },
-    moveWordToReady (state, word) {
-      delete state.wordsToChoose.conflicts[word[0].word]
-      this.$set(state.wordsToChoose.ready, word[0].word, word)
+    moveOrUpdateReady (state, selected) {
+      // console.log('function')
+      if(Object.prototype.hasOwnProperty.call(
+          state.wordsToChoose.conflicts, selected[0].word)) {
+            // console.log('true')
+            delete state.wordsToChoose.conflicts[selected[0].word]
+            Vue.set(state.wordsToChoose.ready, selected[0].word, selected)
+      } else {
+        // console.log('false')
+        state.wordsToChoose.ready[selected[0].word] = selected
+      }
     },
     cleanWordsToChoose (state) {
       state.wordsToChoose = {}
@@ -50,7 +58,7 @@ export default new Vuex.Store({
         })
     },
     markAsReady ({ commit }, marked) {
-      commit('moveWordToReady', marked)
+      commit('moveOrUpdateReady', marked)
     },
     resetWordsToChoose ({ commit }) {
       commit('cleanWordsToChoose');

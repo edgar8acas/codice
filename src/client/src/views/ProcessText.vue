@@ -1,22 +1,24 @@
 <template>
   <div>
-    <h2>Procesar texto {{ text.textId }}</h2>
+    <h2>Obtener palabras esenciales del texto {{ text.textId }}</h2>
     <span v-if="loading">Cargando...</span>
     <!-- -->
-    <div class="words conflicts">
+    <div v-if="!processed">
+      <div class="words conflicts">
       <span v-if="isEmpty(wordsToChoose.conflicts)">Sin conflictos</span>
       <div v-for="(conflicts, word) in wordsToChoose.conflicts" :key="word">
         {{ word }}
-        <ChoosingTooltip :options="conflicts" @selectedChanged="updateConflicts"/>
+        <ChoosingTooltip :options="conflicts" @selectedChanged="selectedChange"/>
         </div>
-    </div>
-    <div class="words ready">
-      <div v-for="(ready, word) in wordsToChoose.ready" :key="word">
-        {{ word }}
-        <ChoosingTooltip :options="ready"/>
+      </div>
+      <div class="words ready">
+        <div v-for="(ready, word) in wordsToChoose.ready" :key="word">
+          {{ word }}
+          <ChoosingTooltip :options="ready" @selectedChanged="selectedChange"/>
+        </div>
       </div>
     </div>
-    <a class="btn-primary" @click.prevent="save">Guardar</a>
+    <a class="btn-primary" @click.prevent="save" v-if="!processed">Guardar</a>
   </div>
 </template>
 
@@ -38,6 +40,11 @@ export default {
         text => text.textId === this.textId
       )
     },
+    processed() {
+      return this.text.status === 'processed' ||
+             this.text.status === 'incomplete' 
+             ? true : false
+    },
     wordsToChoose() {
       return this.$store.state.wordsToChoose;
     }
@@ -55,8 +62,12 @@ export default {
       }
       return true;
     },
-    save() {
-      this.$store.dispatch('saveChoosenWords', this.textId);
+    async save() {
+      await this.$store.dispatch('saveChoosenWords', this.textId);
+      this.$router.replace({name: 'Texts'})
+    },
+    selectedChange(selected) {
+      this.$store.dispatch('markAsReady', selected)
     }
   }
 }
