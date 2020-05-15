@@ -41,7 +41,6 @@ export default {
              ? true : false
     },
     status() {
-      console.log(this.text.status)
       switch(this.text.status) {
         case 'processed': 
           return 'Con palabras';

@@ -19,7 +19,9 @@ export default {
     }
   },
   mounted() {
-    this.selected = this.options.find(option => option.selected).wordId
+    const selected = this.options.find(option => option.selected)
+    if (typeof selected !== 'undefined')
+      this.selected = selected.wordId
   },
   watch: {
     selected: function() {
@@ -29,8 +31,6 @@ export default {
   computed: {
     selectedOption() {
       return this.options.map(option => {
-        //delete option.selected
-        console.log(option.wordId, this.selected)
         if(option.wordId !== this.selected) {
           
           delete option.selected;
