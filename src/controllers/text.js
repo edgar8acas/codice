@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { Text, Word } from '@models';
+import { Text, Word, Template, sequelize } from '@models';
 import { processTexts } from '@processing';
 import { isObjectEmpty } from '@utils';
 
@@ -98,11 +98,11 @@ export default router
           .status(404)
           .json({ msg: 'Texto no encontrado'})
       
-      if(item.status === 'PROCESSED' || !item.rawContent) {
+      if(item.status === 'processed' || !item.rawContent) {
         return res
           .status(500)
           .json({ msg: 'Este texto ya fue procesado o el contenido no ha sido proporcionado'});
-      } 
+      }
 
       const texts = await Text.getTextsToProcess(item.textId);
       const processed = await processTexts(texts);
@@ -127,18 +127,43 @@ export default router
       params: { id: textId }
     } = req
 
+    const item = await Text.findByPk(textId);
+    
+    if(item === null)
+      return res
+        .status(404)
+        .json({ msg: 'Texto no encontrado'})
+
+    if(item.status === 'processed' || !item.rawContent) {
+      return res
+        .status(500)
+        .json({ msg: 'Este texto ya fue procesado o el contenido no ha sido proporcionado'});
+    }
+
     if(!isObjectEmpty(conflicts))
       return res
         .status(400)
         .json({msg: 'No es posible guardar si aún existen conflictos'})
     
     try {
+      const transaction = await sequelize.transaction();
       const saved = await Word.saveChoosen(ready);
+      const toSaveInTemplate = saved.map(
+        s => {
+          return { wordId: s[0].wordId, textId: Number(textId) }
+        })
+      const savedInTemplate = await Template.bulkCreate(toSaveInTemplate)
 
+      let text = await Text.findByPk(textId);
+      text = await text.update({
+        status: 'processed'
+      });
+      await transaction.commit();
       return res
         .status(200)
-        .json(saved);
+        .json(savedInTemplate);
     } catch (error) {
+      await transaction.rollback();
       return res
         .status(500)
         .json(error)

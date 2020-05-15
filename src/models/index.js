@@ -11,6 +11,7 @@ const sequelize = new Sequelize(database, username, password, {
 
 const Text = sequelize.import('./text.js');
 const Word = sequelize.import('./word.js');
+const Template = sequelize.import('./template.js');
 
 sequelize.authenticate()
   .then(() => {
@@ -24,5 +25,6 @@ export {
   sequelize,
   Sequelize,
   Text,
-  Word
+  Word,
+  Template
 };

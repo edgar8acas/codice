@@ -1,17 +1,32 @@
 import Sequelize from 'sequelize';
-import Word from '@models';
-import Text from '@models';
+import { Word, Text } from '@models';
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   const Template = sequelize.define(
-    'Template',
+    'Template', {},
     {
       tableName: 'template_words',
       freezeTableNames: true,
       underscored: true
     }
   )
-  Word.belongsToMany(Text, { through: Template});
-  Text.belongsToMany(Word, { through: Template});
+
+  Word.belongsToMany(Text,
+    {
+      through: Template, foreignKey: {
+        type: DataTypes.INTEGER,
+        name: 'wordId',
+        allowNull: false
+      }
+    });
+
+  Text.belongsToMany(Word, {
+    through: Template, foreignKey: {
+      type: DataTypes.INTEGER,
+      name: 'textId',
+      allowNull: false
+    }
+  });
+  
   return Template;
 }
