@@ -27,6 +27,7 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false
     }
   });
-  
+
+  Template.belongsTo(Word, { foreignKey: 'wordId'});
   return Template;
 }
