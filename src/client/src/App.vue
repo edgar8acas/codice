@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/process">Procesar</router-link> |
       <router-link to="/">Mostrar todos</router-link>
     </div>
     <router-view/>

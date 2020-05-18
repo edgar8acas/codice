@@ -13,7 +13,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     texts: [],
-    wordsToChoose: {}
+    wordsToChoose: {},
+    currentTemplate: {}
   },
   mutations: {
     setTexts (state, texts) {
@@ -36,11 +37,18 @@ export default new Vuex.Store({
     },
     cleanWordsToChoose (state) {
       state.wordsToChoose = {}
+    },
+    cleanCurrentTemplate (state) {
+      state.currentTemplate = {}
+    },
+    setCurrentTemplate (state, template) {
+      Vue.set(state.currentTemplate, 'text', template.text);
+      Vue.set(state.currentTemplate, 'words', template.words);
     }
   },
   actions: {
     getAllTexts ({ commit }) {
-      axios.get('/api/texts')
+      return axios.get('/api/texts')
         .then(res => {
           commit('setTexts', res.data)
         })
@@ -49,7 +57,7 @@ export default new Vuex.Store({
         })
     },
     processText ({ commit }, textId) {
-      axios.post(`/api/texts/${ textId }/process`)
+      return axios.post(`/api/texts/${ textId }/process`)
         .then(res => {
           commit('setWordsToChoose', res.data);
         })
@@ -64,7 +72,7 @@ export default new Vuex.Store({
       commit('cleanWordsToChoose');
     },
     saveChoosenWords ({ commit, state }, textId) {
-      axios.post(`/api/texts/${ textId }/process/save`, {
+      return axios.post(`/api/texts/${ textId }/process/save`, {
         ...state.wordsToChoose
       })
       .then(res => {
@@ -74,6 +82,11 @@ export default new Vuex.Store({
       .catch(errors => {
         console.log(errors)
       })
+    },
+    async getCurrentTemplate ({ commit }, textId) {
+      commit('cleanCurrentTemplate')
+      const { data } = await axios.get(`/api/templates/?id=${textId}`)
+      commit('setCurrentTemplate', data);
     }
   },
   modules: {

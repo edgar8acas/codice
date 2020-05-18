@@ -1,7 +1,11 @@
 <template>
   <div class="row">
-    <router-link :to="{ name: 'TextDetails', params: { id: textId } }">{{ textId }}</router-link>
-    | {{ text.title }} | {{ text.category }} | {{ isRawContentNull }} | {{ isProcessed }}
+    <router-link :to="{ name: 'TextDetails', params: { id: textId } }">{{ textId }}</router-link> |
+    <span style="color: #157A6E; font-weight: bold">{{ text.title }}</span> |
+    <span style="color: #157A6E">{{ text.category }}</span> |
+    <span style="color: #157A6E">{{ text.grade + '°' }} grado</span> |
+    <span style="color: #157A6E">Procesado: {{ isProcessed }}</span> |
+    <span style="color: #C2C5BB">{{ isRawContentNull }}</span> 
   </div>
 </template>
 
@@ -21,10 +25,10 @@ export default {
       return `/texts/${this.text.textId}`;
     },
     isRawContentNull: function() {
-      return this.text.rawContent ? this.text.rawContent.substring(0, 10) + '...' : 'Sin contenido';
+      return this.text.rawContent ? this.text.rawContent.substring(0, 30) + '...' : 'Sin contenido';
     },
     isProcessed: function() {
-      return this.text.status === 'PROCESSED' ? 'Si' : 'No';
+      return this.text.status === 'processed' ? 'Si' : 'No';
     }
   }
 }
