@@ -7,13 +7,21 @@ import {
 import InlineWord from '@/components/InlineWord';
 export default Vue.component('text-content', {
   render: function(h) {
-    let reg = /<span.*>(.*)<\/span>/i;
+    let wordRegex = /<span.*>(.*)<\/span>/i;
+    let attribRegex = /(\S+)=["']?((?:.(?!["']?\s+(?:\S+)=|[>"']))+.)["']?/gi;
+
     const children = this.template.content.map(chunk => {
-      let regexResult = reg.exec(chunk)
-      if (regexResult) {
+      let word = wordRegex.exec(chunk);
+      let attributes = [...chunk.matchAll(attribRegex)];
+
+      if (word) {
         return h(InlineWord, {
           props: {
-            word: regexResult[1]
+            word: word[1]
+          },
+          attrs: {
+            [attributes[0][1]]: attributes[0][2],
+            [attributes[1][1]]: attributes[1][2],
           }
         });
       }

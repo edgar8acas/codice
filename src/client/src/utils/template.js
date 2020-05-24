@@ -7,9 +7,9 @@ function escapeForRegExp(str) {
 export function markEssentialWords(text, words) {
   let replacedText;
   if(words.length > 0) {
-    const next = words.shift()
+    const next = words.shift();
     const regex = new RegExp('\\b' + escapeForRegExp(next.word) + '\\b', 'gi');
-    replacedText = text.replace(regex, `<span class="identified">${next.word}</span>`)
+    replacedText = text.replace(regex, `<span class="inline-word" data-id="_${next.wordId}">${next.word}</span>`);
     return markEssentialWords(replacedText, words);
   }
   else
