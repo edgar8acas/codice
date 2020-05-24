@@ -9,32 +9,33 @@
         <span class="detail-label">Grado</span>: {{ text.grade }} <br>
         <span class="detail-label">Estado</span>: {{ status }} <br>
         <span class="detail-label">Añadido por</span>: {{ text.addedBy }} <br> <br>
-        <span class="detail-label">Palabras</span> <br>
+        <span class="detail-label">Contenido</span> <br>
         <router-link 
           :to="{ name: 'ProcessText', params: { id: text.textId }}"
           v-slot="{ href, navigate }"
           v-if="!processed">
           <a :href="href" @click="navigate" class="btn-primary"> Obtener </a>
         </router-link>
-        <a class="btn-primary" @click.prevent="displayText" v-if="processed">Ver</a>
+        <a class="btn-primary" @click.prevent="displayContent">Mostrar</a>
       </p>
     </div>
     <div class="template">
-      <h2 class="title">{{ template.title || text.title }}</h2>
-      <p class="content" v-html="template.content"></p>
+      <h2 class="title">{{ text.title }}</h2>
+      <text-content v-if="showContent"></text-content>
     </div>
   </section>
 </template>
 
 <script>
-import generateTemplate from '@/utils/template';
+import TextContent from '@/components/TextContent';
 export default {
+  components: {
+    TextContent
+  },
   data() {
     return {
       textId: this.$route.params.id,
-      template: {
-        content: ''
-      }
+      showContent: false
     }
   },
   computed: {
@@ -42,9 +43,6 @@ export default {
       return this.$store.state.texts.find(
         text => text.textId === this.textId
       )
-    },
-    currentTemplate() {
-      return this.$store.state.currentTemplate;
     },
     processed() {
       return this.text.status === 'processed' ||
@@ -65,10 +63,9 @@ export default {
     }
   },
   methods: {
-    async displayText() {
+    async displayContent() {
       await this.$store.dispatch('getCurrentTemplate', this.text.textId);
-      const { words, text } = this.currentTemplate;
-      this.template.content = generateTemplate(words, text)
+      this.showContent = true;
     }
   }
 }
