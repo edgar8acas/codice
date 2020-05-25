@@ -1,8 +1,8 @@
 <template>
   <section class="text">
-    <div class="details">
+    <div class="details side-info">
       <h2>Detalles del texto</h2>
-      <p class="text-details">
+      <p class="details-box">
         <span class="detail-label">ID</span>: {{ text.textId }} <br>
         <span class="detail-label">Título</span>: {{ text.title }} <br>
         <span class="detail-label">Categoría</span>: {{ text.category }} <br>
@@ -21,21 +21,27 @@
     </div>
     <div class="template">
       <h2 class="title">{{ text.title }}</h2>
-      <text-content v-if="showContent"></text-content>
+      <text-content class="content" v-if="showContent" @showWordInfo="showWordInfo"></text-content>
     </div>
+    <word-details class="word-details side-info" :wordId="currentWordId">
+    </word-details>
   </section>
 </template>
 
 <script>
 import TextContent from '@/components/TextContent';
+import WordDetails from '@/components/WordDetails';
+
 export default {
   components: {
-    TextContent
+    TextContent,
+    WordDetails
   },
   data() {
     return {
       textId: this.$route.params.id,
-      showContent: false
+      showContent: false,
+      currentWordId: null
     }
   },
   computed: {
@@ -62,10 +68,18 @@ export default {
       }
     }
   },
+  async created() {
+    await this.$store.dispatch('getCurrentTemplate', this.text.textId);
+  },
+  beforeDestroy() {
+    this.$store.dispatch('resetCurrentWord');
+  },
   methods: {
-    async displayContent() {
-      await this.$store.dispatch('getCurrentTemplate', this.text.textId);
+    displayContent() {
       this.showContent = true;
+    },
+    showWordInfo(wordId) {
+      this.currentWordId = wordId
     }
   }
 }
@@ -77,8 +91,8 @@ export default {
 }
 .text {
   display: grid;
-  grid-template-columns: 1fr 3fr;
-  max-width: 900px;
+  grid-template-columns: 1fr 3fr 1fr;
+  max-width: 1200px;
   column-gap: 1em;
 }
 
@@ -90,19 +104,20 @@ export default {
 .content {
   overflow: scroll;
   overflow-x: hidden;
-  max-height: 300px;
+  max-height: 500px;
+  font-size: 1.5em;
   margin: 0 10px;
   text-align: left;
   line-height: 160%;
 }
 
-.details {
+.side-info {
   max-width: 300px;
   border-radius: 5px;
   border: 1px solid #c2c2c2;
 }
 
-.text-details {
+.details-box {
   min-height: 200px;
   border-radius: 5px;
   border-top: 1px solid #c2c2c2;

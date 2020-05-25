@@ -1,17 +1,39 @@
 <template>
-  <span>{{ word }}</span>
+  <span 
+    @mouseover="onMouseOver" 
+    @mouseleave="hover = false"
+  >{{ word }}
+  </span>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      hover: false
+    }
+  },
   props: {
-    word: String
+    word: String,
+    wordId: String
+  },
+  methods: {
+    onMouseOver() {
+      this.hover = true;
+      this.$emit('mouseover', this.wordId);
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-span {
+.inline-word {
   color: red;
+  display: inline-block;
+}
+
+.inline-word:hover {
+  text-decoration: underline;
+  cursor: help;
 }
 </style>

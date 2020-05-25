@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { mapState } from 'vuex';
 import { 
   markEssentialWords,
   splitTemplate
@@ -17,11 +18,15 @@ export default Vue.component('text-content', {
       if (word) {
         return h(InlineWord, {
           props: {
-            word: word[1]
+            word: word[1],
+            wordId: attributes[1][2].substring(1)
           },
           attrs: {
             [attributes[0][1]]: attributes[0][2],
             [attributes[1][1]]: attributes[1][2],
+          },
+          on: {
+            mouseover: this.showWordInfo
           }
         });
       }
@@ -40,12 +45,18 @@ export default Vue.component('text-content', {
     any: String
   },
   created() {
-    const { words, text } = this.currentTemplate;
-    this.template.content = splitTemplate(markEssentialWords(text.rawContent, words));
+    this.template.content = 
+    splitTemplate(
+      markEssentialWords(
+        this.currentTemplateText.rawContent, [...this.currentTemplateWords]
+        ));
   },
   computed: {
-    currentTemplate() {
-      return this.$store.state.currentTemplate;
+    ...mapState(['currentTemplateWords', 'currentTemplateText'])
+  },
+  methods: {
+    showWordInfo(wordId) {
+      this.$emit('showWordInfo', wordId)
     }
   }
 })

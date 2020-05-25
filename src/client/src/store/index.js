@@ -14,7 +14,9 @@ export default new Vuex.Store({
   state: {
     texts: [],
     wordsToChoose: {},
-    currentTemplate: {}
+    currentTemplateText: '',
+    currentTemplateWords: [],
+    currentWordId: null
   },
   mutations: {
     setTexts (state, texts) {
@@ -38,12 +40,19 @@ export default new Vuex.Store({
     cleanWordsToChoose (state) {
       state.wordsToChoose = {}
     },
-    cleanCurrentTemplate (state) {
-      state.currentTemplate = {}
+    cleanCurrentWord (state) {
+      state.currentWordId = null
     },
     setCurrentTemplate (state, template) {
-      Vue.set(state.currentTemplate, 'text', template.text);
-      Vue.set(state.currentTemplate, 'words', template.words);
+      //state.currentTemplate = { ...template }
+      //state.currentTemplateWords = template.words
+      Vue.set(state, 'currentTemplateWords', [...template.words]);
+      Vue.set(state, 'currentTemplateText', template.text);
+      //Vue.set(state.currentTemplate, 'text', template.text);
+      //Vue.set(state.currentTemplate, 'words', template.words);
+    },
+    setCurrentWordId (state, wordId) {
+      state.currentWordId = wordId
     }
   },
   actions: {
@@ -84,9 +93,22 @@ export default new Vuex.Store({
       })
     },
     async getCurrentTemplate ({ commit }, textId) {
-      commit('cleanCurrentTemplate')
+      //commit('cleanCurrentTemplate')
       const { data } = await axios.get(`/api/templates/?id=${textId}`)
-      commit('setCurrentTemplate', data);
+      commit('setCurrentTemplate', {...data});
+    },
+    setCurrentWordId ({ commit }, wordId){
+      commit('setCurrentWordId', wordId);
+    },
+    resetCurrentWord ({ commit }) {
+      commit('cleanCurrentWord');
+    }
+  },
+  getters: {
+    currentWord: state => {
+      return state.currentTemplateWords.find(
+        word => word.wordId === state.currentWordId
+      ) || {}
     }
   },
   modules: {
