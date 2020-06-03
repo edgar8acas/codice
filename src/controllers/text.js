@@ -92,26 +92,26 @@ export default router
     } = req
 
     try {
-      const item = await Text.findByPk(textId);
-      if(item === null)
+      const text = await Text.findByPk(textId);
+      if(text === null)
         return res
           .status(404)
           .json({ msg: 'Texto no encontrado'})
       
-      if(item.status === 'processed' || !item.rawContent) {
+      if(text.status === 'processed' || !text.rawContent) {
         return res
           .status(500)
           .json({ msg: 'Este texto ya fue procesado o el contenido no ha sido proporcionado'});
       }
 
-      const texts = await Text.getTextsToProcess(item.textId);
+      const texts = await Text.getTextsToProcess(text.textId);
       const processed = await processTexts(texts);
       const conflicts = await Word.compareBeforeSaving(
         processed.find(processed => processed.textId === Number(textId)).essentialWords
       );
       return res
         .status(200)
-        .json({textId, ...conflicts});
+        .json({text, ...conflicts});
     } catch (error) {
       return res
         .status(500)
