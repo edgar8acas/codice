@@ -1,5 +1,5 @@
 <template>
-  <section class="text">
+  <section class="central">
     <div class="details side-info">
       <h2>Detalles del texto</h2>
       <p class="details-box">
@@ -16,7 +16,6 @@
           v-if="!processed">
           <a :href="href" @click="navigate" class="btn-primary"> Obtener </a>
         </router-link>
-        <a class="btn-primary" @click.prevent="displayContent">Mostrar</a>
       </p>
     </div>
     <div class="template">
@@ -89,11 +88,11 @@ export default {
 .identified {
   color: blue;
 }
-.text {
+.central {
   display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
-  max-width: 1200px;
-  column-gap: 1em;
+  grid-template-columns: 20% 40% 20%;
+  justify-content: center;
+  column-gap: 0.5em;
 }
 
 .template {
@@ -104,7 +103,6 @@ export default {
 .content {
   overflow: scroll;
   overflow-x: hidden;
-  max-height: 500px;
   font-size: 1.5em;
   margin: 0 10px;
   text-align: left;
@@ -112,7 +110,6 @@ export default {
 }
 
 .side-info {
-  max-width: 300px;
   border-radius: 5px;
   border: 1px solid #c2c2c2;
 }

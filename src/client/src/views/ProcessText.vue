@@ -1,40 +1,65 @@
 <template>
   <div>
-    <h2>Obtener palabras esenciales del texto {{ text.textId }}</h2>
-    <span v-if="loading">Cargando...</span>
-    <!-- -->
-    <div v-if="!processed">
-      <div class="words conflicts">
-      <span v-if="isEmpty(wordsToChoose.conflicts)">Sin conflictos</span>
-      <div v-for="(conflicts, word) in wordsToChoose.conflicts" :key="word">
-        {{ word }}
-        <ChoosingTooltip :options="conflicts" @selectedChanged="selectedChange"/>
-        </div>
-      </div>
-      <div class="words ready">
-        <div v-for="(ready, word) in wordsToChoose.ready" :key="word">
-          {{ word }}
-          <ChoosingTooltip :options="ready" @selectedChanged="selectedChange"/>
-        </div>
-      </div>
-    </div>
+    <section class="central">
+      <div class="side-info">
+        <h2 class="section-title">Instrucciones para el administrador</h2>
+    <p class="instructions">
+      Aquí se muestran todas las ocurrencias de las palabras esenciales
+      obtenidas por el procesamiento.
+      <br> <br>
+      Para generar la plantilla con la que el texto se mostrará a los usuarios que quieran visualizarla,
+      es necesario que especifiques qué significado tiene cada una de ellas. 
+      <br> <br>
+      Si ninguna de los significados es apropiado, seleccionar el último generará uno nuevo.
+      <br> <br>
+      Debes elegir un significado para cada ocurrencia antes de guardar la plantilla.
+      Por lo que <strong>todas</strong> las ocurrencias deben mostrarse en <strong style="color: green">verde</strong>.
+    </p>
+    <a class="btn-primary" @click.prevent="setDefault" v-if="!processed">Predeterminado</a>
+    <br>
     <a class="btn-primary" @click.prevent="save" v-if="!processed">Guardar</a>
+    
+      </div>
+      <div class="template">
+        <h2 class="section-title">{{ text.title }}</h2>
+        <text-content 
+          class="content" 
+          v-if="showContent" 
+          :isChoosing="true" 
+          @changeOccurrence="changeOccurrence"
+        ></text-content>
+      </div>
+      <div class="side-info">
+        <word-details class="word-details" :occurrence="occurrence">
+      </word-details>  
+        <create-word :forWord="occurrence.word"></create-word>
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
-import ChoosingTooltip from '@/components/ChoosingTooltip';
+import WordDetails from '@/components/WordDetails';
+
+import CreateWord from '@/components/CreateWord';
+import { mapState } from 'vuex';
 export default {
   components: {
-    ChoosingTooltip
+    CreateWord,
+    WordDetails
   },
   data() {
     return {
       textId: this.$route.params.id,
-      loading: false
+      loading: false,
+      showContent: true,
+      occurrence: {}
     }
   },
   computed: {
+    ...mapState([
+      'occurrences'
+    ]),
     text() {
       return this.$store.state.texts.find(
         text => text.textId === this.textId
@@ -49,9 +74,8 @@ export default {
       return this.$store.state.wordsToChoose;
     }
   },
-  mounted() {
-    this.$store.dispatch('resetWordsToChoose');
-    this.$store.dispatch('processText', this.textId);
+  async mounted() {
+    await this.$store.dispatch('processText', this.textId);
   },
   methods: {
     isEmpty(obj) {
@@ -63,18 +87,32 @@ export default {
       return true;
     },
     async save() {
-      await this.$store.dispatch('saveChoosenWords', this.textId);
+      await this.$store.dispatch('saveOccurrences', this.textId);
       this.$router.replace({name: 'Texts'})
-    },
+    },/*
+    async save() {
+      await this.$store.dispatch('saveOccurrences', this.textId);
+    },*/
     selectedChange(selected) {
       this.$store.dispatch('markAsReady', selected)
+    },
+    changeOccurrence(start) {
+      this.occurrence = this.occurrences.find(
+        o => o.start === start
+      )
+    },
+    setDefault() {
+      this.$store.dispatch('setDefault');
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
+.content {
+  height: 800px;
+}
 .words {
   max-width: 300px;
   display: flex;
@@ -87,6 +125,11 @@ export default {
     border-radius: 3px;
     cursor: pointer;
   }  
+}
+
+.instructions {
+  text-align: left;
+  padding: 10px;
 }
 
 [class~="conflicts"] > div {

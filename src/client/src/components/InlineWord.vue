@@ -1,7 +1,7 @@
 <template>
   <span 
-    @mouseover="onMouseOver" 
-    @mouseleave="hover = false"
+    @click="select"
+    :class="'inline-word ' + occurrence.markedStatus"
   >{{ word }}
   </span>
 </template>
@@ -10,17 +10,23 @@
 export default {
   data() {
     return {
-      hover: false
     }
   },
   props: {
-    word: String,
-    wordId: String
+    occurrence: Object
+  },
+  computed: {
+    word() {
+      return this.occurrence.word;
+    },
+    start() {
+      return this.occurrence.start;
+    }
   },
   methods: {
-    onMouseOver() {
+    select() {
       this.hover = true;
-      this.$emit('mouseover', this.wordId);
+      this.$emit('changeOccurrence', this.start);
     }
   }
 }
@@ -35,5 +41,15 @@ export default {
 .inline-word:hover {
   text-decoration: underline;
   cursor: help;
+}
+
+.inline-word.conflicts {
+  color: white;
+  background-color: red;
+}
+
+.inline-word.ready {
+  color: white;
+  background-color: green;
 }
 </style>

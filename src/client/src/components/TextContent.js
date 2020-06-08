@@ -1,62 +1,51 @@
 import Vue from 'vue';
 import { mapState } from 'vuex';
-import { 
-  markEssentialWords,
-  splitTemplate
-} from '@/utils/template';
-
+import Occurrence from '@/utils/occurrence';
 import InlineWord from '@/components/InlineWord';
+
 export default Vue.component('text-content', {
   render: function(h) {
-    let wordRegex = /<span.*>(.*)<\/span>/i;
-    let attribRegex = /(\S+)=["']?((?:.(?!["']?\s+(?:\S+)=|[>"']))+.)["']?/gi;
 
-    const children = this.template.content.map(chunk => {
-      let word = wordRegex.exec(chunk);
-      let attributes = [...chunk.matchAll(attribRegex)];
+    const children = this.tokenizedContent.map(chunk => {
 
-      if (word) {
+      if (typeof chunk === 'string') return chunk;
+      if (chunk instanceof Occurrence && chunk.textId !== undefined) {
         return h(InlineWord, {
           props: {
-            word: word[1],
-            wordId: attributes[1][2].substring(1)
-          },
-          attrs: {
-            [attributes[0][1]]: attributes[0][2],
-            [attributes[1][1]]: attributes[1][2],
+            occurrence: chunk
           },
           on: {
-            mouseover: this.showWordInfo
+            changeOccurrence: this.changeOccurrence
           }
         });
       }
-      return chunk;
+      return h('br')
     });
+
     return h('p', children);
   },
   data() {
     return {
-      template: {
-        content: ''
-      }
+      content: []
     }
   },
   props: {
-    any: String
+    isChoosing: {
+      type: Boolean,
+      default: false
+    }
   },
   created() {
-    this.template.content = 
-    splitTemplate(
-      markEssentialWords(
-        this.currentTemplateText.rawContent, [...this.currentTemplateWords]
-        ));
+    
   },
   computed: {
-    ...mapState(['currentTemplateWords', 'currentTemplateText'])
+    ...mapState([
+      'tokenizedContent'
+    ])
   },
   methods: {
-    showWordInfo(wordId) {
-      this.$emit('showWordInfo', wordId)
+    changeOccurrence(start) {
+      this.$emit('changeOccurrence', start);
     }
   }
 })

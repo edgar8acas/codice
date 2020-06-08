@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Axios from 'axios'
+import { getTokenizedContent, findOccurrencesInText } from '@/utils/template';
 
 Vue.config.productionTip = false
 
@@ -16,6 +17,8 @@ export default new Vuex.Store({
     wordsToChoose: {},
     currentTemplateText: '',
     currentTemplateWords: [],
+    tokenizedContent: [],
+    occurrences: [],
     currentWordId: null
   },
   mutations: {
@@ -23,7 +26,7 @@ export default new Vuex.Store({
       state.texts = texts
     },
     setWordsToChoose (state, words) {
-      state.wordsToChoose = words
+      state.wordsToChoose = Object.assign({}, state.wordsToChoose, words);
     },
     moveOrUpdateReady (state, selected) {
       // console.log('function')
@@ -44,18 +47,64 @@ export default new Vuex.Store({
       state.currentWordId = null
     },
     setCurrentTemplate (state, template) {
-      //state.currentTemplate = { ...template }
-      //state.currentTemplateWords = template.words
       Vue.set(state, 'currentTemplateWords', [...template.words]);
       Vue.set(state, 'currentTemplateText', template.text);
-      //Vue.set(state.currentTemplate, 'text', template.text);
-      //Vue.set(state.currentTemplate, 'words', template.words);
     },
     setCurrentWordId (state, wordId) {
       state.currentWordId = wordId
+    },
+    setOccurrences (state, occurrences) {
+      state.occurrences = occurrences;
+    },
+    setTokenizedContent (state, tokens) {
+      state.tokenizedContent = tokens;
+    },
+    updateSelectedWord (state, { occurrenceStart, wordId }) {
+      let ocurrence = state.occurrences.find(o => o.start === occurrenceStart);
+      /*let oldSelected = ocurrence.relatedWords.find(w => w.selected === true) || {};
+      delete oldSelected.selected;
+      */if (wordId === "undefined") wordId = undefined;
+      // Number("undefined") === 0 -> (truthy)
+      // Number(undefined) === NaN -> (falsy)
+      let newSelected = ocurrence.relatedWords.find(
+        w => w.wordId === (Number(wordId) || undefined)
+      );
+      /*newSelected.selected = true;*/
+      ocurrence.selectedWordId = newSelected.wordId;
+    },
+    updateMarkedStatus (state, { occurrenceStart, markedStatus }) {
+      let ocurrence = state.occurrences.find(o => o.start === occurrenceStart);
+      ocurrence.markedStatus = markedStatus;
+    },
+    addRelatedWord (state, word) {
+      let occurrence = state.occurrences.find(o => o.word === word.word);
+      occurrence.relatedWords.push(word);
+    },
+    setDefaultOccurrences (state) {
+      state.occurrences.forEach(o => {
+        o.selectDefault();
+      })
+    },
+    setSelectedForEveryOccurrence(state, occurrence) {
+      state.occurrences.forEach(o => {
+        if( o.word === occurrence.word) {
+          o.selectedWordId = occurrence.selectedWordId;
+        }
+      })
     }
   },
   actions: {
+    saveOccurrences({ state }, textId) {
+      return axios.post(`/api/texts/${ textId }/process/save`, {
+        occurrences: state.occurrences
+      })
+      .then(res => {
+        console.log(res)
+      })
+      .catch(errors => {
+        console.log(errors)
+      })
+    },
     getAllTexts ({ commit }) {
       return axios.get('/api/texts')
         .then(res => {
@@ -65,20 +114,16 @@ export default new Vuex.Store({
           console.log(errors)
         })
     },
-    processText ({ commit }, textId) {
-      return axios.post(`/api/texts/${ textId }/process`)
-        .then(res => {
-          commit('setWordsToChoose', res.data);
-        })
-        .catch(errors => {
-          console.log(errors)
-        })
+    async processText ({ commit }, textId) {
+      const res = await axios.post(`/api/texts/${ textId }/process`)
+      commit('setWordsToChoose', res.data);
+      const occurrences = findOccurrencesInText(res.data);
+      commit('setOccurrences', occurrences);
+      const tokenizedContent = getTokenizedContent(occurrences, res.data.text);
+      commit('setTokenizedContent', tokenizedContent);
     },
     markAsReady ({ commit }, marked) {
       commit('moveOrUpdateReady', marked)
-    },
-    resetWordsToChoose ({ commit }) {
-      commit('cleanWordsToChoose');
     },
     saveChoosenWords ({ commit, state }, textId) {
       return axios.post(`/api/texts/${ textId }/process/save`, {
@@ -93,8 +138,7 @@ export default new Vuex.Store({
       })
     },
     async getCurrentTemplate ({ commit }, textId) {
-      //commit('cleanCurrentTemplate')
-      const { data } = await axios.get(`/api/templates/?id=${textId}`)
+      const { data } = await axios.get(`/api/templates/?id=${textId}`);
       commit('setCurrentTemplate', {...data});
     },
     setCurrentWordId ({ commit }, wordId){
@@ -102,6 +146,22 @@ export default new Vuex.Store({
     },
     resetCurrentWord ({ commit }) {
       commit('cleanCurrentWord');
+    },
+    updateSelectedWord ({ commit }, updatedData) {
+      commit('updateSelectedWord', updatedData);
+    },
+    updateMarkedStatus ({ commit }, updatedData) {
+      commit('updateMarkedStatus', updatedData);
+    },
+    async saveWord ({ commit }, word) {
+      const { data } = await axios.post(`/api/words`, word)
+      commit('addRelatedWord', data);
+    },
+    setDefault ({ commit }) {
+      commit('setDefaultOccurrences');
+    },
+    setSelectedForEveryOccurrence({ commit }, occurrence) {
+      commit('setSelectedForEveryOccurrence', occurrence);
     }
   },
   getters: {
@@ -115,22 +175,3 @@ export default new Vuex.Store({
   }
 })
 
-// let old = {
-//   state: {
-//     texts: [],
-//     wordsToChoose: {}
-//   },
-//   setTexts(texts) {
-//     console.log('setTexts action triggered with', texts);
-//     this.state.texts = texts;
-//   },
-//   setWordsToChoose(wordsToChoose) {
-//     console.log('setWordsToChoose action triggered with', wordsToChoose);
-//     this.state.wordsToChoose = wordsToChoose;
-//   },
-//   updateWordsToChoose(updated) {
-//     delete this.state.wordsToChoose.conflicts[updated[0].word]
-//     this.state.wordsToChoose[updated[0].word] = updated
-//     console.log('updateWordsToChoose action triggered, new wordsToChoose', this.state.wordsToChoose);
-//   }
-// }
