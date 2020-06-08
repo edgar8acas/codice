@@ -67,12 +67,6 @@ export default {
       }
     }
   },
-  async created() {
-    await this.$store.dispatch('getCurrentTemplate', this.text.textId);
-  },
-  beforeDestroy() {
-    this.$store.dispatch('resetCurrentWord');
-  },
   methods: {
     displayContent() {
       this.showContent = true;

@@ -35,9 +35,6 @@ export default Vue.component('text-content', {
       default: false
     }
   },
-  created() {
-    
-  },
   computed: {
     ...mapState([
       'tokenizedContent'

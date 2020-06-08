@@ -5,30 +5,13 @@ function escapeForRegExp(str) {
   return str.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&');
 }
 
-/** Encloses each text's essential word in a span element, returning the modified text content */
-export function markEssentialWords(text, words) {
-  const isConflicts = words.conflicts !== undefined && words.ready !== undefined;
-  const mWords = prepareWordsArray(words, isConflicts);
-  
-  const markedContent = replaceWithSpan(text, mWords, isConflicts);
-  return markedContent;
-}
-
-function replaceWithSpan(text, words, isConflicts = false) {
-  let replacedText = "";
-  if(words.length > 0) {
-    const next = words.shift();
-    if(isConflicts) {
-      const regex = new RegExp('\\b' + escapeForRegExp(next[1].word) + '\\b', 'gi');
-      replacedText = text.replace(regex, `<span class="inline-word ${next[0]}" data-id="_${next[1].wordId}">${next[1].word}</span>`);
-    } else {
-      const regex = new RegExp('\\b' + escapeForRegExp(next.word) + '\\b', 'gi');
-      replacedText = text.replace(regex, `<span class="inline-word" data-id="_${next.wordId}">${next.word}</span>`);
-    }
-    return replaceWithSpan(replacedText, words, isConflicts);
-  }
-  else
-    return text;
+/** Returns an array of occurrences, new lines or strings representing chunks of the text.*/
+export function getTokenizedContent(wordOccurrences, text) {
+  const newLineOccurrences = findNewLinesInText(text);
+  const tokens = [...wordOccurrences, ...newLineOccurrences];
+  tokens.sort((a, b) => a.start - b.start);
+  const tokenizedContent = splitContentFromTokens(tokens, text);
+  return tokenizedContent;
 }
 
 /** In case words is a conflict/ready structure, transform it to array of words */
@@ -51,8 +34,9 @@ function prepareWordsArray(words, isConflicts = false) {
   return words;
 }
 
-/** It receives the modified content, and returns an array where each element can be either a chunk of the content
- * or a hypermarked essential word, in the order they appear in text.
+/** It receives the text content, ordered new lines and occurrences tokens,
+ * and returns an array where each element can be either a chunk of the content text,
+ * an occurrence or a new line in the order they appear in text.
  */
 export function splitContentFromTokens(tokens, text) {
   if(Array.isArray(tokens)) {
@@ -87,14 +71,6 @@ export function splitContentFromTokens(tokens, text) {
   }
   throw new TypeError('Occurrences is not an array')
 
-}
-
-export function getTokenizedContent(wordOccurrences, text) {
-  const newLineOccurrences = findNewLinesInText(text);
-  const tokens = [...wordOccurrences, ...newLineOccurrences];
-  tokens.sort((a, b) => a.start - b.start);
-  const tokenizedContent = splitContentFromTokens(tokens, text);
-  return tokenizedContent;
 }
 
 export function findOccurrencesInText({text, conflicts, ready}) {

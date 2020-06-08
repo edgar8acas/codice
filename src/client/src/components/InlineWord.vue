@@ -1,6 +1,6 @@
 <template>
   <span 
-    @click="select"
+    @click="selectMeaning"
     :class="'inline-word ' + occurrence.markedStatus"
   >{{ word }}
   </span>
@@ -24,7 +24,7 @@ export default {
     }
   },
   methods: {
-    select() {
+    selectMeaning() {
       this.hover = true;
       this.$emit('changeOccurrence', this.start);
     }

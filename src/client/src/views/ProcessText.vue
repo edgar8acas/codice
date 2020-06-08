@@ -18,13 +18,11 @@
     <a class="btn-primary" @click.prevent="setDefault" v-if="!processed">Predeterminado</a>
     <br>
     <a class="btn-primary" @click.prevent="save" v-if="!processed">Guardar</a>
-    
       </div>
       <div class="template">
         <h2 class="section-title">{{ text.title }}</h2>
         <text-content 
-          class="content" 
-          v-if="showContent" 
+          class="content"
           :isChoosing="true" 
           @changeOccurrence="changeOccurrence"
         ></text-content>
@@ -40,9 +38,9 @@
 
 <script>
 import WordDetails from '@/components/WordDetails';
-
 import CreateWord from '@/components/CreateWord';
 import { mapState } from 'vuex';
+
 export default {
   components: {
     CreateWord,
@@ -52,7 +50,6 @@ export default {
     return {
       textId: this.$route.params.id,
       loading: false,
-      showContent: true,
       occurrence: {}
     }
   },
@@ -69,9 +66,6 @@ export default {
       return this.text.status === 'processed' ||
              this.text.status === 'incomplete' 
              ? true : false
-    },
-    wordsToChoose() {
-      return this.$store.state.wordsToChoose;
     }
   },
   async mounted() {
@@ -89,12 +83,6 @@ export default {
     async save() {
       await this.$store.dispatch('saveOccurrences', this.textId);
       this.$router.replace({name: 'Texts'})
-    },/*
-    async save() {
-      await this.$store.dispatch('saveOccurrences', this.textId);
-    },*/
-    selectedChange(selected) {
-      this.$store.dispatch('markAsReady', selected)
     },
     changeOccurrence(start) {
       this.occurrence = this.occurrences.find(
