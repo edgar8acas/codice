@@ -121,8 +121,7 @@ export default router
   .post('/:id/process/save', async (req, res) => {
     const {
       body: {
-        conflicts,
-        ready
+        occurrences
       },
       params: { id: textId }
     } = req
@@ -140,19 +139,20 @@ export default router
         .json({ msg: 'Este texto ya fue procesado o el contenido no ha sido proporcionado'});
     }
 
-    if(!isObjectEmpty(conflicts))
-      return res
-        .status(400)
-        .json({msg: 'No es posible guardar si aún existen conflictos'})
-    
-    try {
+    //TODO: Validate occurrences
+
       const transaction = await sequelize.transaction();
-      const saved = await Word.saveChoosen(ready);
-      const toSaveInTemplate = saved.map(
-        s => {
-          return { wordId: s[0].wordId, textId: Number(textId) }
+    try {
+      const toSaveInTemplate = occurrences.map(
+        o => {
+          return { 
+            wordId: o.selectedWordId, 
+            textId: o.textId,
+            start: o.start,
+            ending: o.ending 
+          }
         })
-      const savedInTemplate = await Template.bulkCreate(toSaveInTemplate)
+      const savedInTemplate = await Template.bulkCreate(toSaveInTemplate);
 
       let text = await Text.findByPk(textId);
       text = await text.update({

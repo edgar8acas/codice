@@ -30,9 +30,11 @@ CREATE TABLE words (
 );
 
 CREATE TABLE template_words (
+    template_id serial PRIMARY KEY,
+    start integer NOT NULL,
+    ending integer NOT NULL,
     word_id integer REFERENCES words (word_id),
     text_id integer REFERENCES texts (text_id),
-    PRIMARY KEY (word_id, text_id),
     created_at timestamp NOT NULL DEFAULT now(),
     updated_at timestamp NOT NULL
 );

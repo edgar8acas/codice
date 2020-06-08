@@ -56,9 +56,9 @@ module.exports = function(sequelize, DataTypes) {
         .map(c => c.dataValues);
       
       if(conflicts.length > 0) {
-        result.conflicts[word] = [...conflicts, {word}];
+        result.conflicts[word] = [...conflicts];
       } else {
-        result.ready[word] = [{word, selected: true }];
+        result.ready[word] = [];
       }
     });
 

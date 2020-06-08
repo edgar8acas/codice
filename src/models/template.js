@@ -3,7 +3,21 @@ import { Word, Text } from '@models';
 
 module.exports = function (sequelize, DataTypes) {
   const Template = sequelize.define(
-    'Template', {},
+    'Template', {
+      templateId: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
+      start: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      ending: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      }
+    },
     {
       tableName: 'template_words',
       freezeTableNames: true,
