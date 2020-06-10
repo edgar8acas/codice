@@ -6,6 +6,7 @@ import {
   findOccurrencesInText,
   generateOccurrencesFromTemplate
 } from '@/utils/template';
+import getExclusiveWords from '@/utils/filter_processed';
 
 Vue.config.productionTip = false
 
@@ -20,7 +21,8 @@ export default new Vuex.Store({
     texts: [],
     tokenizedContent: [],
     occurrences: [],
-    dictionaryWords: []
+    dictionaryWords: [],
+    exclusivo: false
   },
   mutations: {
     setTexts (state, texts) {
@@ -74,6 +76,9 @@ export default new Vuex.Store({
       );
       console.log(dw)
       dw = Object.assign({}, dictionaryWord);
+    },
+    setOnlyExclusive(state, value) {
+      state.exclusivo = value
     }
   },
   actions: {
@@ -97,9 +102,10 @@ export default new Vuex.Store({
           console.log(errors)
         })
     },
-    async processText ({ commit }, textId) {
-      const res = await axios.post(`/api/texts/${ textId }/process`)
-      const occurrences = findOccurrencesInText(res.data);
+    async processText ({ state, commit }, textId) {
+      const res = await axios.post(`/api/texts/${ textId }/process`);
+      let processed = state.exclusivo ? getExclusiveWords(res.data) : res.data;
+      const occurrences = findOccurrencesInText(processed);
       commit('setOccurrences', occurrences);
       const tokenizedContent = getTokenizedContent(occurrences, res.data.text);
       commit('setTokenizedContent', tokenizedContent);
@@ -138,7 +144,10 @@ export default new Vuex.Store({
       const { data: newDictionaryWord } = await axios.put(`/api/dictionary-words/`, dictionaryWord);
       console.log(dictionaryWord, newDictionaryWord)
       commit('changeLearntStatus', newDictionaryWord);
-    }
+    },
+    setProcessingOptions ({ commit }, value) {
+      commit('setOnlyExclusive', value);
+    },
   },
   getters: {
     learntWords (state) {

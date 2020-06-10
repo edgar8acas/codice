@@ -10,6 +10,9 @@
         <span class="detail-label">Estado</span>: {{ status }} <br>
         <span class="detail-label">Añadido por</span>: {{ text.addedBy }} <br> <br>
         <span class="detail-label">Contenido</span> <br>
+        <input type="checkbox" name="exclusivo" id="exclusivo" v-model="onlyExclusive" v-if="!processed">
+        <label for="exclusivo">Solo léxico exclusivo</label>
+        <br>
         <router-link 
           :to="{ name: 'ProcessText', params: { id: text.textId }}"
           v-slot="{ href, navigate }"
@@ -40,7 +43,8 @@ export default {
     return {
       textId: this.$route.params.id,
       showContent: false,
-      currentWordId: null
+      currentWordId: null,
+      onlyExclusive: false
     }
   },
   computed: {
@@ -65,6 +69,14 @@ export default {
         default:
           return 'Desconocido'
       }
+    },
+  },
+  mounted() {
+    this.$store.dispatch('setProcessingOptions', false);
+  },
+  watch: {
+    onlyExclusive(newVal) {
+      this.$store.dispatch('setProcessingOptions', newVal);
     }
   },
   methods: {
