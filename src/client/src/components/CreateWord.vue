@@ -1,13 +1,13 @@
 <template>
   <div class="form">
-    <h3>Nueva palabra</h3>
+    <h3>Nueva definición</h3>
     <div class="control">
       <label for="word" class="label">Palabra</label>
-      <input type="text" v-model="word.word" id="word">
+      <input type="text" v-model="forWord" id="word" disabled>
     </div>
     <div class="control">
       <label for="definition" class="label">Definición</label>
-      <input type="text" v-model="word.definition" id="definition">
+      <input type="text" v-model="definition" id="definition">
     </div>
     <button type="submit" @click.prevent="saveWord">Guardar</button>
   </div>
@@ -20,15 +20,15 @@ export default {
   },
   data() {
     return {
-      word: {
-        definition: '',
-        word: this.forWord
-      }
+      definition: ''
     }
   },
   methods: {
     saveWord() {
-      this.$store.dispatch('saveWord', this.word);
+      this.$store.dispatch('saveWord', {
+        word: this.forWord,
+        definition: this.definition
+      });
     }
   }
 }
@@ -36,11 +36,11 @@ export default {
 
 <style lang="scss" scoped>
 .form {
-
+  text-align: center;
 }
 
 .control {
- 
+  margin-bottom: 20px;
 }
 
 .label {

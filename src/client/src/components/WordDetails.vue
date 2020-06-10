@@ -108,10 +108,6 @@ export default {
   background-color: #d9d9d9;
   .info {
     box-sizing: border-box;
-    padding: 5px;
-    border-radius: 5px;
-    margin-left: 10px;
-    background-color: white;
     text-align: left;
     .definition {
       display: block;

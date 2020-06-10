@@ -34,8 +34,20 @@ export default {
 
 <style lang="scss" scoped>
 .inline-word {
-  color: red;
   display: inline-block;
+  border-radius: 5px;
+}
+
+.inline-word.learnt {
+  color: #246EB9;
+  text-shadow: #2BD9FE 1px 0 10px;
+  font-weight: bold;
+}
+
+.inline-word.unlearnt {
+  color: #F06543;
+  text-shadow: #c05136 1px 0 10px;
+  font-weight: bold;
 }
 
 .inline-word:hover {

@@ -5,7 +5,8 @@
     <span style="color: #157A6E">{{ text.category }}</span> |
     <span style="color: #157A6E">{{ text.grade + '°' }} grado</span> |
     <span style="color: #157A6E">Procesado: {{ isProcessed }}</span> |
-    <span style="color: #C2C5BB">{{ isRawContentNull }}</span> 
+    <span style="color: #C2C5BB">{{ isRawContentNull }}</span> |
+    <router-link :to="{ name: 'Learn', params: { id: textId } }">{{ 'Aprender' }}</router-link>
   </div>
 </template>
 

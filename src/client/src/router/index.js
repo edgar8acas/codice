@@ -20,6 +20,11 @@ Vue.use(VueRouter)
     name: 'ProcessText',
     component: () => import(/* webpackChunkName: "process-text" */ '@/views/ProcessText.vue')
   },
+  {
+    path: '/learn/:id',
+    name: 'Learn',
+    component: () => import(/* webpackChunkName: "process-text" */ '@/views/Learn.vue')
+  },
 ]
 
 const router = new VueRouter({

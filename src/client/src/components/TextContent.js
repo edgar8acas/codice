@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { mapState } from 'vuex';
 import Occurrence from '@/utils/occurrence';
+import UserOccurrence from '@/utils/user_occurrence';
 import InlineWord from '@/components/InlineWord';
 
 export default Vue.component('text-content', {
@@ -9,7 +10,7 @@ export default Vue.component('text-content', {
     const children = this.tokenizedContent.map(chunk => {
 
       if (typeof chunk === 'string') return chunk;
-      if (chunk instanceof Occurrence && chunk.textId !== undefined) {
+      if ((chunk instanceof Occurrence || chunk instanceof UserOccurrence) && chunk.textId !== undefined) {
         return h(InlineWord, {
           props: {
             occurrence: chunk

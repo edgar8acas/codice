@@ -1,4 +1,5 @@
 import Occurrence from '@/utils/occurrence';
+import UserOccurrence from '@/utils/user_occurrence';
 
 //Will escape the string passed to it so it's mached verbatim as it was passed
 function escapeForRegExp(str) {
@@ -55,7 +56,7 @@ export function splitContentFromTokens(tokens, text) {
       if(j === tokens.length - 1) {
         return [
           text.rawContent.substring(start, end), 
-          token.relatedWords[2], 
+          token.relatedWords ? token.relatedWords[2] : token.word, 
           text.rawContent.substring(token.ending, text.rawContent.length + 1)
         ];
       }
@@ -103,4 +104,19 @@ function findNewLinesInText(text) {
     })
   }
   return newLines;
+}
+
+export function generateOccurrencesFromTemplate(userOccurrences, dictionaryWords) {
+  return userOccurrences.map(o => {
+    return new UserOccurrence({
+      Word: o.Word,
+      start: o.start,
+      ending: o.ending,
+      textId: o.textId,
+      userId: o.userId,
+      userOccurrenceId: o.userOccurrenceId
+    }, 
+      dictionaryWords.find(dw => dw.Word.wordId === o.Word.wordId)
+    )
+  })
 }
