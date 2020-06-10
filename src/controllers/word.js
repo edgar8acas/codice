@@ -11,8 +11,9 @@ export default router
     try {
       //TODO: Filter fields
       item = await Word.create(body);
-      item = await item.save();
+      
     } catch(e) {
+      console.log(e)
       return res
         .status(500)
         .json({ msg: e })
