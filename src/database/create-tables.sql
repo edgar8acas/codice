@@ -39,12 +39,22 @@ CREATE TABLE template_words (
     updated_at timestamp NOT NULL
 );
 
-CREATE TABLE dictionary_words (
+CREATE TABLE user_occurrences (
+    user_occurrence_id serial PRIMARY KEY,
     word_id integer REFERENCES words (word_id),
     text_id integer REFERENCES texts (text_id),
     user_id integer REFERENCES users (user_id),
-    PRIMARY KEY (word_id, user_id, text_id),
-    is_learned bool,
+    start integer NOT NULL,
+    ending integer NOT NULL,
+    created_at timestamp NOT NULL DEFAULT now(),
+    updated_at timestamp NOT NULL
+);
+
+CREATE TABLE dictionary_words (
+    dictionary_id serial PRIMARY KEY,
+    word_id integer REFERENCES words (word_id),
+    user_id integer REFERENCES users (user_id),
+    is_learned bool DEFAULT false,
     created_at timestamp NOT NULL DEFAULT now(),
     updated_at timestamp NOT NULL
 );

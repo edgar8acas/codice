@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS user_occurrences;
 DROP TABLE IF EXISTS dictionary_words;
 DROP TABLE IF EXISTS template_words;
 DROP TABLE IF EXISTS texts;

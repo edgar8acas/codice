@@ -1,0 +1,1 @@
+INSERT INTO users (username, updated_at) VALUES ('Frank Valkyria', now());

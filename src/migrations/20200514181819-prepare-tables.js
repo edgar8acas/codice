@@ -9,8 +9,12 @@ module.exports = {
     try {
       const tables = await fs.readFile(__dirname + '/../database/create-tables.sql');
       const texts = await fs.readFile(__dirname + '/../database/insert-texts.sql');
+      const users = await fs.readFile(__dirname + '/../database/insert-users.sql');
+      const words = await fs.readFile(__dirname + '/../database/insert-words.sql');
       await queryInterface.sequelize.query(tables.toString());
       await queryInterface.sequelize.query(texts.toString());
+      await queryInterface.sequelize.query(users.toString());
+      await queryInterface.sequelize.query(words.toString());
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();
