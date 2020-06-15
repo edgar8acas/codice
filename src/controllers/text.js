@@ -2,26 +2,16 @@ import express from 'express';
 import multer from 'multer';
 import { Text, Word, Template, sequelize } from '@models';
 import { processTexts } from '@processing';
-import { isObjectEmpty } from '@utils';
+import { paginate } from '@utils';
 
 const router = express.Router();
 const upload = multer();
 
 export default router
-  .get('/', async (req, res) => {
-    try {
-      const items = await Text.findAll();
-
-      return res
-        .status(200)
-        .json(items)
-
-    } catch(error) {
-
-      return res
-        .status(500)
-        .json({ error })
-    }
+  .get('/', paginate(Text), async (req, res) => {
+    return res
+      .status(200)
+      .json(res.paginatedResults)
   })
   .get('/:id', async (req, res) => {
     const { 
