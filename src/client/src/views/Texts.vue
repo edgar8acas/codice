@@ -1,19 +1,31 @@
 <template>
   <div class="home">
     <div class="info"></div>
-    <TextsTable class="texts" :type="'texts'"/>
-    <div class="more-info"></div>
+    <catalog-table
+      api-url="http://localhost:3000/api/texts"
+      :fields="fields"
+    >
+    </catalog-table>
+    <div class="more-info">
+    </div>
+    
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import TextsTable from '@/components/Table.vue'
+import CatalogTable from '@/components/CatalogTable.vue'
+import FieldDefs from '@/components/FieldDefs.js'
 
 export default {
   name: 'Home',
   components: {
-    TextsTable
+    CatalogTable
+  },
+  data() {
+    return {
+      fields: FieldDefs
+    }
   }
 }
 </script>

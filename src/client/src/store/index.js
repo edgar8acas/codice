@@ -93,14 +93,8 @@ export default new Vuex.Store({
         console.log(errors)
       })
     },
-    getAllTexts ({ commit }) {
-      return axios.get('/api/texts')
-        .then(res => {
-          commit('setTexts', res.data)
-        })
-        .catch(errors => {
-          console.log(errors)
-        })
+    setTexts ({ commit }, texts) {
+      commit('setTexts', texts);
     },
     async processText ({ state, commit }, textId) {
       const res = await axios.post(`/api/texts/${ textId }/process`);
