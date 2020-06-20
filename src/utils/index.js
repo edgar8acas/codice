@@ -9,36 +9,43 @@ export function isObjectEmpty(obj) {
 
 export function paginate(model) {
   return async (req, res, next) => {
-    let { page, limit } = req.query;
-    [page, limit] = [page, limit].map(Number);
 
-    const start = (page - 1) * limit;
-    const end = page * limit;
+    let { page, per_page } = req.query;
+    if (!page || !per_page) {
+      page = 1,
+      per_page = 3
+    }
+    
+    [page, per_page] = [page, per_page].map(Number);
+
+    const start = (page - 1) * per_page;
+    const end = page * per_page;
 
     const result = {}
-    
+    console.log(page, per_page)
     try {
       const { count, rows } = await model.findAndCountAll({
         order: ['textId'],
         offset: start,
-        limit: end - start
+        limit: per_page
       });
-
-      if(start > 0) {
-        result.previous = { 
-          page: page - 1, 
-          limit 
-        };
-      }
-  
-      if(end < count) {
-        result.next = { 
-          page: page + 1, 
-          limit 
-        };
-      }
       
-      result.items = rows
+      result.total = count;
+      result.per_page = per_page;
+      result.current_page = page;
+      result.last_page = Math.ceil(count / per_page);
+
+      result.previous_page_url = start > 0
+        ? `http://localhost:3000/api/texts?page=${page - 1}&per_page=${per_page}`
+        : null;
+
+      result.next_page_url = end < count 
+        ? `http://localhost:3000/api/texts?page=${page + 1}&per_page=${per_page}` 
+        : null;
+      
+      result.from = start + 1;
+      result.to = end;
+      result.data = rows;
       res.paginatedResults = result;
       next()
 
