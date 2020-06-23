@@ -23,8 +23,13 @@ Vue.use(VueRouter)
   {
     path: '/learn/:id',
     name: 'Learn',
-    component: () => import(/* webpackChunkName: "process-text" */ '@/views/Learn.vue')
+    component: () => import(/* webpackChunkName: "learn-text" */ '@/views/Learn.vue')
   },
+  {
+    path: '/learn/add',
+    name: 'AddText',
+    component: () => import(/* webpackChunkName: "add-text" */ '@/views/AddText.vue')
+  }
 ]
 
 const router = new VueRouter({

@@ -22,7 +22,9 @@ export default new Vuex.Store({
     tokenizedContent: [],
     occurrences: [],
     dictionaryWords: [],
-    exclusivo: false
+    exclusivo: false,
+    errors: [],
+    success: []
   },
   mutations: {
     setTexts (state, texts) {
@@ -79,6 +81,12 @@ export default new Vuex.Store({
     },
     setOnlyExclusive(state, value) {
       state.exclusivo = value
+    },
+    addError(state, error) {
+      state.errors = [error];
+    },
+    addSuccess(state, data) {
+      state.success = [data];
     }
   },
   actions: {
@@ -142,6 +150,18 @@ export default new Vuex.Store({
     setProcessingOptions ({ commit }, value) {
       commit('setOnlyExclusive', value);
     },
+    addText ({ commit }, text) {
+      axios.post(`/api/texts/`, text)
+      .then(data => {
+        console.log(data)
+        commit('addSuccess', data);
+      })
+      .catch(error => {
+        if(error.response) {
+          commit('addError', error.response.data.error);
+        }
+      })
+    }
   },
   getters: {
     learntWords (state) {
