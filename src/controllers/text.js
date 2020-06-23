@@ -3,6 +3,7 @@ import multer from 'multer';
 import { Text, Word, Template, sequelize } from '@models';
 import { processTexts } from '@processing';
 import { paginate } from '@utils';
+import { validateText } from '@utils/validation';
 
 const router = express.Router();
 const upload = multer();
@@ -33,20 +34,20 @@ export default router
   })
   .post('/', async (req, res) => {
     const { body } = req;
-    let item;
+
     try {
-      //TODO: Filter fields
-      item = await Text.create(body);
-      item = await item.save();
+      const item = await Text.create(
+        validateText(body)
+      );
+
+      return res
+      .status(201)
+      .json(item);
     } catch(e) {
       return res
         .status(500)
-        .json({ msg: e })
+        .json({ error: e.message })
     }
-
-    return res
-      .status(201)
-      .json(item);
   })
   .put('/:id', (req, res) => {
 
