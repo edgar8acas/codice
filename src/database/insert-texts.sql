@@ -1,6 +1,4 @@
-INSERT INTO public.texts (text_id, title, category, added_by, status, grade, raw_content, created_at, updated_at) VALUES (1, 'My new text', 'Español', 1, 'unprocessed', 3, 'Los Bancos
-
-Un banco es una institución financiera que se encarga de la administración de dineros además de otorgar préstamos. Por otro lado, el sistema bancario, es un conjunto de instituciones que dentro de la economía realiza el servicio de banco.
+INSERT INTO public.texts (text_id, title, category, added_by, status, grade, raw_content, created_at, updated_at) VALUES (1, 'Los bancos', 'Español', 1, 'unprocessed', 3, 'Un banco es una institución financiera que se encarga de la administración de dineros además de otorgar préstamos. Por otro lado, el sistema bancario, es un conjunto de instituciones que dentro de la economía realiza el servicio de banco.
 
 Lo que podemos contarte es que el primer banco moderno fue fundado en Génova, Italia en el año 1406, su nombre era el Banco di San Giorgio; apareciendo así los primeros bancos en la época del renacimiento.
 
@@ -23,9 +21,7 @@ Se clasifican también según el tipo de operación, estos son:
     Bancos de segundo piso: aquellos que distribuyen los recursos financieros al mercado a través de otras instituciones financieras que actúan como intermediarios.
 
 Dentro de este sistema trabajan una red de personas con conocimientos adecuados para pertenecer a esta entidad. Estos son guardias, cajeros, ejecutivos, contadores, auditores, etc.; trabajadores que hacen que el banco funcione día a día.', '2020-05-14 19:30:50.941383', '2020-05-14 19:30:50.941383');
-INSERT INTO public.texts (text_id, title, category, added_by, status, grade, raw_content, created_at, updated_at) VALUES (2, 'My new text', 'Español', 1, 'unprocessed', 3, 'El Cine
-
-A lo largo del tiempo, el ser humano ha experimentado la necesidad de dejar testimonio de su existencia, de guardar en imágenes personas, lugares y momentos. Para lograr esto, en épocas pasadas utilizaron recursos como la escritura y la pintura, nuevos inventos permitieron la representación del hombre y su entorno, todo esto gracias a la incorporación de la ciencia.
+INSERT INTO public.texts (text_id, title, category, added_by, status, grade, raw_content, created_at, updated_at) VALUES (2, 'El cine', 'Español', 1, 'unprocessed', 3, 'A lo largo del tiempo, el ser humano ha experimentado la necesidad de dejar testimonio de su existencia, de guardar en imágenes personas, lugares y momentos. Para lograr esto, en épocas pasadas utilizaron recursos como la escritura y la pintura, nuevos inventos permitieron la representación del hombre y su entorno, todo esto gracias a la incorporación de la ciencia.
 
 Uno de estos inventos es el cine. En la historia quedo marcado el 28 de diciembre de 1895 como la fecha de su nacimiento, día que en el Gran Café del Boulevard de los Capuchinos, en Paris, Louis y Auguste Lumière se realizó la primera proyección de cine; siendo cerca de 12 documentales los que dieron inicio a lo conocido como arte, que para muchos es industria y espectáculo, combinadas de ciencia, luces y fama.
 
@@ -56,9 +52,7 @@ Usualmente estos géneros están formados por películas que comparten ciertas s
 Hablando técnicamente, lo que el cine trata de representar es la fotografía en una secuencia continua para mostrar movimiento sin interrupciones.
 
 El importante y apetecido cine clásico se caracteriza por poseer un estilo que destaca por la continuidad y comprensibilidad de la película; encontrándose representaciones fuertes y constantes durante toda la película, además de un argumento con un final feliz. Sin embargo el cine moderno rechaza el cine clásico y su estilo e intenta romperlo junto con todas las convenciones éste.', '2020-05-14 19:30:52.082167', '2020-05-14 19:30:52.082167');
-INSERT INTO public.texts (text_id, title, category, added_by, status, grade, raw_content, created_at, updated_at) VALUES (3, 'My new text', 'Español', 1, 'unprocessed', 3, 'Los Colegios
-
-El colegio (o escuela), es un establecimiento de educación y formación, el cual puede ser privado o estatal, está orientado a la preparación de los alumnos para la vida en general, aportando los conocimientos en las diversas áreas en las que se deberán desenvolver.
+INSERT INTO public.texts (text_id, title, category, added_by, status, grade, raw_content, created_at, updated_at) VALUES (3, 'Los colegios', 'Español', 1, 'unprocessed', 3, 'El colegio (o escuela), es un establecimiento de educación y formación, el cual puede ser privado o estatal, está orientado a la preparación de los alumnos para la vida en general, aportando los conocimientos en las diversas áreas en las que se deberán desenvolver.
 
 Además los prepara para la elección de su profesión y de la cual vivirán y se irán especializando a lo largo de los años.
 

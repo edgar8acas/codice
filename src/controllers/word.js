@@ -1,9 +1,14 @@
 import express from 'express';
 import { Word } from '@models';
-
+import { paginate } from '@utils';
 const router = express.Router();
 
 export default router
+  .get('/', paginate(Word), async (req, res) => {
+    return res
+      .status(200)
+      .json(res.paginatedResults)
+  })
   .post('/', async (req, res) => {
 
     const { body } = req;
