@@ -42,7 +42,7 @@ export default {
   data() {
     return {
       textId: this.$route.params.id,
-      showContent: false,
+      showContent: true,
       currentWordId: null,
       onlyExclusive: false
     }
@@ -96,7 +96,7 @@ export default {
 }
 .central {
   display: grid;
-  grid-template-columns: 20% 40% 20%;
+  grid-template-columns: 20% 60% 20%;
   justify-content: center;
   column-gap: 0.5em;
 }

@@ -170,12 +170,12 @@ ul {
     height: 100%;
   }
   .video {
-  color: red;
+  //color: red;
   text-align: center;
-  border: 1px solid red;
+  //border: 1px solid red;
   }
   .image {
-    border: 1px solid blue;
+    //border: 1px solid blue;
   }
 }
 </style>
