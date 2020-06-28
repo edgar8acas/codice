@@ -1,9 +1,9 @@
-import Sequelize from 'sequelize';
+import {Sequelize, DataTypes} from 'sequelize';
 import { Word, Text } from '@models';
 
 module.exports = function (sequelize, DataTypes) {
-  const Template = sequelize.define(
-    'Template', {
+  const TemplateOccurrence = sequelize.define(
+    'TemplateOccurrence', {
       templateId: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -16,32 +16,27 @@ module.exports = function (sequelize, DataTypes) {
       ending: {
         type: DataTypes.INTEGER,
         allowNull: false
+      },
+      word: {
+        type: DataTypes.STRING,
+        allowNull: false
       }
     },
     {
-      tableName: 'template_words',
+      tableName: 'template_occurrences',
       freezeTableNames: true,
       underscored: true
     }
   )
 
-  Word.belongsToMany(Text,
-    {
-      through: Template, foreignKey: {
-        type: DataTypes.INTEGER,
-        name: 'wordId',
-        allowNull: false
-      }
-    });
-
-  Text.belongsToMany(Word, {
-    through: Template, foreignKey: {
+  /*Text.belongsToMany(Word, {
+    through: TemplateOccurrence, foreignKey: {
       type: DataTypes.INTEGER,
       name: 'textId',
       allowNull: false
     }
-  });
-
-  Template.belongsTo(Word, { foreignKey: 'wordId'});
-  return Template;
+  });*/
+  TemplateOccurrence.belongsTo(Text, { foreignKey: 'textId'});
+  //TemplateOccurrence.belongsTo(Word, { foreignKey: 'wordId'});
+  return TemplateOccurrence;
 }

@@ -1,4 +1,3 @@
-import Sequelize from 'sequelize';
 import { Word, User } from '@models';
 
 module.exports = function (sequelize, DataTypes) {

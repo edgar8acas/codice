@@ -16,7 +16,23 @@ module.exports = function (sequelize, DataTypes) {
       ending: {
         type: DataTypes.INTEGER,
         allowNull: false
-      }
+      },
+      word: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      essential: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+      },
+      visible: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+      },
+      availableMeanings: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+      },
     },
     {
       tableName: 'user_occurrences',
@@ -25,7 +41,9 @@ module.exports = function (sequelize, DataTypes) {
     }
   )
 
-  UserOccurrence.belongsTo(Word, { foreignKey: 'wordId'});
+  UserOccurrence.belongsTo(Word, {
+    foreignKey: 'selectedWordId'
+  });
   UserOccurrence.belongsTo(Text, { foreignKey: 'textId'});
   UserOccurrence.belongsTo(User, { foreignKey: 'userId'});
 

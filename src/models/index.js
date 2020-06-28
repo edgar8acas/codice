@@ -12,7 +12,7 @@ const sequelize = new Sequelize(database, username, password, {
 const Text = sequelize.import('./text.js');
 const Word = sequelize.import('./word.js');
 const User = sequelize.import('./user.js');
-const Template = sequelize.import('./template.js');
+const TemplateOccurrence = sequelize.import('./template_occurrence.js');
 const Dictionary = sequelize.import('./dictionary.js');
 const UserOccurrence = sequelize.import('./user_occurrence.js');
 
@@ -29,7 +29,7 @@ export {
   Sequelize,
   Text,
   Word,
-  Template,
+  TemplateOccurrence,
   User,
   UserOccurrence,
   Dictionary

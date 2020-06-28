@@ -1,5 +1,5 @@
 import express from 'express';
-import { Text, Word, Template, UserOccurrence, Dictionary } from '@models';
+import { Text, Word, TemplateOccurrence, UserOccurrence, Dictionary } from '@models';
 import Sequelize from 'sequelize';
 
 const Op = Sequelize.Op;
@@ -27,18 +27,21 @@ export default router
       }
       let userOccurrences = await UserOccurrence.findAll(query);
       
-      if( userOccurrences.length === 0) {
-        const occurrences = await Template.findAll({
+      if( userOccurrences.length === 0 ) {
+        const occurrences = await TemplateOccurrence.findAll({
           where: { textId },
-        }); 
+        });
         userOccurrences = await UserOccurrence.bulkCreate(
           occurrences.map(o => {
             return {
+              textId: o.textId,
+              userId: userId,
               start: o.start,
               ending: o.ending,
-              textId: o.textId,
-              wordId: o.wordId,
-              userId: userId
+              word: o.word,
+              essential: true,
+              visible: true,
+              availableMeanings: false
             }
           })
         )
@@ -76,9 +79,8 @@ export default router
         .status(200)
         .json(response);
     } catch (error) {
-      console.log(error)
       return res
         .status(500)
-        .json(error);
+        .json();
     }
   })

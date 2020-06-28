@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { Text, Word, Template, sequelize } from '@models';
+import { Text, Word, TemplateOccurrence, sequelize } from '@models';
 import { processTexts } from '@processing';
 import { paginate } from '@utils';
 import { validateText } from '@utils/validation';
@@ -132,7 +132,7 @@ export default router
 
     //TODO: Validate occurrences
 
-      const transaction = await sequelize.transaction();
+    const transaction = await sequelize.transaction();
     try {
       const toSaveInTemplate = occurrences.map(
         o => {
@@ -140,10 +140,11 @@ export default router
             wordId: o.selectedWordId, 
             textId: o.textId,
             start: o.start,
-            ending: o.ending 
+            ending: o.ending,
+            word: o.word
           }
         })
-      const savedInTemplate = await Template.bulkCreate(toSaveInTemplate);
+      const savedInTemplate = await TemplateOccurrence.bulkCreate(toSaveInTemplate);
 
       let text = await Text.findByPk(textId);
       text = await text.update({
@@ -157,6 +158,6 @@ export default router
       await transaction.rollback();
       return res
         .status(500)
-        .json(error)
+        .json({error: 'Error al guardar los elementos'})
     }
   })

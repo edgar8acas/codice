@@ -18,6 +18,13 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      type: {
+        type: DataTypes.ENUM(
+          'artículo', 'sustantivo', 'pronombre',
+          'adjetivo', 'verbo', 'adverbio',
+          'preposición', 'conjunción', 'intersección'),
+        allowNull: true,
+      },
       imageUrl: {
         type: DataTypes.STRING,
         allowNull: true,
