@@ -6,6 +6,7 @@ import {
   findOccurrencesInText,
   generateOccurrencesFromTemplate
 } from '@/utils/template';
+import UserOccurrence from '@/utils/user_occurrence';
 import getExclusiveWords from '@/utils/filter_processed';
 
 Vue.config.productionTip = false
@@ -39,18 +40,10 @@ export default new Vuex.Store({
     setDictionaryWords (state, dictionaryWords) {
       state.dictionaryWords = dictionaryWords
     },
-    updateSelectedWord (state, { occurrenceStart, wordId }) {
-      let ocurrence = state.occurrences.find(o => o.start === occurrenceStart);
-      
-      if (wordId === "undefined") wordId = undefined;
-      
-      // Number("undefined") === 0 -> (truthy)
-      // Number(undefined) === NaN -> (falsy)
-      let newSelected = ocurrence.relatedWords.find(
-        w => w.wordId === (Number(wordId) || undefined)
-      );
-      
-      ocurrence.selectedWordId = newSelected.wordId;
+    updateSelectedWord (state, updated) {
+      let oc = state.occurrences.find(o => o.start === updated.start);
+      oc = new UserOccurrence({...oc, ...updated});
+      console.log(oc);
     },
     updateMarkedStatus (state, { occurrenceStart, markedStatus }) {
       let ocurrence = state.occurrences.find(o => o.start === occurrenceStart);
@@ -59,6 +52,17 @@ export default new Vuex.Store({
     addRelatedWord (state, word) {
       let occurrence = state.occurrences.find(o => o.word === word.word);
       occurrence.relatedWords.push(word);
+    },
+    deleteRelatedWord (state, word) {
+      const occurrence = state.occurrences.find(o => o.word === word.word);
+      const index = occurrence.relatedWords.findIndex(w => w.wordId === word.wordId);
+      occurrence.relatedWords.splice(index, 1);
+    },
+    addRelatedWords (state, data) {
+      const { data: words } = data;
+      const occurrences = state.occurrences.filter(o => o.word === words[0].word);
+      const matchingWords = words.length > 0 ? words : [];
+      occurrences.forEach(o => o.matchingWords = matchingWords);
     },
     setDefaultOccurrences (state) {
       state.occurrences.forEach(o => {
@@ -112,14 +116,26 @@ export default new Vuex.Store({
       const tokenizedContent = getTokenizedContent(occurrences, res.data.text);
       commit('setTokenizedContent', tokenizedContent);
     },
-    updateSelectedWord ({ commit }, updatedData) {
-      commit('updateSelectedWord', updatedData);
+    async updateSelectedWord ({ commit }, occurrence) {
+      try {
+        const { data: { updated, dictionaryWord, matchingWords} } = await axios.put(
+          `/api/user-occurrences/${occurrence.userOccurrenceId}/update-selected`,
+          occurrence
+        );
+        commit('updateSelectedWord', updated);
+        commit('addRelatedWords', matchingWords);
+        commit('updateDictionary', dictionaryWord);
+        //commit('addSuccess', data)
+      } catch (error) {
+        if(error.response) {
+          commit('addError', error.response.data.error);
+        }
+      }
     },
     updateMarkedStatus ({ commit }, updatedData) {
       commit('updateMarkedStatus', updatedData);
     },
     async saveWord ({ commit }, word) {
-      console.log(word)
       const { data } = await axios.post(`/api/words`, word)
       commit('addRelatedWord', data);
     },
@@ -161,6 +177,29 @@ export default new Vuex.Store({
           commit('addError', error.response.data.error);
         }
       })
+    },
+    async deleteRelatedWord ({ commit }, word) {
+      try {
+        const { data } = await axios.delete(`/api/words/${word.wordId}`);
+        commit('deleteRelatedWord', word);
+        commit('addSuccess', data)
+      } catch (error) {
+        if(error.response) {
+          commit('addError', error.response.data.error);
+        }
+      }
+      
+    },
+    async getRelatedWords ({ commit }, occurrence) {
+      try {
+        const { data } = await axios.get(`/api/words/?word=${occurrence.word}`);
+        commit('addRelatedWords', data);
+      } catch (error) {
+        if(error.response) {
+          console.log
+          commit('addError', error.response.data.error);
+        }
+      }
     }
   },
   getters: {

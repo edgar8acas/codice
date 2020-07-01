@@ -1,9 +1,13 @@
 <template>
   <span 
     @click="selectMeaning"
-    :class="'inline-word ' + occurrence.markedStatus"
-  >{{ word }}
-  </span>
+    :class="
+      'inline-word ' + 
+      occurrence.learntStyle + ' ' + 
+      occurrence.essentialStyle + ' ' + 
+      occurrence.availableStyle + ' ' +
+      occurrence.visibleStyle" 
+  >{{ word }}</span>
 </template>
 
 <script>
@@ -36,6 +40,16 @@ export default {
 .inline-word {
   display: inline-block;
   border-radius: 5px;
+
+  &.no-meanings {
+    background-color: #f2711c;
+    color: white;
+  }
+
+  &.with-meanings {
+    background-color: #21ba45;
+    color: white;
+  }
 }
 
 .inline-word.learnt {
@@ -44,7 +58,7 @@ export default {
   font-weight: bold;
 }
 
-.inline-word.unlearnt {
+.inline-word.not-learnt {
   color: #F06543;
   text-shadow: #c05136 1px 0 10px;
   font-weight: bold;
