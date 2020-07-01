@@ -9,6 +9,15 @@
       <label for="definition" class="label">Definición</label>
       <input type="text" v-model="definition" id="definition">
     </div>
+    <div class="field">
+      <label>Tipo</label>
+      <sui-dropdown
+        placeholder="Selecciona un tipo"
+        selection
+        :options="typeOptions"
+        v-model="type"
+      ></sui-dropdown>
+    </div>
     <button type="submit" @click.prevent="saveWord">Guardar</button>
   </div>
 </template>
@@ -20,14 +29,27 @@ export default {
   },
   data() {
     return {
-      definition: ''
+      definition: '',
+      type: '',
+      typeOptions: [
+        { text: 'Artículo', value: 'artículo'},
+        { text: 'Sustantivo', value: 'sustantivo'},
+        { text: 'Pronombre', value: 'pronombre'},
+        { text: 'Adjetivo', value: 'adjetivo'},
+        { text: 'Verbo', value: 'verbo'},
+        { text: 'Adverbio', value: 'adverbio'},
+        { text: 'Preposición', value: 'preposición'},
+        { text: 'Conjunción', value: 'conjunción'},
+        { text: 'Intersección', value: 'intersección'},
+      ],
     }
   },
   methods: {
     saveWord() {
       this.$store.dispatch('saveWord', {
         word: this.forWord,
-        definition: this.definition
+        definition: this.definition,
+        type: this.type
       });
     }
   }
