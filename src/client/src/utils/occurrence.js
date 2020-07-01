@@ -1,12 +1,11 @@
 export default function Occurrence(data, relatedWords = []) {
-  const { word, start, ending, textId, wordId, markedStatus } = data;
+  const { word, start, ending, textId, wordId } = data;
   this.start = start;
   this.word = word;
   this.ending = ending;
   this.textId = textId;
   this.wordId = wordId;
   this.occurrenceId = undefined;
-  this.markedStatus = markedStatus;
   this.relatedWords = relatedWords;
 }
 
@@ -30,6 +29,26 @@ Object.defineProperties(Occurrence.prototype, {
       }
     },
     enumerable: true
+  },
+
+  _relatedWords: { writable: true, enumerable: false },
+  relatedWords: {
+    get: function() {
+      return this._relatedWords || [];
+    },
+    set: function(relatedWords) {
+      this._relatedWords = relatedWords
+    },
+    enumerable: true
+  },
+  
+  status: {
+    get: function() {
+      if(this._relatedWords.length > 0) {
+        return 'with-meanings';
+      }
+      return 'no-meanings'
+    }
   }
 });
 

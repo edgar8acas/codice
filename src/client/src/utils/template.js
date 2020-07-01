@@ -108,14 +108,7 @@ function findNewLinesInText(text) {
 
 export function generateOccurrencesFromTemplate(userOccurrences, dictionaryWords) {
   return userOccurrences.map(o => {
-    return new UserOccurrence({
-      Word: o.Word,
-      start: o.start,
-      ending: o.ending,
-      textId: o.textId,
-      userId: o.userId,
-      userOccurrenceId: o.userOccurrenceId
-    }, 
+    return new UserOccurrence(o, 
       dictionaryWords.find(dw => dw.Word.wordId === o.Word.wordId)
     )
   })

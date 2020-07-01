@@ -25,7 +25,7 @@
       <h2>Los bancos</h2>
       <text-content class="content" :isChoosing="false" @changeOccurrence="changeOccurrence"></text-content>
 
-      <div class="media-container">
+      <!--<div class="media-container">
         <img v-if="occurrence.Word.imageUrl"
           :src="occurrence.Word.imageUrl" 
           :alt="occurrence.word" 
@@ -42,23 +42,49 @@
           allowfullscreen></iframe>
         <div v-if="!occurrence.Word.videoUrl"
           class="video">Sin video</div>
-      </div>
+      </div>-->
     </div>
     <div class="side-info">
       <h2 class="section-title">{{occurrence.word || 'Información de palabra'}}</h2>
-      <mark-learned :occurrence="occurrence"></mark-learned>
+      <!--<mark-learned :occurrence="occurrence"></mark-learned>-->
+
+      <button class="ui button" @click="toggleSelectMeaning">Cambiar significado</button> <br>
     </div>
+
+    <sui-modal v-model="selectMeaning">
+      <sui-modal-header>Selecciona un significado para la ocurrencia</sui-modal-header>
+      <sui-modal-content>
+        <sui-modal-description>
+          <!--<sui-header>Default Profile Image</sui-header>-->
+          <p>
+            We've found the following gravatar image associated with your e-mail
+            address.
+          </p>
+          <p>Is it okay to use this photo?</p>
+          <word-details class="word-details" :occurrence="occurrence" :selection="true">
+          </word-details>
+        </sui-modal-description>
+      </sui-modal-content>
+      <sui-modal-actions>
+        <sui-button positive @click.native="toggleSelectMeaning">
+          Aceptar
+        </sui-button>
+      </sui-modal-actions>
+    </sui-modal>
   </section>
 </template>
 
 <script>
 import TextContent from "@/components/TextContent";
-import MarkLearned from "@/components/MarkLearned";
+// import MarkLearned from "@/components/MarkLearned";
+import WordDetails from '@/components/WordDetails';
+
 import { mapState, mapGetters } from "vuex";
 export default {
   components: {
+    WordDetails,
     TextContent,
-    MarkLearned
+    // MarkLearned
   },
   data() {
     return {
@@ -66,7 +92,8 @@ export default {
       occurrence: {
         Word: {}
       },
-      isLearnt: false
+      isLearnt: false,
+      selectMeaning: false
     };
   },
   computed: {
@@ -86,6 +113,10 @@ export default {
   methods: {
     changeOccurrence(start) {
       this.occurrence = this.occurrences.find(o => o.start === start);
+    },
+    async toggleSelectMeaning() {
+      await this.$store.dispatch('getRelatedWords', this.occurrence);
+      this.selectMeaning = !this.selectMeaning;
     }
   }
 };

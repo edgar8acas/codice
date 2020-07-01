@@ -2,14 +2,17 @@
   <div>
     <h2 class="section-title">{{ occurrence.word || 'Detalles de palabra' }}</h2>
     <div class="related-words-container">
-      <div v-if="occurrence.relatedWords.length === 0">
+      <div v-if="occurrence.matchingWords.length === 0">
         No hay definiciones para la ocurrencia
       </div>
-      <div v-else>
+      <div v-else-if="selection" >
         Selecciona un significado para la ocurrencia
       </div>
+      <div v-else >
+        Significados disponibles
+      </div>
       <div 
-        v-for="word in occurrence.relatedWords" 
+        v-for="word in occurrence.matchingWords" 
         :key="word.wordId"
         class="related-word"
       >
@@ -18,11 +21,13 @@
           :style="{ backgroundImage: 'url(' + require('@/assets/img_placeholder.png') + ')'}"
         ></div>
         <div class="flex-item info">
-          <span class="definition">{{ word.definition || 'Definición...' }}</span>
-          <span class="more">{{ word.wordId ? 'Id de palabra: ' + word.wordId : 'Nuevo significado'}}</span> <br>
-          <span class="more">Selección</span> <input :id="'word-' + word.wordId" :value="'word-' + word.wordId" type="radio" name="words-group" v-model="picked"> <br>
+          <span class="definition" style="font-weight:bold">{{ word.definition || 'Definición...' }}</span>
+          <span class="definition">{{ word.type || 'Tipo...' }}</span>
+          <span class="more">{{ word.wordId ? 'Id de palabra: ' + word.wordId : 'Nuevo significado'}}</span>
+          <span class="more" v-if="selection">Selección</span> 
+          <input v-if="selection" :id="'word-' + word.wordId" :value="'word-' + word.wordId" type="radio" name="words-group" v-model="picked"> <br>
+          <button class="mini red ui button" v-if="!selection" @click="deleteWord(word)">Eliminar</button> <br>
           <span class="more">Más información</span>
-          
         </div>
       </div>
       <div v-if="occurrence.selectedWordId !== null">
@@ -45,6 +50,10 @@ export default {
       default: function() {
         return {}
       }
+    },
+    selection: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -60,9 +69,10 @@ export default {
     },
     picked(newVal) {
       if(newVal === 'word-' + this.occurrence.selectedWordId) return
+      
       this.$store.dispatch('updateSelectedWord', {
-        occurrenceStart: this.occurrence.start,
-        wordId: newVal.substring(5)
+        ...this.occurrence,
+        selectedWordId: Number(newVal.substring(5))
       });
       this.markedStatus = 'ready';
     },
@@ -79,6 +89,9 @@ export default {
   methods: {
     setSelectedForEveryOccurrence() {
       this.$store.dispatch('setSelectedForEveryOccurrence', this.occurrence);
+    },
+    deleteWord(word) {
+      this.$store.dispatch('deleteRelatedWord', word)
     }
   }
 }
