@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+
 export function isObjectEmpty(obj) {
   for(var key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
@@ -11,7 +13,7 @@ export function paginate(model) {
   return async (req, res, next) => {
     const name = model.getTableName();
     
-    let { page, per_page } = req.query;
+    let { page, per_page, word } = req.query;
     if (!page || !per_page) {
       page = 1,
       per_page = 3
@@ -24,11 +26,20 @@ export function paginate(model) {
 
     const result = {}
     try {
-      const { count, rows } = await model.findAndCountAll({
+      const query = {
         order: [name.substring(0, name.length - 1) + 'Id'],
         offset: start,
         limit: per_page
-      });
+      }
+
+      if (word) {
+        query.where = {
+          word
+        };
+        delete query.offset;
+      }
+
+      const { count, rows } = await model.findAndCountAll(query);
       
       result.total = count;
       result.per_page = per_page;

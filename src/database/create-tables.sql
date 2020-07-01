@@ -31,6 +31,7 @@ CREATE TABLE words (
     type word_type NOT NULL,
     image_url varchar NULL,
     video_url varchar NULL,
+    deprecated boolean DEFAULT false NOT NULL,
     created_at timestamp NOT NULL DEFAULT now(),
     updated_at timestamp NOT NULL
 );

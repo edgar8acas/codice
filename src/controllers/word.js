@@ -29,3 +29,24 @@ export default router
       .json(item)
       
   })
+  .delete('/:id', async(req, res) => {
+    const { id } = req.params;
+
+    try {
+      const wordId = Number(id);
+      const deleted = await Word.destroy({
+        where: {
+          wordId
+        }
+      })
+
+      return res
+        .status(200)
+        .json({ count: deleted})
+    } catch (e) {
+      console.error(e);
+      return res
+        .status(500)
+        .json({ msg: 'Error al eliminar el elemento'})
+    }
+  })

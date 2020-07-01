@@ -46,9 +46,9 @@ export default router
           })
         )
       }
-      const wordIds = Array.from( new Set( userOccurrences.map(o => o.wordId )) );
+      //const wordIds = Array.from( new Set( userOccurrences.map(o => o.wordId )) );
 
-      let dictionaryWords = await Dictionary.findAll({
+      /*let dictionaryWords = await Dictionary.findAll({
         where: {
           [Op.and]: [
             { wordId: {[Op.in]: wordIds}},
@@ -67,12 +67,12 @@ export default router
             }
           })
         )
-      }
+      }*/
 
       let response = {
         text,
         userOccurrences,
-        dictionaryWords
+        dictionaryWords: []
       };
 
       return res
