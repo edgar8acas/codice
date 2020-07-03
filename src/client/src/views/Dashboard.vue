@@ -1,6 +1,6 @@
 <template>
   <div id="dashboard-container">
-    <header class="header">
+    <header class="dash-header">
       <div class="logo">CÓDICE</div>
       <div class="top-buttons">
         <router-link to="/">Salir</router-link>
@@ -26,7 +26,7 @@ export default {
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: 50px 50px;
 
-  .header {
+  .dash-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;

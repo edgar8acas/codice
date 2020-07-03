@@ -3,8 +3,48 @@
     <catalog-table
       api-url="http://localhost:3000/api/words"
       :fields="fields"
+      @showWordDetails="this.showWordDetails"
     >
     </catalog-table>
+
+    <sui-modal v-model="showDetailsModal">
+      <sui-modal-header>Editar palabra</sui-modal-header>
+      <sui-modal-content class="scrolling">
+        <form class="ui form">
+        <div class="field">
+          <label>Id</label>
+          <input 
+            type="text" 
+            name="wordId"
+            v-model="word.wordId">
+        </div>
+        <div class="field">
+          <label>Palabra</label>
+          <input 
+            type="text" 
+            name="word"
+            v-model="word.word">
+        </div>
+        <div class="field">
+          <label>Definición</label>
+          <input 
+            type="text" 
+            name="definition"
+            v-model="word.word">
+        </div>
+        <div class="field">
+          <label>Tipo</label>
+          <input 
+            type="text" 
+            name="type"
+            v-model="word.type">
+        </div>
+      </form>
+      </sui-modal-content>
+      <sui-modal-actions>
+        <button class="primary ui button" @click="editWord">Guardar</button>
+      </sui-modal-actions>
+    </sui-modal>
   </div>
 </template>
 
@@ -18,7 +58,18 @@ export default {
   },
   data() {
     return {
-      fields: FieldDefs
+      fields: FieldDefs,
+      showDetailsModal: false,
+      word: {}
+    }
+  },
+  methods: {
+    showWordDetails(word) {
+      this.word = word;
+      this.showDetailsModal = !this.showDetailsModal;
+    },
+    editWord() {
+
     }
   }
 }

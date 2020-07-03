@@ -20,7 +20,13 @@ export default Vue.component('text-content', {
           }
         });
       }
-      return h('br')
+      /*const breakLinesCount = chunk.ending - chunk.start;
+      let breakLines = [];
+      for (let i = 0; i < breakLinesCount; i++) {
+        breakLines.push(h('br'))
+      }
+      return breakLines;*/
+      return h('br');
     });
 
     return h('p', children);

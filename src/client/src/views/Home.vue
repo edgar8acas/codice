@@ -1,6 +1,6 @@
 <template>
   <div class="main-bg">
-    <header class="header">
+    <header class="home-header">
       <div class="logo">CÓDICE</div>
       <div class="top-buttons">
         <router-link to="/login">Ingresar</router-link>
@@ -45,7 +45,7 @@ export default {
 
 }
 
-.header {
+.home-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;

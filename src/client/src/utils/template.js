@@ -79,7 +79,7 @@ export function findOccurrencesInText({text, conflicts, ready}) {
   let occurrences = [];
   mWords.forEach(related => {
     const status = 'conflicts';
-    const regex = new RegExp('\\b' + escapeForRegExp(related[2]) + '\\b', 'gi');
+    const regex = getRegexFromWord(related[2]);
     
     for(const match of text.rawContent.matchAll(regex)) {
       occurrences.push(new Occurrence({
@@ -112,4 +112,57 @@ export function generateOccurrencesFromTemplate(userOccurrences, dictionaryWords
       dictionaryWords.find(dw => dw.Word.wordId === o.Word.wordId)
     )
   })
+}
+
+function getRegexFromWord(word) {
+  return new RegExp('\\b' + escapeForRegExp(word) + '\\b', 'gi');
+}
+
+export function getSelectedWordDetails(text) {
+  const selection = window.getSelection();
+  console.log(selection);
+  console.log(text.rawContent.substring(selection.anchorOffset, selection.focusOffset));
+  
+  return {
+    start: selection.anchorOffset,
+    ending: selection.focusOffset,
+    word: text.rawContent.substring(selection.anchorOffset, selection.focusOffset),
+    textId: text.textId
+  }
+  //const range = selection.getRangeAt(0);
+  /*const textContentNode = range.startContainer.parentNode;
+  const textContentRange = new Range();
+  textContentRange.selectNode(textContentNode);
+  const startContainerRange = new Range();
+  startContainerRange.selectNode(range.startContainer);
+
+  let startCharOfStartContainer = 0;
+  for (let i = 0; i < startContainerRange.startOffset; i++) {
+    const node = textContentNode.childNodes[i];
+    
+    //text-node
+    if (node.nodeType === 3) {
+      startCharOfStartContainer += node.length;
+    }
+
+    //element-node
+    if (node.nodeType === 1) {
+      /*if (node.nodeName === 'br') 
+        //startCharOfStartContainer += 1
+      else 
+        startCharOfStartContainer += node.innerText.length
+    }
+  }
+
+  const startOfWord = startCharOfStartContainer + range.startOffset;
+  const endOfWord = startCharOfStartContainer + range.startOffset + (range.endOffset - range.startOffset);
+  console.log(startCharOfStartContainer, range.startOffset);
+  console.log(textContentNode.innerText.substring(startOfWord, endOfWord));
+  
+  
+  console.log(selection)
+  console.log(range)
+  console.log(textContentNode, textContentNode.nodeType);
+  console.log(startContainerRange, range.startContainer.nodeType);
+  */
 }

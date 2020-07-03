@@ -1,13 +1,22 @@
 <template>
-  <div class="form">
-    <h3>Nueva definición</h3>
-    <div class="control">
-      <label for="word" class="label">Palabra</label>
-      <input type="text" v-model="forWord" id="word" disabled>
+  <div class="ui form" id="create-word-form">
+    <h3>Añadir definición</h3>
+    <div class="field">
+      <label>Palabra</label>
+      <input 
+        type="text" 
+        name="title"
+        v-model="forWord"
+        disabled
+      >
     </div>
-    <div class="control">
-      <label for="definition" class="label">Definición</label>
-      <input type="text" v-model="definition" id="definition">
+    <div class="field">
+      <label>Definición</label>
+      <input 
+        type="text" 
+        name="title"
+        v-model="definition"
+      >
     </div>
     <div class="field">
       <label>Tipo</label>
@@ -18,7 +27,7 @@
         v-model="type"
       ></sui-dropdown>
     </div>
-    <button type="submit" @click.prevent="saveWord">Guardar</button>
+    <button class="ui button" type="submit" @click.prevent="saveWord">Guardar</button>
   </div>
 </template>
 
@@ -57,8 +66,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form {
-  text-align: center;
+
+#create-word-form {
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 1em;
+  h3 {
+    text-align: center;
+  }
 }
 
 .control {

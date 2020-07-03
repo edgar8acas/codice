@@ -23,7 +23,7 @@
     </div>
     <div class="learn-view">
       <h2>Los bancos</h2>
-      <text-content class="content" :isChoosing="false" @changeOccurrence="changeOccurrence"></text-content>
+      <text-content class="text-content" :isChoosing="false" @changeOccurrence="changeOccurrence"></text-content>
 
       <!--<div class="media-container">
         <img v-if="occurrence.Word.imageUrl"
@@ -46,29 +46,65 @@
     </div>
     <div class="side-info">
       <h2 class="section-title">{{occurrence.word || 'Información de palabra'}}</h2>
+      <div class="word-detailed-info">
+        <div class="feature">
+          <span>{{ formatEssential }}</span>
+          <div class="help">
+            <b>Esencial: </b> La ocurrencia fue añadida por el administrador. <br>
+            <b>No esencial: </b> La ocurrencia fue añadida por el usuario.
+          </div>
+        </div>
+        <div class="feature">
+          <span>{{ formatAvailableMeanings }}</span>
+          <div class="help">
+            <b>Definiciones disponibles: </b> Existen definiciones para la ocurrencia. <br>
+            <b>Sin definiciones: </b> No existen definiciones para la ocurrencia.
+          </div>
+        </div>
+        <div class="feature">
+          <span>{{ formatVisible }}</span>
+          <div class="help">
+            <b>Visible: </b> La palabra está resaltada en el texto. <br>
+            <b>No visible: </b> La palabra no está resaltada en el texto.
+          </div>
+        </div>
+      </div>
+      <div class="word-actions">
+        <button class="ui button" @click="toggleSelectMeaning">Cambiar significado</button>
+        <button class="ui button" @click="toggleAddOccurrence">Añadir ocurrencia</button>
+      </div>
+      
       <!--<mark-learned :occurrence="occurrence"></mark-learned>-->
-
-      <button class="ui button" @click="toggleSelectMeaning">Cambiar significado</button> <br>
     </div>
 
     <sui-modal v-model="selectMeaning">
-      <sui-modal-header>Selecciona un significado para la ocurrencia</sui-modal-header>
-      <sui-modal-content>
-        <sui-modal-description>
-          <!--<sui-header>Default Profile Image</sui-header>-->
-          <p>
-            We've found the following gravatar image associated with your e-mail
-            address.
-          </p>
-          <p>Is it okay to use this photo?</p>
-          <word-details class="word-details" :occurrence="occurrence" :selection="true">
-          </word-details>
-        </sui-modal-description>
+      <sui-modal-header>Cambiar significado</sui-modal-header>
+      <sui-modal-content class="scrolling">
+        <word-details class="word-details" :occurrence="occurrence" :selection="true">
+        </word-details>
       </sui-modal-content>
       <sui-modal-actions>
         <sui-button positive @click.native="toggleSelectMeaning">
           Aceptar
         </sui-button>
+      </sui-modal-actions>
+    </sui-modal>
+
+    <sui-modal v-model="addingOccurrence">
+      <sui-modal-header>Añadir ocurrencia</sui-modal-header>
+      <sui-modal-content class="scrolling">
+        <div class="ui info message" v-if="addingOccurrence">
+          <div class="header">
+            Instrucciones
+          </div>
+          <p>
+            Selecciona la ocurrencia y da click en <b>Añadir seleccionado</b>.
+          </p>
+        </div>
+        <pre>{{currentTemplateText.rawContent}}</pre>
+      </sui-modal-content>
+      <sui-modal-actions>
+        <button class="primary ui button" v-if="addingOccurrence" @click="addSelectedOccurrence">Añadir seleccionado</button>
       </sui-modal-actions>
     </sui-modal>
   </section>
@@ -78,7 +114,7 @@
 import TextContent from "@/components/TextContent";
 // import MarkLearned from "@/components/MarkLearned";
 import WordDetails from '@/components/WordDetails';
-
+import { getSelectedWordDetails } from '@/utils/template';
 import { mapState, mapGetters } from "vuex";
 export default {
   components: {
@@ -90,14 +126,16 @@ export default {
     return {
       textId: this.$route.params.id,
       occurrence: {
-        Word: {}
+        Word: {},
+        matchingWords: []
       },
       isLearnt: false,
-      selectMeaning: false
+      selectMeaning: false,
+      addingOccurrence: false
     };
   },
   computed: {
-    ...mapState(["occurrences"]),
+    ...mapState(["occurrences", "currentTemplateText"]),
     ...mapGetters(["learntWords", "unlearntWords"]),
     formattedVideoUrl() {
       if(this.occurrence.Word.videoUrl) {
@@ -105,6 +143,15 @@ export default {
         return `https://www.youtube.com/embed/${videoUrl}`;
       }
       return null;
+    },
+    formatEssential() {
+      return this.occurrence.essential ? 'Esencial' : 'No esencial';
+    },
+    formatAvailableMeanings() {
+      return this.occurrence.availableMeanings ? 'Definiciones disponibles' : 'Sin definiciones';
+    },
+    formatVisible() {
+      return this.occurrence.visible ? 'Visible' : 'No visible';
     }
   },
   async mounted() {
@@ -117,12 +164,21 @@ export default {
     async toggleSelectMeaning() {
       await this.$store.dispatch('getRelatedWords', this.occurrence);
       this.selectMeaning = !this.selectMeaning;
+    },
+    toggleAddOccurrence() {
+      this.addingOccurrence = true;
+    },
+    async addSelectedOccurrence() {
+      const details = getSelectedWordDetails(this.currentTemplateText);
+      await this.$store.dispatch('addNewOccurrence', details);
+      window.location.reload()
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+
 .central {
   display: grid;
   grid-template-columns: 20% 40% 20%;
@@ -132,6 +188,47 @@ export default {
 .side-info {
   border-radius: 5px;
   border: 1px solid #c2c2c2;
+  text-align: center;
+
+  .word-detailed-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.5em;
+
+    .feature {
+      position: relative;
+
+      span {
+        color: #2185d0;
+      }
+      .help {
+        display: none;
+      }
+      &:hover .help {
+        display: block;
+        border-radius: 20px;
+        position: absolute;
+        background-color: beige;
+        z-index: 5;
+        left: 200px;
+        min-width: 200px;
+        text-align: left;
+        padding: 10px;
+      }
+    }
+  }
+
+  .word-actions {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    margin-right: 20px;
+
+    >* {
+      margin-top: 10px;
+    }
+  }
 }
 
 .btn {
@@ -180,7 +277,7 @@ ul {
     background-color: #fff3b3;
   }
 }
-.content {
+.text-content {
   height: 400px;
   overflow: scroll;
   overflow-x: hidden;

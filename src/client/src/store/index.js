@@ -25,7 +25,8 @@ export default new Vuex.Store({
     dictionaryWords: [],
     exclusivo: false,
     errors: [],
-    success: []
+    success: [],
+    currentTemplateText: {}
   },
   mutations: {
     setTexts (state, texts) {
@@ -36,6 +37,9 @@ export default new Vuex.Store({
     },
     setTokenizedContent (state, tokens) {
       state.tokenizedContent = tokens;
+    },
+    setCurrentTemplateText (state, text) {
+      state.currentTemplateText = text;
     },
     setDictionaryWords (state, dictionaryWords) {
       state.dictionaryWords = dictionaryWords
@@ -51,12 +55,12 @@ export default new Vuex.Store({
     },
     addRelatedWord (state, word) {
       let occurrence = state.occurrences.find(o => o.word === word.word);
-      occurrence.relatedWords.push(word);
+      occurrence.matchingWords.push(word);
     },
     deleteRelatedWord (state, word) {
       const occurrence = state.occurrences.find(o => o.word === word.word);
-      const index = occurrence.relatedWords.findIndex(w => w.wordId === word.wordId);
-      occurrence.relatedWords.splice(index, 1);
+      const index = occurrence.matchingWords.findIndex(w => w.wordId === word.wordId);
+      occurrence.matchingWords.splice(index, 1);
     },
     addRelatedWords (state, data) {
       const { data: words } = data;
@@ -154,6 +158,7 @@ export default new Vuex.Store({
       
       commit('setOccurrences', occurrences);
       commit('setDictionaryWords', dictionaryWords);
+      commit('setCurrentTemplateText', text);
       const tokenizedContent = getTokenizedContent(occurrences, text);
       commit('setTokenizedContent', tokenizedContent);
     },
@@ -167,7 +172,7 @@ export default new Vuex.Store({
       commit('setOnlyExclusive', value);
     },
     addText ({ commit }, text) {
-      axios.post(`/api/texts/`, text)
+      return axios.post(`/api/texts/`, text)
       .then(data => {
         console.log(data)
         commit('addSuccess', data);
@@ -200,6 +205,18 @@ export default new Vuex.Store({
           commit('addError', error.response.data.error);
         }
       }
+    },
+    async addNewOccurrence ({ commit, dispatch }, occurrenceInfo) {
+      try {
+        const { data } = await axios.post(`/api/user-occurrences/`, occurrenceInfo);
+        await dispatch('getTemplateByTextId', data.textId);
+      } catch (error) {
+        if(error.response) {
+          console.log
+          commit('addError', error.response.data.error);
+        }
+      }
+      
     }
   },
   getters: {

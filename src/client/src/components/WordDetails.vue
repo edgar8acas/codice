@@ -23,10 +23,18 @@
         <div class="flex-item info">
           <span class="definition" style="font-weight:bold">{{ word.definition || 'Definición...' }}</span>
           <span class="definition">{{ word.type || 'Tipo...' }}</span>
-          <span class="more">{{ word.wordId ? 'Id de palabra: ' + word.wordId : 'Nuevo significado'}}</span>
-          <span class="more" v-if="selection">Selección</span> 
-          <input v-if="selection" :id="'word-' + word.wordId" :value="'word-' + word.wordId" type="radio" name="words-group" v-model="picked"> <br>
-          <button class="mini red ui button" v-if="!selection" @click="deleteWord(word)">Eliminar</button> <br>
+          <span class="more">{{ word.wordId ? 'Id de palabra: ' + word.wordId : 'Nuevo significado'}}</span> <br>
+            <div class="field" v-if="selection">
+              <label>Seleccionar</label>
+              <input 
+                type="radio" 
+                name="words-group"
+                v-model="picked"
+                :id="'word-' + word.wordId" 
+                :value="'word-' + word.wordId"
+                placeholder="&quot;Español&quot; ó &quot;Conocimiento del medio&quot;">
+            </div>
+          <button class="mini red ui button" v-if="!selection" @click="deleteWord(word)">Eliminar <br></button>
           <span class="more">Más información</span>
         </div>
       </div>
@@ -48,7 +56,9 @@ export default {
       type: Object,
       required: true,
       default: function() {
-        return {}
+        return {
+          matchingWords: []
+        }
       }
     },
     selection: {
@@ -122,6 +132,7 @@ export default {
   .info {
     box-sizing: border-box;
     text-align: left;
+    margin-left: 0.5em;
     .definition {
       display: block;
       overflow: hidden;

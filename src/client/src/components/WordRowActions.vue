@@ -7,6 +7,7 @@
     >
       Detalles
     </router-link>
+    <button class="ui button mini" @click="showWordDetails">Editar</button>
   </div>
 </template>
 
@@ -14,6 +15,11 @@
 export default {
   props: {
     rowData: Object
+  },
+  methods: {
+    showWordDetails() {
+      this.$emit('showWordDetails', this.rowData);
+    }
   }
 }
 </script>

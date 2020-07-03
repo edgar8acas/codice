@@ -6,7 +6,8 @@
       occurrence.learntStyle + ' ' + 
       occurrence.essentialStyle + ' ' + 
       occurrence.availableStyle + ' ' +
-      occurrence.visibleStyle" 
+      occurrence.visibleStyle + ' ' +
+      occurrence.status + ' '"
   >{{ word }}</span>
 </template>
 
@@ -49,6 +50,25 @@ export default {
   &.with-meanings {
     background-color: #21ba45;
     color: white;
+  }
+
+  &.essential {
+    border-bottom: 3px solid black;
+  }
+
+  &.unessential {
+    border-bottom: 4px solid blue;
+  }
+
+  &.invisible {
+    background-color: initial;
+    border: none;
+    color: inherit;
+
+    &:hover {
+      text-decoration: none;
+      cursor: initial;
+    }
   }
 }
 

@@ -25,6 +25,7 @@
           class="content"
           :isChoosing="true" 
           @changeOccurrence="changeOccurrence"
+          v-if="showTextContent"
         ></text-content>
       </div>
       <div class="side-info">
@@ -50,7 +51,8 @@ export default {
     return {
       textId: this.$route.params.id,
       loading: false,
-      occurrence: {}
+      occurrence: {},
+      showTextContent: false
     }
   },
   computed: {
@@ -70,6 +72,7 @@ export default {
   },
   async mounted() {
     await this.$store.dispatch('processText', this.textId);
+    this.showTextContent = true;
   },
   methods: {
     isEmpty(obj) {

@@ -15,6 +15,11 @@ export default [
     sortField: 'definition'
   },
   {
+    title: 'Tipo',
+    name: 'type',
+    sortField: 'type'
+  },
+  {
     title: 'Imagen',
     name: 'imageUrl',
     callback: 'formatUrl'

@@ -1,4 +1,4 @@
-export default function Occurrence(data, relatedWords = []) {
+export default function Occurrence(data, matchingWords = []) {
   const { word, start, ending, textId, wordId } = data;
   this.start = start;
   this.word = word;
@@ -6,7 +6,7 @@ export default function Occurrence(data, relatedWords = []) {
   this.textId = textId;
   this.wordId = wordId;
   this.occurrenceId = undefined;
-  this.relatedWords = relatedWords;
+  this.matchingWords = matchingWords;
 }
 
 Object.defineProperties(Occurrence.prototype, {
@@ -16,7 +16,7 @@ Object.defineProperties(Occurrence.prototype, {
       return this._selectedWordId || null;
     },
     set: function(wordId) {
-      const word = this.relatedWords.find(
+      const word = this.matchingWords.find(
         w => w.wordId === wordId 
       );
       if(word) {
@@ -31,20 +31,20 @@ Object.defineProperties(Occurrence.prototype, {
     enumerable: true
   },
 
-  _relatedWords: { writable: true, enumerable: false },
-  relatedWords: {
+  _matchingWords: { writable: true, enumerable: false },
+  matchingWords: {
     get: function() {
-      return this._relatedWords || [];
+      return this._matchingWords || [];
     },
-    set: function(relatedWords) {
-      this._relatedWords = relatedWords
+    set: function(matchingWords) {
+      this._matchingWords = matchingWords
     },
     enumerable: true
   },
   
   status: {
     get: function() {
-      if(this._relatedWords.length > 0) {
+      if(this._matchingWords.length > 0) {
         return 'with-meanings';
       }
       return 'no-meanings'
@@ -53,8 +53,8 @@ Object.defineProperties(Occurrence.prototype, {
 });
 
 Occurrence.prototype.selectDefault = function() {
-  if(this.relatedWords.length > 0) {
-    this.selectedWordId = this.relatedWords[0].wordId;
+  if(this.matchingWords.length > 0) {
+    this.selectedWordId = this.matchingWords[0].wordId;
     this.markedStatus = 'ready';
   }
 }
@@ -68,7 +68,7 @@ Occurrence.prototype.toJSON = function() {
     wordId: this.wordId,
     occurrenceId: this.occurrenceId,
     markedStatus: this.markedStatus,
-    relatedWords: this.relatedWords,
+    matchingWords: this.matchingWords,
     selectedWordId: this.selectedWordId,
   }
 }
