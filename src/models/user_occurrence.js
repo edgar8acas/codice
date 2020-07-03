@@ -31,7 +31,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       availableMeanings: {
         type: DataTypes.BOOLEAN,
-        allowNull: false
+        allowNull: true
       },
     },
     {

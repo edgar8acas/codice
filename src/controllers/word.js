@@ -15,7 +15,7 @@ export default router
     let item;
     try {
       //TODO: Filter fields
-      item = await Word.create(body);
+      item = await Word.create({...body, deprecated: false});
       
     } catch(e) {
       console.log(e)

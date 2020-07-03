@@ -9,6 +9,10 @@ AS $$
         ELSE
             new_or_old := NEW;
         END IF;
+        new_or_old.selected_word_id := NEW.selected_word_id;
+        new_or_old.visible := NEW.visible;
+        new_or_old.essential := NEW.essential;
+        new_or_old.user_id := NEW.user_id;
         IF EXISTS (SELECT FROM words WHERE words.word = new_or_old.word) THEN
             new_or_old.available_meanings := TRUE;
         ELSE

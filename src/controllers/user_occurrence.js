@@ -3,6 +3,44 @@ import { UserOccurrence, Word, User } from '@models';
 const router = express.Router();
 
 export default router
+  .post('/', async (req, res) => {
+    const {
+      body
+    } = req
+
+    try {
+      const existent = await UserOccurrence.findOne({
+        where: {
+          start: body.start,
+          textId: body.textId
+        }
+      });
+  
+      if (existent) {
+        return res
+          .status(500)
+          .json({ error: 'Error al crear ocurrencia: es posible que ya exista.'})
+      }
+      //TODO: validate occurrence
+      const item = await UserOccurrence.create(
+        {
+          ...body,
+          essential: false,
+          visible: true,
+          userId: 1
+        }
+      );
+
+      return res
+      .status(201)
+      .json(item);
+    } catch(e) {
+      console.log(e);
+      return res
+        .status(500)
+        .json({ error: e.message })
+    }
+  })
   .put('/:id/update-selected', async (req, res) => {
     const {
       params: { id: userOccurrenceId },
