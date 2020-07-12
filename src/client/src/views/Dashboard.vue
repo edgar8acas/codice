@@ -8,29 +8,33 @@
       </div>
     </header>
     <nav class="nav">
-      <router-link :to="{ name: 'Texts' }" exact-active-class="nav-active">Textos</router-link>
-      <router-link :to="{ name: 'Words' }" exact-active-class="nav-active">Palabras</router-link>
+      <router-link :to="{ name: 'Texts' }" exact-active-class="nav-active"
+        >Textos</router-link
+      >
+      <router-link :to="{ name: 'Words' }" exact-active-class="nav-active"
+        >Palabras</router-link
+      >
     </nav>
     <router-view class="main"></router-view>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState(['user']),
+    ...mapState(["user"]),
     formatUserType() {
-      return this.user.admin ? 'Administrador' : 'Estudiante'
-    }
+      return this.user.admin ? "Administrador" : "Estudiante";
+    },
   },
   methods: {
     changeUserType() {
-      this.$store.dispatch('toggleUserType');
-    }
-  }
-}
+      this.$store.dispatch("toggleUserType");
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -53,7 +57,7 @@ export default {
     }
 
     .logo {
-      font-family: 'Krona One';
+      font-family: "Krona One";
       padding: 10px;
       color: white;
     }
@@ -65,7 +69,7 @@ export default {
 
     .user-info {
       color: white;
-      padding: 10px ;
+      padding: 10px;
     }
   }
 

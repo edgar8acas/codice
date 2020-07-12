@@ -1,7 +1,11 @@
-export default function UserOccurrence(data, dictionaryWord = null, matchingWords = []) {
+export default function UserOccurrence(
+  data,
+  dictionaryWord = null,
+  matchingWords = []
+) {
   for (const key of Object.keys(data)) {
-    if (key === 'Word') {
-      this['relatedWord'] = data[key];
+    if (key === "Word") {
+      this["relatedWord"] = data[key];
       break;
     }
     this[key] = data[key];
@@ -12,30 +16,32 @@ export default function UserOccurrence(data, dictionaryWord = null, matchingWord
 
 Object.defineProperties(UserOccurrence.prototype, {
   learntStyle: {
-    get: function() {
-      return this.dictionaryWord ? 
-        this.dictionaryWord.isLearned ? 'learnt' : 'not-learned'
-        : 'not-selected-word';
+    get: function () {
+      return this.dictionaryWord
+        ? this.dictionaryWord.isLearned
+          ? "learnt"
+          : "not-learned"
+        : "not-selected-word";
     },
-    enumerable: true
+    enumerable: true,
   },
   availableStyle: {
-    get: function() {
-      return this.availableMeanings ? 'with-meanings' : 'no-meanings';
+    get: function () {
+      return this.availableMeanings ? "with-meanings" : "no-meanings";
     },
-    enumerable: true
+    enumerable: true,
   },
   essentialStyle: {
-    get: function() {
-      return this.essential ? 'essential' : 'unessential';
+    get: function () {
+      return this.essential ? "essential" : "unessential";
     },
-    enumerable: true
+    enumerable: true,
   },
   visibleStyle: {
-    get: function() {
-      return this.visible ? 'visible' : 'invisible';
+    get: function () {
+      return this.visible ? "visible" : "invisible";
     },
-    enumerable: true
+    enumerable: true,
   },
 });
 

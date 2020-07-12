@@ -21,24 +21,32 @@
         </div>
         <span class="more-info">+</span>
       </div>
-      
+
       <div class="side-card" v-if="processed">
         <h2>Palabras</h2>
-        
       </div>
 
       <div class="side-card" v-if="!processed">
         <sui-message class="warning">
           <sui-message-header>Texto sin palabras</sui-message-header>
           <p>Este texto aún no ha sido procesado.</p>
-          <button class="ui button primary" @click="toggleProcessingConfirmation">Procesar</button>
+          <button
+            class="ui button primary"
+            @click="toggleProcessingConfirmation"
+          >
+            Procesar
+          </button>
         </sui-message>
       </div>
     </div>
 
     <div class="template">
       <h2 class="title">{{ text.title }}</h2>
-      <text-content class="content" v-if="showContent" @showWordInfo="showWordInfo"></text-content>
+      <text-content
+        class="content"
+        v-if="showContent"
+        @showWordInfo="showWordInfo"
+      ></text-content>
     </div>
     <word-details class="word-details side-info" :wordId="currentWordId">
     </word-details>
@@ -49,22 +57,20 @@
         <form class="ui form">
           <div class="field">
             <div class="ui checkbox">
-              <input 
-                type="checkbox" 
-                name="exclusivo"
-                v-model="onlyExclusive">
+              <input type="checkbox" name="exclusivo" v-model="onlyExclusive" />
               <label>Léxico exclusivo</label>
             </div>
           </div>
         </form>
-        
       </sui-modal-content>
       <sui-modal-actions>
-        <router-link 
-          :to="{ name: 'ProcessText', params: { id: text.textId }}"
+        <router-link
+          :to="{ name: 'ProcessText', params: { id: text.textId } }"
           tag="button"
           class="ui button primary"
-          v-if="!processed"> Continuar
+          v-if="!processed"
+        >
+          Continuar
         </router-link>
       </sui-modal-actions>
     </sui-modal>
@@ -72,13 +78,13 @@
 </template>
 
 <script>
-import TextContent from '@/components/TextContent';
-import WordDetails from '@/components/WordDetails';
+import TextContent from "@/components/TextContent";
+import WordDetails from "@/components/WordDetails";
 
 export default {
   components: {
     TextContent,
-    WordDetails
+    WordDetails,
   },
   data() {
     return {
@@ -86,57 +92,58 @@ export default {
       showContent: true,
       currentWordId: null,
       onlyExclusive: false,
-      processingConfirmation: false
-    }
+      processingConfirmation: false,
+    };
   },
   computed: {
     text() {
       return this.$store.state.texts.find(
-        text => text.textId === this.textId
-      )
+        (text) => text.textId === this.textId
+      );
     },
     processed() {
-      return this.text.status === 'processed' ||
-             this.text.status === 'incomplete' 
-             ? true : false
+      return this.text.status === "processed" ||
+        this.text.status === "incomplete"
+        ? true
+        : false;
     },
     status() {
-      switch(this.text.status) {
-        case 'processed': 
-          return 'Procesado';
-        case 'unprocessed': 
-          return 'Sin procesar';
-        case 'incomplete': 
-          return 'Procesado (existen palabras sin multimedia)';
+      switch (this.text.status) {
+        case "processed":
+          return "Procesado";
+        case "unprocessed":
+          return "Sin procesar";
+        case "incomplete":
+          return "Procesado (existen palabras sin multimedia)";
         default:
-          return 'Desconocido'
+          return "Desconocido";
       }
     },
     formatGrade() {
-      return this.text.grade + '°';
-    }
+      return this.text.grade + "°";
+    },
   },
   async mounted() {
-    this.$store.dispatch('setProcessingOptions', false);
-    await this.$store.dispatch('setTemplateForTextDetails', this.text);
+    this.$store.dispatch("setProcessingOptions", false);
+    await this.$store.dispatch("setTemplateForTextDetails", this.text);
   },
   watch: {
     onlyExclusive(newVal) {
-      this.$store.dispatch('setProcessingOptions', newVal);
-    }
+      this.$store.dispatch("setProcessingOptions", newVal);
+    },
   },
   methods: {
     displayContent() {
       this.showContent = true;
     },
     showWordInfo(wordId) {
-      this.currentWordId = wordId
+      this.currentWordId = wordId;
     },
     toggleProcessingConfirmation() {
       this.processingConfirmation = !this.processingConfirmation;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -166,7 +173,6 @@ export default {
   text-align: left;
   line-height: 160%;
 }
-
 
 .details-box {
   box-sizing: border-box;
@@ -201,7 +207,7 @@ export default {
 .btn-primary {
   display: inline-block;
   text-transform: uppercase;
-  background-color: #42B983;
+  background-color: #42b983;
   border-radius: 3px;
   box-sizing: border-box;
   padding: 5px 10px;
@@ -218,7 +224,6 @@ export default {
 }
 
 .btn-primary:hover {
-  background-color: #26694B;
+  background-color: #26694b;
 }
-
 </style>

@@ -1,3 +1,3 @@
 module.exports = {
-  runtimeCompiler: false
-}
+  runtimeCompiler: false,
+};

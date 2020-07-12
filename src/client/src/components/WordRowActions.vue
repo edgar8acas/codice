@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-link 
+    <router-link
       :to="{ path: '', params: { id: rowData.wordId } }"
       tag="button"
       class="ui button mini"
@@ -14,16 +14,14 @@
 <script>
 export default {
   props: {
-    rowData: Object
+    rowData: Object,
   },
   methods: {
     showWordDetails() {
-      this.$emit('showWordDetails', this.rowData);
-    }
-  }
-}
+      this.$emit("showWordDetails", this.rowData);
+    },
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

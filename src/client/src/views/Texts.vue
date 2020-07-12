@@ -1,36 +1,32 @@
 <template>
   <div>
-    <router-link 
+    <router-link
       :to="{ name: 'AddText' }"
       tag="button"
       class="ui primary button"
     >
-    Nuevo texto
+      Nuevo texto
     </router-link>
-    <catalog-table
-      api-url="http://localhost:3000/api/texts"
-      :fields="fields"
-    >
+    <catalog-table api-url="http://localhost:3000/api/texts" :fields="fields">
     </catalog-table>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import CatalogTable from '@/components/CatalogTable.vue'
-import FieldDefs from '@/components/FieldDefs.js'
+import CatalogTable from "@/components/CatalogTable.vue";
+import FieldDefs from "@/components/FieldDefs.js";
 
 export default {
   components: {
-    CatalogTable
+    CatalogTable,
   },
   data() {
     return {
-      fields: FieldDefs
-    }
-  }
-}
+      fields: FieldDefs,
+    };
+  },
+};
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

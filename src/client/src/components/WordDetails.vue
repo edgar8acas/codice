@@ -1,110 +1,128 @@
 <template>
   <div>
-    <h2 class="section-title">{{ occurrence.word || 'Detalles de palabra' }}</h2>
+    <h2 class="section-title">
+      {{ occurrence.word || "Detalles de palabra" }}
+    </h2>
     <div class="related-words-container">
       <div v-if="occurrence.matchingWords.length === 0">
         No hay definiciones para la ocurrencia
       </div>
-      <div v-else-if="selection" >
+      <div v-else-if="selection">
         Selecciona un significado para la ocurrencia
       </div>
-      <div v-else >
+      <div v-else>
         Significados disponibles
       </div>
-      <div 
-        v-for="word in occurrence.matchingWords" 
+      <div
+        v-for="word in occurrence.matchingWords"
         :key="word.wordId"
         class="related-word"
       >
-        <div 
-          class="flex-item image" 
-          :style="{ backgroundImage: 'url(' + require('@/assets/img_placeholder.png') + ')'}"
+        <div
+          class="flex-item image"
+          :style="{
+            backgroundImage:
+              'url(' + require('@/assets/img_placeholder.png') + ')',
+          }"
         ></div>
         <div class="flex-item info">
-          <span class="definition" style="font-weight:bold">{{ word.definition || 'Definición...' }}</span>
-          <span class="definition">{{ word.type || 'Tipo...' }}</span>
-          <span class="more">{{ word.wordId ? 'Id de palabra: ' + word.wordId : 'Nuevo significado'}}</span> <br>
-            <div class="field" v-if="selection">
-              <label>Seleccionar</label>
-              <input 
-                type="radio" 
-                name="words-group"
-                v-model="picked"
-                :id="'word-' + word.wordId" 
-                :value="'word-' + word.wordId"
-                placeholder="&quot;Español&quot; ó &quot;Conocimiento del medio&quot;">
-            </div>
-          <button class="mini red ui button" v-if="!selection" @click="deleteWord(word)">Eliminar <br></button>
+          <span class="definition" style="font-weight: bold;">{{
+            word.definition || "Definición..."
+          }}</span>
+          <span class="definition">{{ word.type || "Tipo..." }}</span>
+          <span class="more">{{
+            word.wordId ? "Id de palabra: " + word.wordId : "Nuevo significado"
+          }}</span>
+          <br />
+          <div class="field" v-if="selection">
+            <label>Seleccionar</label>
+            <input
+              type="radio"
+              name="words-group"
+              v-model="picked"
+              :id="'word-' + word.wordId"
+              :value="'word-' + word.wordId"
+              placeholder='"Español" ó "Conocimiento del medio"'
+            />
+          </div>
+          <button
+            class="mini red ui button"
+            v-if="!selection"
+            @click="deleteWord(word)"
+          >
+            Eliminar <br />
+          </button>
           <span class="more">Más información</span>
         </div>
       </div>
       <div v-if="occurrence.selectedWordId !== null">
-        Guardar seleccionado para cada ocurrencia de <i>{{ occurrence.word }}</i>
-         <br>
-        <a class="btn-primary" @click.prevent="setSelectedForEveryOccurrence">Guardar</a>
+        Guardar seleccionado para cada ocurrencia de
+        <i>{{ occurrence.word }}</i>
+        <br />
+        <a class="btn-primary" @click.prevent="setSelectedForEveryOccurrence"
+          >Guardar</a
+        >
       </div>
-      
     </div>
   </div>
 </template>
 
 <script>
-
 export default {
   props: {
     occurrence: {
       type: Object,
       required: true,
-      default: function() {
+      default: function () {
         return {
-          matchingWords: []
-        }
-      }
+          matchingWords: [],
+        };
+      },
     },
     selection: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      picked: '',
-      markedStatus: ''
-    }
+      picked: "",
+      markedStatus: "",
+    };
   },
   watch: {
     occurrence() {
-      this.picked = 'word-' + this.occurrence.selectedWordId;
+      this.picked = "word-" + this.occurrence.selectedWordId;
       this.markedStatus = this.occurrence.markedStatus;
     },
     picked(newVal) {
-      if(newVal === 'word-' + this.occurrence.selectedWordId) return
-      
-      this.$store.dispatch('updateSelectedWord', {
+      if (newVal === "word-" + this.occurrence.selectedWordId) return;
+
+      this.$store.dispatch("updateSelectedWord", {
         ...this.occurrence,
-        selectedWordId: Number(newVal.substring(5))
+        selectedWordId: Number(newVal.substring(5)),
       });
-      this.markedStatus = 'ready';
+      this.markedStatus = "ready";
     },
-    'markedStatus': {
+    markedStatus: {
       handler(newVal) {
-        if(newVal === this.occurrence.markedStatus) return
-        this.$store.dispatch('updateMarkedStatus', {
+        if (newVal === this.occurrence.markedStatus) return;
+        this.$store.dispatch("updateMarkedStatus", {
           occurrenceStart: this.occurrence.start,
-          markedStatus: newVal
-        })
-      }
-    }
+          markedStatus: newVal,
+        });
+      },
+    },
   },
   methods: {
     setSelectedForEveryOccurrence() {
-      this.$store.dispatch('setSelectedForEveryOccurrence', this.occurrence);
+      this.$store.dispatch("setSelectedForEveryOccurrence", this.occurrence);
     },
     deleteWord(word) {
-      this.$store.dispatch('deleteRelatedWord', word)
-    }
-  }
-}
+      this.$store.dispatch("deleteRelatedWord", word);
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -151,7 +169,6 @@ export default {
     border-radius: 5px;
   }
 }
-
 
 .flex-item {
   width: 100px;

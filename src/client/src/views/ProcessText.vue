@@ -3,34 +3,44 @@
     <section class="central">
       <div class="side-info">
         <h2 class="section-title">Instrucciones para el administrador</h2>
-    <p class="instructions">
-      Aquí se muestran todas las ocurrencias de las palabras esenciales
-      obtenidas por el procesamiento.
-      <br> <br>
-      Para generar la plantilla con la que el texto se mostrará a los usuarios que quieran visualizarla,
-      es necesario que especifiques qué significado tiene cada una de ellas. 
-      <br> <br>
-      Si ninguna de los significados es apropiado, seleccionar el último generará uno nuevo.
-      <br> <br>
-      Debes elegir un significado para cada ocurrencia antes de guardar la plantilla.
-      Por lo que <strong>todas</strong> las ocurrencias deben mostrarse en <strong style="color: green">verde</strong>.
-    </p>
-    <a class="btn-primary" @click.prevent="setDefault" v-if="!processed">Predeterminado</a>
-    <br>
-    <a class="btn-primary" @click.prevent="save" v-if="!processed">Guardar</a>
+        <p class="instructions">
+          Aquí se muestran todas las ocurrencias de las palabras esenciales
+          obtenidas por el procesamiento.
+          <br />
+          <br />
+          Para generar la plantilla con la que el texto se mostrará a los
+          usuarios que quieran visualizarla, es necesario que especifiques qué
+          significado tiene cada una de ellas.
+          <br />
+          <br />
+          Si ninguna de los significados es apropiado, seleccionar el último
+          generará uno nuevo.
+          <br />
+          <br />
+          Debes elegir un significado para cada ocurrencia antes de guardar la
+          plantilla. Por lo que <strong>todas</strong> las ocurrencias deben
+          mostrarse en <strong style="color: green;">verde</strong>.
+        </p>
+        <a class="btn-primary" @click.prevent="setDefault" v-if="!processed"
+          >Predeterminado</a
+        >
+        <br />
+        <a class="btn-primary" @click.prevent="save" v-if="!processed"
+          >Guardar</a
+        >
       </div>
       <div class="template">
         <h2 class="section-title">{{ text.title }}</h2>
-        <text-content 
+        <text-content
           class="content"
-          :isChoosing="true" 
+          :isChoosing="true"
           @changeOccurrence="changeOccurrence"
           v-if="showTextContent"
         ></text-content>
       </div>
       <div class="side-info">
         <word-details class="word-details" :occurrence="occurrence">
-      </word-details>  
+        </word-details>
         <create-word :forWord="occurrence.word"></create-word>
       </div>
     </section>
@@ -38,69 +48,65 @@
 </template>
 
 <script>
-import WordDetails from '@/components/WordDetails';
-import CreateWord from '@/components/CreateWord';
-import { mapState } from 'vuex';
+import WordDetails from "@/components/WordDetails";
+import CreateWord from "@/components/CreateWord";
+import { mapState } from "vuex";
 
 export default {
   components: {
     CreateWord,
-    WordDetails
+    WordDetails,
   },
   data() {
     return {
       textId: this.$route.params.id,
       loading: false,
       occurrence: {},
-      showTextContent: false
-    }
+      showTextContent: false,
+    };
   },
   computed: {
-    ...mapState([
-      'occurrences'
-    ]),
+    ...mapState(["occurrences"]),
     text() {
       return this.$store.state.texts.find(
-        text => text.textId === this.textId
-      )
+        (text) => text.textId === this.textId
+      );
     },
     processed() {
-      return this.text.status === 'processed' ||
-             this.text.status === 'incomplete' 
-             ? true : false
-    }
+      return this.text.status === "processed" ||
+        this.text.status === "incomplete"
+        ? true
+        : false;
+    },
   },
   async mounted() {
-    await this.$store.dispatch('processText', this.textId);
+    await this.$store.dispatch("processText", this.textId);
     this.showTextContent = true;
   },
   methods: {
     isEmpty(obj) {
-      for(var key in obj) {
+      for (var key in obj) {
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
-            return false;
+          return false;
         }
       }
       return true;
     },
     async save() {
-      await this.$store.dispatch('saveOccurrences', this.textId);
-      this.$router.replace({name: 'Texts'})
+      await this.$store.dispatch("saveOccurrences", this.textId);
+      this.$router.replace({ name: "Texts" });
     },
     changeOccurrence(start) {
-      this.occurrence = this.occurrences.find(
-        o => o.start === start
-      )
+      this.occurrence = this.occurrences.find((o) => o.start === start);
     },
     setDefault() {
-      this.$store.dispatch('setDefault');
-    }
-  }
-}
+      this.$store.dispatch("setDefault");
+    },
+  },
+};
 </script>
 
 <style lang="scss">
-
 .content {
   height: 800px;
 }
@@ -109,13 +115,13 @@ export default {
   display: flex;
   flex-flow: row wrap;
   border: 1px solid blue;
-  
+
   > div {
     margin: 5px;
     padding: 5px;
     border-radius: 3px;
     cursor: pointer;
-  }  
+  }
 }
 
 .instructions {
@@ -130,7 +136,7 @@ export default {
     background-color: red;
     color: white;
   }
-} 
+}
 
 [class~="ready"] > div {
   border: 1px solid green;
@@ -144,7 +150,7 @@ export default {
 .btn-primary {
   display: inline-block;
   text-transform: uppercase;
-  background-color: #42B983;
+  background-color: #42b983;
   color: white;
   border-radius: 3px;
   box-sizing: border-box;
@@ -162,6 +168,6 @@ export default {
 }
 
 .btn-primary:hover {
-  background-color: #26694B;
+  background-color: #26694b;
 }
 </style>

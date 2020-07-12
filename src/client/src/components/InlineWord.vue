@@ -1,24 +1,30 @@
 <template>
-  <span 
+  <span
     @click="selectMeaning"
     :class="
-      'inline-word ' + 
-      occurrence.learntStyle + ' ' + 
-      occurrence.essentialStyle + ' ' + 
-      occurrence.availableStyle + ' ' +
-      occurrence.visibleStyle + ' ' +
-      occurrence.status + ' '"
-  >{{ word }}</span>
+      'inline-word ' +
+      occurrence.learntStyle +
+      ' ' +
+      occurrence.essentialStyle +
+      ' ' +
+      occurrence.availableStyle +
+      ' ' +
+      occurrence.visibleStyle +
+      ' ' +
+      occurrence.status +
+      ' '
+    "
+    >{{ word }}</span
+  >
 </template>
 
 <script>
 export default {
   data() {
-    return {
-    }
+    return {};
   },
   props: {
-    occurrence: Object
+    occurrence: Object,
   },
   computed: {
     word() {
@@ -26,15 +32,15 @@ export default {
     },
     start() {
       return this.occurrence.start;
-    }
+    },
   },
   methods: {
     selectMeaning() {
       this.hover = true;
-      this.$emit('changeOccurrence', this.start);
-    }
-  }
-}
+      this.$emit("changeOccurrence", this.start);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -73,13 +79,13 @@ export default {
 }
 
 .inline-word.learnt {
-  color: #246EB9;
-  text-shadow: #2BD9FE 1px 0 10px;
+  color: #246eb9;
+  text-shadow: #2bd9fe 1px 0 10px;
   font-weight: bold;
 }
 
 .inline-word.not-learnt {
-  color: #F06543;
+  color: #f06543;
   text-shadow: #c05136 1px 0 10px;
   font-weight: bold;
 }

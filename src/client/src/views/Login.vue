@@ -3,22 +3,24 @@
     <form class="ui form">
       <div class="field">
         <label class="white">Usuario</label>
-        <input 
-          type="text" 
+        <input
+          type="text"
           name="user"
           v-model="user.user"
-          placeholder="Usuario">
+          placeholder="Usuario"
+        />
       </div>
       <div class="field">
         <label class="white">Contraseña</label>
-        <input 
-          type="password" 
+        <input
+          type="password"
           name="password"
           v-model="user.password"
-          placeholder="Contraseña">
+          placeholder="Contraseña"
+        />
       </div>
       <button class="fluid ui button blue">Ingresar</button>
-      <br>
+      <br />
       <button class="fluid ui button">Registro</button>
     </form>
   </div>
@@ -28,10 +30,10 @@
 export default {
   data() {
     return {
-      user: {}
-    }
-  }
-}
+      user: {},
+    };
+  },
+};
 </script>
 
 <style lang="scss">

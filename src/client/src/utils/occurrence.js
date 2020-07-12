@@ -10,56 +10,53 @@ export default function Occurrence(data, matchingWords = []) {
 }
 
 Object.defineProperties(Occurrence.prototype, {
-  _selectedWordId: {writable: true, enumerable: false},
+  _selectedWordId: { writable: true, enumerable: false },
   selectedWordId: {
-    get: function() {
+    get: function () {
       return this._selectedWordId || null;
     },
-    set: function(wordId) {
-      const word = this.matchingWords.find(
-        w => w.wordId === wordId 
-      );
-      if(word) {
-        this._selectedWordId = word.wordId
-        this.markedStatus = 'ready';
-      }
-      else {
+    set: function (wordId) {
+      const word = this.matchingWords.find((w) => w.wordId === wordId);
+      if (word) {
+        this._selectedWordId = word.wordId;
+        this.markedStatus = "ready";
+      } else {
         this._selectedWordId = null;
-        this.markedStatus = 'conflict';
+        this.markedStatus = "conflict";
       }
     },
-    enumerable: true
+    enumerable: true,
   },
 
   _matchingWords: { writable: true, enumerable: false },
   matchingWords: {
-    get: function() {
+    get: function () {
       return this._matchingWords || [];
     },
-    set: function(matchingWords) {
-      this._matchingWords = matchingWords
+    set: function (matchingWords) {
+      this._matchingWords = matchingWords;
     },
-    enumerable: true
+    enumerable: true,
   },
-  
+
   status: {
-    get: function() {
-      if(this._matchingWords.length > 0) {
-        return 'with-meanings';
+    get: function () {
+      if (this._matchingWords.length > 0) {
+        return "with-meanings";
       }
-      return 'no-meanings'
-    }
-  }
+      return "no-meanings";
+    },
+  },
 });
 
-Occurrence.prototype.selectDefault = function() {
-  if(this.matchingWords.length > 0) {
+Occurrence.prototype.selectDefault = function () {
+  if (this.matchingWords.length > 0) {
     this.selectedWordId = this.matchingWords[0].wordId;
-    this.markedStatus = 'ready';
+    this.markedStatus = "ready";
   }
-}
+};
 
-Occurrence.prototype.toJSON = function() {
+Occurrence.prototype.toJSON = function () {
   return {
     start: this.start,
     word: this.word,
@@ -70,5 +67,5 @@ Occurrence.prototype.toJSON = function() {
     markedStatus: this.markedStatus,
     matchingWords: this.matchingWords,
     selectedWordId: this.selectedWordId,
-  }
-}
+  };
+};

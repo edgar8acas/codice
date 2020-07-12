@@ -3,20 +3,20 @@
     <!--<div id="nav">
       <router-link to="/">Mostrar todos</router-link>
     </div>-->
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <script>
-import store from '@/store'
+import store from "@/store";
 
 export default {
-  store
-}
+  store,
+};
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Krona+One&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Krona+One&display=swap");
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

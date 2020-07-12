@@ -9,7 +9,9 @@
             class="learned"
             v-for="dictionaryWord in learntWords"
             :key="dictionaryWord.dictionaryId"
-          >{{dictionaryWord.Word.word}}</li>
+          >
+            {{ dictionaryWord.Word.word }}
+          </li>
         </ul>
         Por aprender ({{ unlearntWords.length }})
         <ul>
@@ -17,13 +19,19 @@
             class="unlearned"
             v-for="dictionaryWord in unlearntWords"
             :key="dictionaryWord.dictionaryId"
-          >{{dictionaryWord.Word.word}}</li>
+          >
+            {{ dictionaryWord.Word.word }}
+          </li>
         </ul>
       </div>
     </div>
     <div class="learn-view">
       <h2>Los bancos</h2>
-      <text-content class="text-content" :isChoosing="false" @changeOccurrence="changeOccurrence"></text-content>
+      <text-content
+        class="text-content"
+        :isChoosing="false"
+        @changeOccurrence="changeOccurrence"
+      ></text-content>
 
       <!--<div class="media-container">
         <img v-if="occurrence.Word.imageUrl"
@@ -45,42 +53,55 @@
       </div>-->
     </div>
     <div class="side-info">
-      <h2 class="section-title">{{occurrence.word || 'Información de palabra'}}</h2>
+      <h2 class="section-title">
+        {{ occurrence.word || "Información de palabra" }}
+      </h2>
       <div class="word-detailed-info">
         <div class="feature">
           <span>{{ formatEssential }}</span>
           <div class="help">
-            <b>Esencial: </b> La ocurrencia fue añadida por el administrador. <br>
+            <b>Esencial: </b> La ocurrencia fue añadida por el administrador.
+            <br />
             <b>No esencial: </b> La ocurrencia fue añadida por el usuario.
           </div>
         </div>
         <div class="feature">
           <span>{{ formatAvailableMeanings }}</span>
           <div class="help">
-            <b>Definiciones disponibles: </b> Existen definiciones para la ocurrencia. <br>
-            <b>Sin definiciones: </b> No existen definiciones para la ocurrencia.
+            <b>Definiciones disponibles: </b> Existen definiciones para la
+            ocurrencia. <br />
+            <b>Sin definiciones: </b> No existen definiciones para la
+            ocurrencia.
           </div>
         </div>
         <div class="feature">
           <span>{{ formatVisible }}</span>
           <div class="help">
-            <b>Visible: </b> La palabra está resaltada en el texto. <br>
+            <b>Visible: </b> La palabra está resaltada en el texto. <br />
             <b>No visible: </b> La palabra no está resaltada en el texto.
           </div>
         </div>
       </div>
       <div class="word-actions">
-        <button class="ui button" @click="toggleSelectMeaning">Cambiar significado</button>
-        <button class="ui button" @click="toggleAddOccurrence">Añadir ocurrencia</button>
+        <button class="ui button" @click="toggleSelectMeaning">
+          Cambiar significado
+        </button>
+        <button class="ui button" @click="toggleAddOccurrence">
+          Añadir ocurrencia
+        </button>
       </div>
-      
+
       <!--<mark-learned :occurrence="occurrence"></mark-learned>-->
     </div>
 
     <sui-modal v-model="selectMeaning">
       <sui-modal-header>Cambiar significado</sui-modal-header>
       <sui-modal-content class="scrolling">
-        <word-details class="word-details" :occurrence="occurrence" :selection="true">
+        <word-details
+          class="word-details"
+          :occurrence="occurrence"
+          :selection="true"
+        >
         </word-details>
       </sui-modal-content>
       <sui-modal-actions>
@@ -101,10 +122,16 @@
             Selecciona la ocurrencia y da click en <b>Añadir seleccionado</b>.
           </p>
         </div>
-        <pre>{{currentTemplateText.rawContent}}</pre>
+        <pre>{{ currentTemplateText.rawContent }}</pre>
       </sui-modal-content>
       <sui-modal-actions>
-        <button class="primary ui button" v-if="addingOccurrence" @click="addSelectedOccurrence">Añadir seleccionado</button>
+        <button
+          class="primary ui button"
+          v-if="addingOccurrence"
+          @click="addSelectedOccurrence"
+        >
+          Añadir seleccionado
+        </button>
       </sui-modal-actions>
     </sui-modal>
   </section>
@@ -113,8 +140,8 @@
 <script>
 import TextContent from "@/components/TextContent";
 // import MarkLearned from "@/components/MarkLearned";
-import WordDetails from '@/components/WordDetails';
-import { getSelectedWordDetails } from '@/utils/template';
+import WordDetails from "@/components/WordDetails";
+import { getSelectedWordDetails } from "@/utils/template";
 import { mapState, mapGetters } from "vuex";
 export default {
   components: {
@@ -127,42 +154,46 @@ export default {
       textId: this.$route.params.id,
       occurrence: {
         Word: {},
-        matchingWords: []
+        matchingWords: [],
       },
       isLearnt: false,
       selectMeaning: false,
-      addingOccurrence: false
+      addingOccurrence: false,
     };
   },
   computed: {
     ...mapState(["occurrences", "currentTemplateText"]),
     ...mapGetters(["learntWords", "unlearntWords"]),
     formattedVideoUrl() {
-      if(this.occurrence.Word.videoUrl) {
-        const videoUrl = this.occurrence.Word.videoUrl.match(new RegExp('v=(.*)'))[1];
+      if (this.occurrence.Word.videoUrl) {
+        const videoUrl = this.occurrence.Word.videoUrl.match(
+          new RegExp("v=(.*)")
+        )[1];
         return `https://www.youtube.com/embed/${videoUrl}`;
       }
       return null;
     },
     formatEssential() {
-      return this.occurrence.essential ? 'Esencial' : 'No esencial';
+      return this.occurrence.essential ? "Esencial" : "No esencial";
     },
     formatAvailableMeanings() {
-      return this.occurrence.availableMeanings ? 'Definiciones disponibles' : 'Sin definiciones';
+      return this.occurrence.availableMeanings
+        ? "Definiciones disponibles"
+        : "Sin definiciones";
     },
     formatVisible() {
-      return this.occurrence.visible ? 'Visible' : 'No visible';
-    }
+      return this.occurrence.visible ? "Visible" : "No visible";
+    },
   },
   async mounted() {
     await this.$store.dispatch("getTemplateByTextId", this.textId);
   },
   methods: {
     changeOccurrence(start) {
-      this.occurrence = this.occurrences.find(o => o.start === start);
+      this.occurrence = this.occurrences.find((o) => o.start === start);
     },
     async toggleSelectMeaning() {
-      await this.$store.dispatch('getRelatedWords', this.occurrence);
+      await this.$store.dispatch("getRelatedWords", this.occurrence);
       this.selectMeaning = !this.selectMeaning;
     },
     toggleAddOccurrence() {
@@ -170,15 +201,14 @@ export default {
     },
     async addSelectedOccurrence() {
       const details = getSelectedWordDetails(this.currentTemplateText);
-      await this.$store.dispatch('addNewOccurrence', details);
-      window.location.reload()
-    }
-  }
+      await this.$store.dispatch("addNewOccurrence", details);
+      window.location.reload();
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-
 .central {
   display: grid;
   grid-template-columns: 20% 40% 20%;
@@ -225,7 +255,7 @@ export default {
     margin-left: 20px;
     margin-right: 20px;
 
-    >* {
+    > * {
       margin-top: 10px;
     }
   }
@@ -287,7 +317,6 @@ ul {
   line-height: 160%;
 }
 
-
 .media-container {
   display: flex;
   flex-flow: row nowrap;
@@ -298,12 +327,12 @@ ul {
     height: 100%;
   }
   .video {
-  //color: red;
-  text-align: center;
-  //border: 1px solid red;
+    //color: red;
+    text-align: center;
+    //border: 1px solid red;
   }
   .image {
-    //border: 1px solid blue;
+    border: 1px solid blue;
   }
 }
 </style>

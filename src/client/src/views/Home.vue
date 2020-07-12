@@ -15,15 +15,14 @@
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 .main-bg {
   position: relative;
-  width: 100vw; height: 100vh;
+  width: 100vw;
+  height: 100vh;
 
   .central {
     height: 100%;
@@ -34,39 +33,38 @@ export default {
   ::before {
     content: "";
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-image: url('../assets/home_bg.jpg');
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../assets/home_bg.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     filter: blur(10px);
     z-index: -1;
   }
-
 }
 
 .home-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background-color: #2185d0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #2185d0;
 
-    font-size: 2em;
+  font-size: 2em;
 
-    height: fit-content;
+  height: fit-content;
 
-    > * {
-      align-self: center;
-    }
-
-    .logo {
-      font-family: 'Krona One';
-      padding: 10px;
-      color: white;
-    }
-
-    
+  > * {
+    align-self: center;
   }
+
+  .logo {
+    font-family: "Krona One";
+    padding: 10px;
+    color: white;
+  }
+}
 
 .top-buttons {
   display: flex;

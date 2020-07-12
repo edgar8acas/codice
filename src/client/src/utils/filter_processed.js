@@ -19,22 +19,22 @@ const exclusivo = {
     "jugar",
     "aquí",
     "biblioteca",
-    "siempre"
+    "siempre",
   ],
-  segundo: []
-}
+  segundo: [],
+};
 
 export default function getExclusiveWords(processed) {
   for (const key in processed.conflicts) {
-    if (!exclusivo.primero.find(word => word === key)) {
-      delete processed.conflicts[key]
+    if (!exclusivo.primero.find((word) => word === key)) {
+      delete processed.conflicts[key];
     }
   }
   for (const key in processed.ready) {
-    if (!exclusivo.primero.find(word => word === key)) {
-      delete processed.ready[key]
+    if (!exclusivo.primero.find((word) => word === key)) {
+      delete processed.ready[key];
     }
   }
-  console.log(processed)
+  console.log(processed);
   return processed;
 }

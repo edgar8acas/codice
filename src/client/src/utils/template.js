@@ -1,13 +1,17 @@
-import Occurrence from '@/utils/occurrence';
-import UserOccurrence from '@/utils/user_occurrence';
+import Occurrence from "@/utils/occurrence";
+import UserOccurrence from "@/utils/user_occurrence";
 
 //Will escape the string passed to it so it's mached verbatim as it was passed
 function escapeForRegExp(str) {
-  return str.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&');
+  return str.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
 }
 
 /** Returns an array of occurrences, new lines or strings representing chunks of the text.*/
-export function getTokenizedContent(wordOccurrences, text, onlyNewLines = false) {
+export function getTokenizedContent(
+  wordOccurrences,
+  text,
+  onlyNewLines = false
+) {
   const newLineOccurrences = findNewLinesInText(text);
   const tokens = [];
   if (onlyNewLines) {
@@ -22,18 +26,20 @@ export function getTokenizedContent(wordOccurrences, text, onlyNewLines = false)
 
 /** In case words is a conflict/ready structure, transform it to array of words */
 function prepareWordsArray(words, isConflicts = false) {
-  if(isConflicts) {
+  if (isConflicts) {
     //merge conflicts structure in single array
-    let joined = []
-    for (const property of ['conflicts', 'ready']) {
-      joined = [...joined,
-        ...Object.entries({...words[property]}) //avoid mutating the object
+    let joined = [];
+    for (const property of ["conflicts", "ready"]) {
+      joined = [
+        ...joined,
+        ...Object.entries({ ...words[property] }) //avoid mutating the object
           .map(([key, value]) => {
             let mWord = value.length > 0 ? [[...value]] : [[]]; //avoid mutating the array
             mWord.unshift(property);
             mWord.push(key); //Word string
             return mWord;
-          })];
+          }),
+      ];
     }
     return joined;
   }
@@ -45,11 +51,11 @@ function prepareWordsArray(words, isConflicts = false) {
  * an occurrence or a new line in the order they appear in text.
  */
 export function splitContentFromTokens(tokens, text) {
-  if(Array.isArray(tokens)) {
+  if (Array.isArray(tokens)) {
     const splitted = tokens.flatMap((token, j, tokens) => {
       let start;
       let end = token.start;
-      
+
       if (j === 0) {
         start = 0;
       } else {
@@ -58,82 +64,93 @@ export function splitContentFromTokens(tokens, text) {
       }
 
       //Last token
-      if(j === tokens.length - 1) {
+      if (j === tokens.length - 1) {
         return [
-          text.rawContent.substring(start, end), 
-          token.relatedWords ? token.relatedWords[2] : token.word, 
-          text.rawContent.substring(token.ending, text.rawContent.length + 1)
+          text.rawContent.substring(start, end),
+          token.relatedWords ? token.relatedWords[2] : token.word,
+          text.rawContent.substring(token.ending, text.rawContent.length + 1),
         ];
       }
 
       //Any other token
-      return [
-        text.rawContent.substring(start, end), 
-        token
-      ];
-
+      return [text.rawContent.substring(start, end), token];
     });
     return splitted;
   }
-  throw new TypeError('Occurrences is not an array')
-
+  throw new TypeError("Occurrences is not an array");
 }
 
-export function findOccurrencesInText({text, conflicts, ready}) {
-  const mWords = prepareWordsArray({ conflicts: {...conflicts}, ready: {...ready}}, true);
+export function findOccurrencesInText({ text, conflicts, ready }) {
+  const mWords = prepareWordsArray(
+    { conflicts: { ...conflicts }, ready: { ...ready } },
+    true
+  );
   let occurrences = [];
-  mWords.forEach(related => {
-    const status = 'conflicts';
+  mWords.forEach((related) => {
+    const status = "conflicts";
     const regex = getRegexFromWord(related[2]);
-    
-    for(const match of text.rawContent.matchAll(regex)) {
-      occurrences.push(new Occurrence({
-        word: related[2],
-        start: match.index,
-        ending: match.index + match[0].length,
-        textId: text.textId,
-        markedStatus: status
-      }, related[1]));
+
+    for (const match of text.rawContent.matchAll(regex)) {
+      occurrences.push(
+        new Occurrence(
+          {
+            word: related[2],
+            start: match.index,
+            ending: match.index + match[0].length,
+            textId: text.textId,
+            markedStatus: status,
+          },
+          related[1]
+        )
+      );
     }
   });
   return occurrences;
 }
 
-
 function findNewLinesInText(text) {
   let newLines = [];
-  for(const match of text.rawContent.matchAll(new RegExp('\\n+', 'g'))) {
+  for (const match of text.rawContent.matchAll(new RegExp("\\n+", "g"))) {
     newLines.push({
       start: match.index,
-      ending: match.index + match[0].length
-    })
+      ending: match.index + match[0].length,
+    });
   }
   return newLines;
 }
 
-export function generateOccurrencesFromTemplate(userOccurrences, dictionaryWords) {
-  return userOccurrences.map(o => {
-    return new UserOccurrence(o, 
-      dictionaryWords.find(dw => dw.Word.wordId === o.Word.wordId)
-    )
-  })
+export function generateOccurrencesFromTemplate(
+  userOccurrences,
+  dictionaryWords
+) {
+  return userOccurrences.map((o) => {
+    return new UserOccurrence(
+      o,
+      dictionaryWords.find((dw) => dw.Word.wordId === o.Word.wordId)
+    );
+  });
 }
 
 function getRegexFromWord(word) {
-  return new RegExp('\\b' + escapeForRegExp(word) + '\\b', 'gi');
+  return new RegExp("\\b" + escapeForRegExp(word) + "\\b", "gi");
 }
 
 export function getSelectedWordDetails(text) {
   const selection = window.getSelection();
   console.log(selection);
-  console.log(text.rawContent.substring(selection.anchorOffset, selection.focusOffset));
-  
+  console.log(
+    text.rawContent.substring(selection.anchorOffset, selection.focusOffset)
+  );
+
   return {
     start: selection.anchorOffset,
     ending: selection.focusOffset,
-    word: text.rawContent.substring(selection.anchorOffset, selection.focusOffset),
-    textId: text.textId
-  }
+    word: text.rawContent.substring(
+      selection.anchorOffset,
+      selection.focusOffset
+    ),
+    textId: text.textId,
+  };
   //const range = selection.getRangeAt(0);
   /*const textContentNode = range.startContainer.parentNode;
   const textContentRange = new Range();

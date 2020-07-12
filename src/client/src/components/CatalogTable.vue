@@ -1,148 +1,159 @@
 <script>
-import Vuetable from 'vuetable-2/src/components/Vuetable';
-import VuetablePagination from 'vuetable-2/src/components/VuetablePagination';
-import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo';
-import TextRowActions from '@/components/TextRowActions'
+import Vuetable from "vuetable-2/src/components/Vuetable";
+import VuetablePagination from "vuetable-2/src/components/VuetablePagination";
+import VuetablePaginationInfo from "vuetable-2/src/components/VuetablePaginationInfo";
+import TextRowActions from "@/components/TextRowActions";
 export default {
   components: {
     Vuetable,
     VuetablePagination,
     VuetablePaginationInfo,
-    TextRowActions
+    TextRowActions,
   },
   props: {
     apiUrl: {
       type: String,
-      required: true
+      required: true,
     },
     fields: {
       type: Array,
-      required: true
+      required: true,
     },
     sortOrder: {
       type: Array,
       default() {
         return [
           {
-            field: 'textId',
-            direction: 'asc'
-          }
-        ]
-      }
+            field: "textId",
+            direction: "asc",
+          },
+        ];
+      },
     },
     appendParams: {
       type: Object,
       default() {
-        return {}
-      }
+        return {};
+      },
     },
   },
   render(h) {
     return h(
-      'div',
+      "div",
       {
-        class: { 'table-container': true }
+        class: { "table-container": true },
       },
       [
         this.renderPaginationTop(h),
         this.renderVuetable(h),
-        this.renderPagination(h)
+        this.renderPagination(h),
       ]
-    )
+    );
   },
   methods: {
     renderVuetable(h) {
-      return h(
-        'vuetable',
-        {
-          ref: 'vuetable',
-          props: {
-            apiUrl: this.apiUrl,
-            fields: this.fields,
-            paginationPath: "",
-            perPage: 4,
-            sortOrder: this.sortOrder
+      return h("vuetable", {
+        ref: "vuetable",
+        props: {
+          apiUrl: this.apiUrl,
+          fields: this.fields,
+          paginationPath: "",
+          perPage: 4,
+          sortOrder: this.sortOrder,
+        },
+        on: {
+          "vuetable:pagination-data": this.onPaginationData,
+          "vuetable:load-success": this.onLoadSuccess,
+        },
+        scopedSlots: {
+          actions: function (props) {
+            return h("text-row-actions", {
+              props: {
+                rowData: props.rowData,
+              },
+            });
           },
-          on: {
-            'vuetable:pagination-data': this.onPaginationData,
-            'vuetable:load-success': this.onLoadSuccess,
-          },
-          scopedSlots: {
-            actions: function(props) {
-              return h(
-                'text-row-actions', 
-                {
-                  props: {
-                    rowData: props.rowData
-                  }
-              })
-            }
-          }
-        }
-      )
+        },
+      });
     },
     renderPagination(h) {
       return h(
-        'div',
-        { class: { 'vuetable-pagination': true, 'ui': true, 'basic': true, 'segment': true, 'grid': true } },
+        "div",
+        {
+          class: {
+            "vuetable-pagination": true,
+            ui: true,
+            basic: true,
+            segment: true,
+            grid: true,
+          },
+        },
         [
-          h('vuetable-pagination-info', { 
-            ref: 'paginationInfo',
+          h("vuetable-pagination-info", {
+            ref: "paginationInfo",
             props: {
-              infoTemplate: 'Mostrando {from} a {to} de {total} textos'
-            }
+              infoTemplate: "Mostrando {from} a {to} de {total} textos",
+            },
           }),
-          h('vuetable-pagination', {
-            ref: 'pagination',
+          h("vuetable-pagination", {
+            ref: "pagination",
             on: {
-              'vuetable-pagination:change-page': this.onChangePage
-            }
-          })
+              "vuetable-pagination:change-page": this.onChangePage,
+            },
+          }),
         ]
-      )
+      );
     },
     renderPaginationTop(h) {
       return h(
-        'div',
-        { class: { 'vuetable-pagination': true, 'ui': true, 'basic': true, 'segment': true, 'grid': true } },
+        "div",
+        {
+          class: {
+            "vuetable-pagination": true,
+            ui: true,
+            basic: true,
+            segment: true,
+            grid: true,
+          },
+        },
         [
-          h('vuetable-pagination-info', { 
-            ref: 'paginationInfoTop',
+          h("vuetable-pagination-info", {
+            ref: "paginationInfoTop",
             props: {
-              infoTemplate: 'Mostrando {from} a {to} de {total} textos'
-            }
+              infoTemplate: "Mostrando {from} a {to} de {total} textos",
+            },
           }),
-          h('vuetable-pagination', {
-            ref: 'paginationTop',
+          h("vuetable-pagination", {
+            ref: "paginationTop",
             on: {
-              'vuetable-pagination:change-page': this.onChangePage
-            }
-          })
+              "vuetable-pagination:change-page": this.onChangePage,
+            },
+          }),
         ]
-      )
+      );
     },
-    formatRawContent (value) {
-      return value ? value.substring(0, 30) + '...' : 'Sin contenido';
+    formatRawContent(value) {
+      return value ? value.substring(0, 30) + "..." : "Sin contenido";
     },
-    formatGrade (value) {
-      return value + '°';
+    formatGrade(value) {
+      return value + "°";
     },
-    formatStatus (value) {
-      return value === 'processed' ? 'Procesado' : 'No procesado';
+    formatStatus(value) {
+      return value === "processed" ? "Procesado" : "No procesado";
     },
-    onPaginationData (paginationData) {
-      this.$refs.paginationTop.setPaginationData(paginationData)
-      this.$refs.paginationInfoTop.setPaginationData(paginationData)
+    onPaginationData(paginationData) {
+      this.$refs.paginationTop.setPaginationData(paginationData);
+      this.$refs.paginationInfoTop.setPaginationData(paginationData);
 
-      this.$refs.pagination.setPaginationData(paginationData)
-      this.$refs.paginationInfo.setPaginationData(paginationData)
+      this.$refs.pagination.setPaginationData(paginationData);
+      this.$refs.paginationInfo.setPaginationData(paginationData);
     },
-    onLoadSuccess (response) {
-      this.$store.dispatch('setTexts', response.data.data);
+    onLoadSuccess(response) {
+      this.$store.dispatch("setTexts", response.data.data);
     },
-    onChangePage (page) {
-      this.$refs.vuetable.changePage(page)
+    onChangePage(page) {
+      this.$refs.vuetable.changePage(page);
     },
-  }
-}
+  },
+};
 </script>
