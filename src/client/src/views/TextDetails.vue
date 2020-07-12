@@ -1,32 +1,73 @@
 <template>
   <section class="central">
     <div class="details side-info">
-      <h2>Detalles del texto</h2>
-      <p class="details-box">
-        <span class="detail-label">ID</span>: {{ text.textId }} <br>
-        <span class="detail-label">Título</span>: {{ text.title }} <br>
-        <span class="detail-label">Categoría</span>: {{ text.category }} <br>
-        <span class="detail-label">Grado</span>: {{ text.grade }} <br>
-        <span class="detail-label">Estado</span>: {{ status }} <br>
-        <span class="detail-label">Añadido por</span>: {{ text.addedBy }} <br> <br>
-        <span class="detail-label">Contenido</span> <br>
-        <input type="checkbox" name="exclusivo" id="exclusivo" v-model="onlyExclusive" v-if="!processed">
-        <label for="exclusivo" v-if="!processed">Solo léxico exclusivo</label>
-        <br>
-        <router-link 
-          :to="{ name: 'ProcessText', params: { id: text.textId }}"
-          v-slot="{ href, navigate }"
-          v-if="!processed">
-          <a :href="href" @click="navigate" class="btn-primary"> Obtener </a>
-        </router-link>
-      </p>
+      <div class="side-card">
+        <h2>Información</h2>
+        <div class="details-box">
+          <div class="detail expand">
+            <span class="label">Título</span>
+            <span>{{ text.title }}</span>
+          </div>
+
+          <div class="detail">
+            <span class="label">Categoría</span>
+            <span>{{ text.category }}</span>
+          </div>
+
+          <div class="detail">
+            <span class="label">Grado</span>
+            <span>{{ formatGrade }}</span>
+          </div>
+        </div>
+        <span class="more-info">+</span>
+      </div>
+      
+      <div class="side-card" v-if="processed">
+        <h2>Palabras</h2>
+        
+      </div>
+
+      <div class="side-card" v-if="!processed">
+        <sui-message class="warning">
+          <sui-message-header>Texto sin palabras</sui-message-header>
+          <p>Este texto aún no ha sido procesado.</p>
+          <button class="ui button primary" @click="toggleProcessingConfirmation">Procesar</button>
+        </sui-message>
+      </div>
     </div>
+
     <div class="template">
       <h2 class="title">{{ text.title }}</h2>
       <text-content class="content" v-if="showContent" @showWordInfo="showWordInfo"></text-content>
     </div>
     <word-details class="word-details side-info" :wordId="currentWordId">
     </word-details>
+
+    <sui-modal v-model="processingConfirmation">
+      <sui-modal-header>Procesar el texto "{{ text.title }}"</sui-modal-header>
+      <sui-modal-content class="scrolling">
+        <form class="ui form">
+          <div class="field">
+            <div class="ui checkbox">
+              <input 
+                type="checkbox" 
+                name="exclusivo"
+                v-model="onlyExclusive">
+              <label>Léxico exclusivo</label>
+            </div>
+          </div>
+        </form>
+        
+      </sui-modal-content>
+      <sui-modal-actions>
+        <router-link 
+          :to="{ name: 'ProcessText', params: { id: text.textId }}"
+          tag="button"
+          class="ui button primary"
+          v-if="!processed"> Continuar
+        </router-link>
+      </sui-modal-actions>
+    </sui-modal>
   </section>
 </template>
 
@@ -44,7 +85,8 @@ export default {
       textId: this.$route.params.id,
       showContent: true,
       currentWordId: null,
-      onlyExclusive: false
+      onlyExclusive: false,
+      processingConfirmation: false
     }
   },
   computed: {
@@ -61,18 +103,22 @@ export default {
     status() {
       switch(this.text.status) {
         case 'processed': 
-          return 'Con palabras';
+          return 'Procesado';
         case 'unprocessed': 
-          return 'Sin palabras';
+          return 'Sin procesar';
         case 'incomplete': 
-          return 'Falta multimedia';
+          return 'Procesado (existen palabras sin multimedia)';
         default:
           return 'Desconocido'
       }
     },
+    formatGrade() {
+      return this.text.grade + '°';
+    }
   },
-  mounted() {
+  async mounted() {
     this.$store.dispatch('setProcessingOptions', false);
+    await this.$store.dispatch('setTemplateForTextDetails', this.text);
   },
   watch: {
     onlyExclusive(newVal) {
@@ -85,12 +131,18 @@ export default {
     },
     showWordInfo(wordId) {
       this.currentWordId = wordId
+    },
+    toggleProcessingConfirmation() {
+      this.processingConfirmation = !this.processingConfirmation;
     }
   }
 }
 </script>
 
 <style lang="scss">
+:root {
+  --box-border-color: #c2c2c2;
+}
 .identified {
   color: blue;
 }
@@ -102,7 +154,7 @@ export default {
 }
 
 .template {
-  border: 1px solid #c2c2c2;
+  border: 1px solid var(--box-border-color);
   border-radius: 5px;
 }
 
@@ -115,22 +167,35 @@ export default {
   line-height: 160%;
 }
 
-.side-info {
-  border-radius: 5px;
-  border: 1px solid #c2c2c2;
-}
 
 .details-box {
-  min-height: 200px;
-  border-radius: 5px;
-  border-top: 1px solid #c2c2c2;
-  padding: 10px;
   box-sizing: border-box;
-  text-align: left;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.detail-label {
-  font-weight: bold;
+.side-card {
+  padding: 10px;
+  border-bottom: 1px solid var(--box-border-color);
+  margin-bottom: 0.5em;
+}
+
+.detail {
+  font-size: 1.4rem;
+  padding-bottom: 10px;
+  padding-right: 10px;
+  .label {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+  }
+  span {
+    display: block;
+  }
+}
+
+.expand {
+  flex-basis: 100%;
+  padding-right: 0;
 }
 
 .btn-primary {

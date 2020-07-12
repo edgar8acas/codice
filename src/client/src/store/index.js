@@ -41,6 +41,9 @@ export default new Vuex.Store({
     setTokenizedContent (state, tokens) {
       state.tokenizedContent = tokens;
     },
+    resetTokenizedContent (state) {
+      state.tokenizedContent = [];
+    },
     setCurrentTemplateText (state, text) {
       state.currentTemplateText = text;
     },
@@ -166,6 +169,11 @@ export default new Vuex.Store({
       commit('setDictionaryWords', dictionaryWords);
       commit('setCurrentTemplateText', text);
       const tokenizedContent = getTokenizedContent(occurrences, text);
+      commit('setTokenizedContent', tokenizedContent);
+    },
+    async setTemplateForTextDetails({ commit }, text) {
+      commit('resetTokenizedContent');
+      const tokenizedContent = getTokenizedContent([], text, true);
       commit('setTokenizedContent', tokenizedContent);
     },
     async changeLearntStatus({ commit }, dictionaryWord) {

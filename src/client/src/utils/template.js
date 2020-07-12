@@ -7,9 +7,14 @@ function escapeForRegExp(str) {
 }
 
 /** Returns an array of occurrences, new lines or strings representing chunks of the text.*/
-export function getTokenizedContent(wordOccurrences, text) {
+export function getTokenizedContent(wordOccurrences, text, onlyNewLines = false) {
   const newLineOccurrences = findNewLinesInText(text);
-  const tokens = [...wordOccurrences, ...newLineOccurrences];
+  const tokens = [];
+  if (onlyNewLines) {
+    tokens.push(...newLineOccurrences);
+  } else {
+    tokens.push(...wordOccurrences, ...newLineOccurrences);
+  }
   tokens.sort((a, b) => a.start - b.start);
   const tokenizedContent = splitContentFromTokens(tokens, text);
   return tokenizedContent;

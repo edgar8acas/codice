@@ -32,9 +32,7 @@ export default Vue.component('text-content', {
     return h('p', children);
   },
   data() {
-    return {
-      content: []
-    }
+    return {}
   },
   props: {
     isChoosing: {
