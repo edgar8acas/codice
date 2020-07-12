@@ -19,6 +19,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    user: {
+      admin: true
+    },
     texts: [],
     tokenizedContent: [],
     occurrences: [],
@@ -95,6 +98,9 @@ export default new Vuex.Store({
     },
     addSuccess(state, data) {
       state.success = [data];
+    },
+    toggleUserType(state) {
+      state.user.admin = !state.user.admin
     }
   },
   actions: {
@@ -217,6 +223,10 @@ export default new Vuex.Store({
         }
       }
       
+    },
+    /** Temporal action to change the user type, just for development purposes */
+    toggleUserType ({ commit }) {
+      commit('toggleUserType');
     }
   },
   getters: {

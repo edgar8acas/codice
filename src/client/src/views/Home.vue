@@ -65,23 +65,29 @@ export default {
       color: white;
     }
 
-    .top-buttons {
-      display: flex;
-      > * {
-        color: white;
-        margin-right: 10px;
-        padding: 10px;
-        font-size: 0.6em;
-        border: 2px solid white;
-        border-radius: 10px;
-        margin-top: 10px;
-        margin-bottom: 10px;
+    
+  }
 
-        :hover {
-          color: #2185d0;
-          background-color: white;
-        }
-      }
+.top-buttons {
+  display: flex;
+  > * {
+    color: white;
+    margin-right: 10px;
+    padding: 10px;
+    font-size: 0.6em;
+    border: 2px solid white;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    :hover {
+      color: #2185d0;
+      background-color: white;
     }
   }
+
+  button {
+    background-color: transparent;
+  }
+}
 </style>

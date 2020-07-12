@@ -4,6 +4,7 @@
       <div class="logo">CÓDICE</div>
       <div class="top-buttons">
         <router-link to="/">Salir</router-link>
+        <button @click="changeUserType">{{ formatUserType }}</button>
       </div>
     </header>
     <nav class="nav">
@@ -15,8 +16,20 @@
 </template>
 
 <script>
-export default {
+import { mapState } from 'vuex';
 
+export default {
+  computed: {
+    ...mapState(['user']),
+    formatUserType() {
+      return this.user.admin ? 'Administrador' : 'Estudiante'
+    }
+  },
+  methods: {
+    changeUserType() {
+      this.$store.dispatch('toggleUserType');
+    }
+  }
 }
 </script>
 
