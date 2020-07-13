@@ -23,7 +23,29 @@
       </div>
 
       <div class="side-card" v-if="processed">
-        <h2>Palabras</h2>
+        <h2>Ocurrencias</h2>
+        <form class="ui form">
+          <div class="field">
+            <div class="ui checkbox">
+              <input
+                type="checkbox"
+                name="availableMeanings"
+                v-model="filter.availableMeanings"
+              />
+              <label>Significados disponibles</label>
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui checkbox">
+              <input
+                type="checkbox"
+                name="noAvailableMeanings"
+                v-model="filter.noAvailableMeanings"
+              />
+              <label>Sin significados</label>
+            </div>
+          </div>
+        </form>
       </div>
 
       <div class="side-card" v-if="!processed">
@@ -45,11 +67,15 @@
       <text-content
         class="content"
         v-if="showContent"
-        @showWordInfo="showWordInfo"
+        :filterOptions="filter"
+        @changeOccurrence="changeOccurrence"
       ></text-content>
     </div>
-    <word-details class="word-details side-info" :wordId="currentWordId">
-    </word-details>
+    <div class="side-info" v-if="occurrence">
+      <word-details class="word-details" :occurrence="occurrence">
+      </word-details>
+      <create-word :forWord="occurrence.word"></create-word>
+    </div>
 
     <sui-modal v-model="processingConfirmation">
       <sui-modal-header>Procesar el texto "{{ text.title }}"</sui-modal-header>
@@ -80,11 +106,14 @@
 <script>
 import TextContent from "@/components/TextContent";
 import WordDetails from "@/components/WordDetails";
+import CreateWord from "@/components/CreateWord";
+import { mapState } from "vuex";
 
 export default {
   components: {
     TextContent,
     WordDetails,
+    CreateWord
   },
   data() {
     return {
@@ -93,9 +122,15 @@ export default {
       currentWordId: null,
       onlyExclusive: false,
       processingConfirmation: false,
+      occurrence: null,
+      filter: {
+        availableMeanings: false,
+        noAvailableMeanings: false
+      }
     };
   },
   computed: {
+    ...mapState(["occurrences"]),
     text() {
       return this.$store.state.texts.find(
         (text) => text.textId === this.textId
@@ -136,8 +171,10 @@ export default {
     displayContent() {
       this.showContent = true;
     },
-    showWordInfo(wordId) {
-      this.currentWordId = wordId;
+    async changeOccurrence(start) {
+      const foundOccurrence = this.occurrences.find((o) => o.start === start);
+      await this.$store.dispatch("getRelatedWords", foundOccurrence);
+      this.occurrence = foundOccurrence;
     },
     toggleProcessingConfirmation() {
       this.processingConfirmation = !this.processingConfirmation;

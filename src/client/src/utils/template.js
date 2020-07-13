@@ -118,16 +118,22 @@ function findNewLinesInText(text) {
   }
   return newLines;
 }
-
-export function generateOccurrencesFromTemplate(
-  userOccurrences,
+/** Transform the row response of occurrence objects and creates instances of Occurrence or UserOccurrences */
+export function generateOccurrencesFromTemplate({
+  occurrences,
+  template = false,
   dictionaryWords
-) {
-  return userOccurrences.map((o) => {
-    return new UserOccurrence(
-      o,
-      dictionaryWords.find((dw) => dw.Word.wordId === o.Word.wordId)
-    );
+}) {
+  return occurrences.map((o) => {
+    if (template) {
+      return new Occurrence(o)
+    } else {
+      return new UserOccurrence(
+        o,
+        dictionaryWords.find((dw) => dw.Word.wordId === o.Word.wordId)
+      );
+    }
+    
   });
 }
 

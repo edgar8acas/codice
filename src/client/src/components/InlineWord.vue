@@ -11,10 +11,10 @@
       ' ' +
       occurrence.visibleStyle +
       ' ' +
-      occurrence.status +
-      ' '
+      occurrence.status
     "
-    >{{ word }}</span
+  >
+    {{ word }}</span
   >
 </template>
 

@@ -1,11 +1,7 @@
 export default function Occurrence(data, matchingWords = []) {
-  const { word, start, ending, textId, wordId } = data;
-  this.start = start;
-  this.word = word;
-  this.ending = ending;
-  this.textId = textId;
-  this.wordId = wordId;
-  this.occurrenceId = undefined;
+  for (const key of Object.keys(data)) {
+    this[key] = data[key];
+  }
   this.matchingWords = matchingWords;
 }
 
@@ -39,13 +35,20 @@ Object.defineProperties(Occurrence.prototype, {
     enumerable: true,
   },
 
-  status: {
+  /*status: {
     get: function () {
       if (this._matchingWords.length > 0) {
         return "with-meanings";
       }
       return "no-meanings";
     },
+  },*/
+
+  availableStyle: {
+    get: function () {
+      return this.availableMeanings ? "with-meanings" : "no-meanings";
+    },
+    enumerable: true,
   },
 });
 

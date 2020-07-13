@@ -40,6 +40,10 @@ export default Vue.component("text-content", {
       type: Boolean,
       default: false,
     },
+    filterOptions: {
+      availableMeanings: true,
+      noAvailableMeanings: true
+    }
   },
   computed: {
     ...mapState(["tokenizedContent"]),

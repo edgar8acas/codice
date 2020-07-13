@@ -172,10 +172,10 @@ export default new Vuex.Store({
         data: { dictionaryWords, text, userOccurrences },
       } = await axios.get(`/api/templates/?text=${textId}&user=${1}`);
 
-      const occurrences = generateOccurrencesFromTemplate(
-        userOccurrences,
+      const occurrences = generateOccurrencesFromTemplate({
+        occurrences: userOccurrences,
         dictionaryWords
-      );
+      });
 
       commit("setOccurrences", occurrences);
       commit("setDictionaryWords", dictionaryWords);
@@ -185,7 +185,23 @@ export default new Vuex.Store({
     },
     async setTemplateForTextDetails({ commit }, text) {
       commit("resetTokenizedContent");
-      const tokenizedContent = getTokenizedContent([], text, true);
+      const tokenizedContent = [];
+      
+      if (text.status === "processed") {
+        const {
+          data: { templateOccurrences },
+        } = await axios.get(`/api/templates/?text=${text.textId}`);
+
+        const occurrences = generateOccurrencesFromTemplate({
+          occurrences: templateOccurrences,
+          template: true
+        })
+        commit("setOccurrences", occurrences);
+        tokenizedContent.push(...getTokenizedContent(occurrences, text));
+      } else {
+        tokenizedContent.push(...getTokenizedContent([], text, true));
+      }
+      
       commit("setTokenizedContent", tokenizedContent);
     },
     async changeLearntStatus({ commit }, dictionaryWord) {
