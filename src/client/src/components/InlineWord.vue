@@ -1,21 +1,5 @@
 <template>
-  <span
-    @click="selectMeaning"
-    :class="
-      'inline-word ' +
-      occurrence.learntStyle +
-      ' ' +
-      occurrence.essentialStyle +
-      ' ' +
-      occurrence.availableStyle +
-      ' ' +
-      occurrence.visibleStyle +
-      ' ' +
-      occurrence.status
-    "
-  >
-    {{ word }}</span
-  >
+  <span @click="selectMeaning" :class="classObject">{{ word }}</span>
 </template>
 
 <script>
@@ -27,11 +11,31 @@ export default {
     occurrence: Object,
   },
   computed: {
+    availableMeanings() {
+      return this.$store.getters.availableMeaningsByWord(this.word);
+    },
     word() {
       return this.occurrence.word;
     },
     start() {
       return this.occurrence.start;
+    },
+    classObject() {
+      return {
+        "inline-word": true,
+        essential:
+          this.occurrence.essential !== undefined
+            ? this.occurrence.essential
+            : false,
+        "available-meanings":
+          this.occurrence.availableMeanings !== undefined
+            ? this.occurrence.availableMeanings
+            : this.availableMeanings.length > 0,
+        invisible:
+          this.occurrence.visible !== undefined
+            ? !this.occurrence.visible
+            : false,
+      };
     },
   },
   methods: {
@@ -48,22 +52,19 @@ export default {
   display: inline-block;
   border-radius: 5px;
 
-  &.no-meanings {
-    background-color: #f2711c;
-    color: white;
-  }
-
-  &.with-meanings {
-    background-color: #21ba45;
-    color: white;
-  }
+  //no essential
+  border-bottom: 4px solid black;
 
   &.essential {
-    border-bottom: 3px solid black;
+    border-bottom: 4px solid blue;
   }
 
-  &.unessential {
-    border-bottom: 4px solid blue;
+  //no available meanings
+  background-color: #f2711c;
+  color: white;
+
+  &.available-meanings {
+    background-color: #21ba45;
   }
 
   &.invisible {

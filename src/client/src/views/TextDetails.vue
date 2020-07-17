@@ -113,7 +113,7 @@ export default {
   components: {
     TextContent,
     WordDetails,
-    CreateWord
+    CreateWord,
   },
   data() {
     return {
@@ -125,8 +125,8 @@ export default {
       occurrence: null,
       filter: {
         availableMeanings: false,
-        noAvailableMeanings: false
-      }
+        noAvailableMeanings: false,
+      },
     };
   },
   computed: {
@@ -160,7 +160,7 @@ export default {
   },
   async mounted() {
     this.$store.dispatch("setProcessingOptions", false);
-    await this.$store.dispatch("setTemplateForTextDetails", this.text);
+    await this.$store.dispatch("getDataForTextDetails", this.text);
   },
   watch: {
     onlyExclusive(newVal) {
@@ -173,7 +173,6 @@ export default {
     },
     async changeOccurrence(start) {
       const foundOccurrence = this.occurrences.find((o) => o.start === start);
-      await this.$store.dispatch("getRelatedWords", foundOccurrence);
       this.occurrence = foundOccurrence;
     },
     toggleProcessingConfirmation() {
@@ -197,18 +196,17 @@ export default {
   column-gap: 0.5em;
 }
 
-.template {
-  border: 1px solid var(--box-border-color);
-  border-radius: 5px;
-}
-
 .content {
+  height: 60vh;
   overflow: scroll;
   overflow-x: hidden;
   font-size: 1.5em;
   margin: 0 10px;
   text-align: left;
   line-height: 160%;
+  border-top: 3px solid #c2c2c2;
+  border-bottom: 3px solid #c2c2c2;
+  padding: 1em 0em;
 }
 
 .details-box {

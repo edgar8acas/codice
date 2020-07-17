@@ -4,7 +4,7 @@
       {{ occurrence.word || "Detalles de palabra" }}
     </h2>
     <div class="related-words-container">
-      <div v-if="occurrence.matchingWords.length === 0">
+      <div v-if="availableMeanings.length === 0">
         No hay definiciones para la ocurrencia
       </div>
       <div v-else-if="selection">
@@ -14,7 +14,7 @@
         Significados disponibles
       </div>
       <div
-        v-for="word in occurrence.matchingWords"
+        v-for="word in availableMeanings"
         :key="word.wordId"
         class="related-word"
       >
@@ -55,7 +55,7 @@
           <span class="more">Más información</span>
         </div>
       </div>
-      <div v-if="occurrence.selectedWordId !== null">
+      <div v-if="selection && occurrence.selectedWordId !== null">
         Guardar seleccionado para cada ocurrencia de
         <i>{{ occurrence.word }}</i>
         <br />
@@ -89,6 +89,11 @@ export default {
       picked: "",
       markedStatus: "",
     };
+  },
+  computed: {
+    availableMeanings() {
+      return this.$store.getters.availableMeaningsByWord(this.occurrence.word);
+    },
   },
   watch: {
     occurrence() {

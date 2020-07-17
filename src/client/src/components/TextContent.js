@@ -42,8 +42,8 @@ export default Vue.component("text-content", {
     },
     filterOptions: {
       availableMeanings: true,
-      noAvailableMeanings: true
-    }
+      noAvailableMeanings: true,
+    },
   },
   computed: {
     ...mapState(["tokenizedContent"]),

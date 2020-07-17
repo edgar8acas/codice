@@ -4,7 +4,7 @@ import Axios from "axios";
 import {
   getTokenizedContent,
   findOccurrencesInText,
-  generateOccurrencesFromTemplate,
+  generateOccurrences,
 } from "@/utils/template";
 import UserOccurrence from "@/utils/user_occurrence";
 import getExclusiveWords from "@/utils/filter_processed";
@@ -25,6 +25,7 @@ export default new Vuex.Store({
     texts: [],
     tokenizedContent: [],
     occurrences: [],
+    availableWords: {},
     dictionaryWords: [],
     exclusivo: false,
     errors: [],
@@ -37,6 +38,9 @@ export default new Vuex.Store({
     },
     setOccurrences(state, occurrences) {
       state.occurrences = occurrences;
+    },
+    setAvailableWords(state, availableWords) {
+      state.availableWords = availableWords;
     },
     setTokenizedContent(state, tokens) {
       state.tokenizedContent = tokens;
@@ -62,23 +66,18 @@ export default new Vuex.Store({
       ocurrence.markedStatus = markedStatus;
     },
     addRelatedWord(state, word) {
-      let occurrence = state.occurrences.find((o) => o.word === word.word);
-      occurrence.matchingWords.push(word);
+      state.availableWords[word.word].push(word);
     },
     deleteRelatedWord(state, word) {
-      const occurrence = state.occurrences.find((o) => o.word === word.word);
-      const index = occurrence.matchingWords.findIndex(
+      const index = state.availableWords[word.word].findIndex(
         (w) => w.wordId === word.wordId
       );
-      occurrence.matchingWords.splice(index, 1);
+      state.availableWords[word.word].splice(index, 1);
     },
-    addRelatedWords(state, data) {
-      const { data: words } = data;
-      const occurrences = state.occurrences.filter(
-        (o) => o.word === words[0].word
-      );
-      const matchingWords = words.length > 0 ? words : [];
-      occurrences.forEach((o) => (o.matchingWords = matchingWords));
+    addRelatedWords(state, words) {
+      if (words[0]) {
+        state.availableWords[words[0].word] = words;
+      }
     },
     setDefaultOccurrences(state) {
       state.occurrences.forEach((o) => {
@@ -172,9 +171,9 @@ export default new Vuex.Store({
         data: { dictionaryWords, text, userOccurrences },
       } = await axios.get(`/api/templates/?text=${textId}&user=${1}`);
 
-      const occurrences = generateOccurrencesFromTemplate({
+      const occurrences = generateOccurrences({
         occurrences: userOccurrences,
-        dictionaryWords
+        dictionaryWords,
       });
 
       commit("setOccurrences", occurrences);
@@ -183,25 +182,26 @@ export default new Vuex.Store({
       const tokenizedContent = getTokenizedContent(occurrences, text);
       commit("setTokenizedContent", tokenizedContent);
     },
-    async setTemplateForTextDetails({ commit }, text) {
+    async getDataForTextDetails({ commit }, text) {
       commit("resetTokenizedContent");
       const tokenizedContent = [];
-      
+
       if (text.status === "processed") {
         const {
-          data: { templateOccurrences },
+          data: { templateOccurrences, availableWords },
         } = await axios.get(`/api/templates/?text=${text.textId}`);
 
-        const occurrences = generateOccurrencesFromTemplate({
+        const occurrences = generateOccurrences({
           occurrences: templateOccurrences,
-          template: true
-        })
+          template: true,
+        });
         commit("setOccurrences", occurrences);
+        commit("setAvailableWords", availableWords);
         tokenizedContent.push(...getTokenizedContent(occurrences, text));
       } else {
         tokenizedContent.push(...getTokenizedContent([], text, true));
       }
-      
+
       commit("setTokenizedContent", tokenizedContent);
     },
     async changeLearntStatus({ commit }, dictionaryWord) {
@@ -242,8 +242,10 @@ export default new Vuex.Store({
     },
     async getRelatedWords({ commit }, occurrence) {
       try {
-        const { data } = await axios.get(`/api/words/?word=${occurrence.word}`);
-        commit("addRelatedWords", data);
+        const {
+          data: { words },
+        } = await axios.get(`/api/words/?word=${occurrence.word}`);
+        commit("addRelatedWords", words);
       } catch (error) {
         if (error.response) {
           console.log;
@@ -276,6 +278,9 @@ export default new Vuex.Store({
     },
     unlearntWords(state) {
       return state.dictionaryWords.filter((dw) => !dw.isLearned);
+    },
+    availableMeaningsByWord: (state) => (word) => {
+      return state.availableWords[word];
     },
   },
   modules: {},

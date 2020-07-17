@@ -119,21 +119,20 @@ function findNewLinesInText(text) {
   return newLines;
 }
 /** Transform the row response of occurrence objects and creates instances of Occurrence or UserOccurrences */
-export function generateOccurrencesFromTemplate({
+export function generateOccurrences({
   occurrences,
   template = false,
-  dictionaryWords
+  dictionaryWords,
 }) {
   return occurrences.map((o) => {
     if (template) {
-      return new Occurrence(o)
+      return new Occurrence(o);
     } else {
       return new UserOccurrence(
         o,
         dictionaryWords.find((dw) => dw.Word.wordId === o.Word.wordId)
       );
     }
-    
   });
 }
 
