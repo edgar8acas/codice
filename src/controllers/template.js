@@ -25,27 +25,52 @@ export default router
         where: { textId, userId },
         include: [{ model: Word }]
       }
-      let userOccurrences = await UserOccurrence.findAll(query);
       
-      if( userOccurrences.length === 0 ) {
-        const occurrences = await TemplateOccurrence.findAll({
-          where: { textId },
-        });
-        userOccurrences = await UserOccurrence.bulkCreate(
-          occurrences.map(o => {
-            return {
-              textId: o.textId,
-              userId: userId,
-              start: o.start,
-              ending: o.ending,
-              word: o.word,
-              essential: true,
-              visible: true,
-              availableMeanings: false
-            }
-          })
-        )
+      const occurrences = await TemplateOccurrence.findAll({
+        where: { textId }
+      });
+      
+      const response = { text };
+      if (userId === undefined) {
+        const uniqueWords = Array.from(new Set(occurrences.map(o => o.word))).sort((a, b) => a - b);
+        const availableWords = await Promise.all(
+          uniqueWords.map(word => 
+            Word.findAll({
+              where: { word }
+            })
+          )
+        );
+        
+        const resultObject = {}
+        availableWords.forEach((result, index) => {
+          resultObject[uniqueWords[index]] = result;
+        })
+        
+        response.templateOccurrences = occurrences;
+        response.availableWords = resultObject;
+      } else {
+        let userOccurrences = await UserOccurrence.findAll(query);
+      
+        if( userOccurrences.length === 0 ) {
+          userOccurrences = await UserOccurrence.bulkCreate(
+            occurrences.map(o => {
+              return {
+                textId: o.textId,
+                userId: userId,
+                start: o.start,
+                ending: o.ending,
+                word: o.word,
+                essential: true,
+                visible: true,
+                availableMeanings: false
+              }
+            })
+          )
+        }
+        response.userOccurrences = userOccurrences;
       }
+
+      
       //const wordIds = Array.from( new Set( userOccurrences.map(o => o.wordId )) );
 
       /*let dictionaryWords = await Dictionary.findAll({
@@ -69,12 +94,7 @@ export default router
         )
       }*/
 
-      let response = {
-        text,
-        userOccurrences,
-        dictionaryWords: []
-      };
-
+      response.dictionaryWords = [];
       return res
         .status(200)
         .json(response);
