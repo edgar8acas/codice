@@ -29,7 +29,6 @@
       <h2>Los bancos</h2>
       <text-content
         class="text-content"
-        :isChoosing="false"
         @changeOccurrence="changeOccurrence"
       ></text-content>
 
@@ -54,9 +53,9 @@
     </div>
     <div class="side-info">
       <h2 class="section-title">
-        {{ occurrence.word || "Información de palabra" }}
+        {{ occurrence.word || "Información de ocurrencia" }}
       </h2>
-      <div class="word-detailed-info">
+      <div v-if="occurrence.word" class="word-detailed-info">
         <div class="feature">
           <span>{{ formatEssential }}</span>
           <div class="help">
@@ -83,7 +82,7 @@
         </div>
       </div>
       <div class="word-actions">
-        <button class="ui button" @click="toggleSelectMeaning">
+        <button v-if="occurrence.word" class="ui button" @click="toggleSelectMeaning">
           Cambiar significado
         </button>
         <button class="ui button" @click="toggleAddOccurrence">
@@ -94,7 +93,7 @@
       <!--<mark-learned :occurrence="occurrence"></mark-learned>-->
     </div>
 
-    <sui-modal v-model="selectMeaning">
+    <sui-modal v-if="selectMeaning" v-model="selectMeaning">
       <sui-modal-header>Cambiar significado</sui-modal-header>
       <sui-modal-content class="scrolling">
         <word-details
@@ -153,8 +152,7 @@ export default {
     return {
       textId: this.$route.params.id,
       occurrence: {
-        Word: {},
-        matchingWords: [],
+        Word: {}
       },
       isLearnt: false,
       selectMeaning: false,
@@ -186,7 +184,7 @@ export default {
     },
   },
   async mounted() {
-    await this.$store.dispatch("getTemplateByTextId", this.textId);
+    await this.$store.dispatch("getDataForLearning", this.textId);
   },
   methods: {
     changeOccurrence(start) {

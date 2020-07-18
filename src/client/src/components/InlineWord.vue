@@ -27,10 +27,7 @@ export default {
           this.occurrence.essential !== undefined
             ? this.occurrence.essential
             : false,
-        "available-meanings":
-          this.occurrence.availableMeanings !== undefined
-            ? this.occurrence.availableMeanings
-            : this.availableMeanings.length > 0,
+        "available-meanings": this.availableMeanings.length > 0,
         invisible:
           this.occurrence.visible !== undefined
             ? !this.occurrence.visible

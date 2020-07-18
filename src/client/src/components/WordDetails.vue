@@ -4,6 +4,12 @@
       {{ occurrence.word || "Detalles de palabra" }}
     </h2>
     <div class="related-words-container">
+      <button
+        class="mini ui button"
+        @click="updateAvailableMeanings"
+      >
+        Refrescar
+      </button>
       <div v-if="availableMeanings.length === 0">
         No hay definiciones para la ocurrencia
       </div>
@@ -50,7 +56,7 @@
             v-if="!selection"
             @click="deleteWord(word)"
           >
-            Eliminar <br />
+            Eliminar
           </button>
           <span class="more">Más información</span>
         </div>
@@ -74,9 +80,7 @@ export default {
       type: Object,
       required: true,
       default: function () {
-        return {
-          matchingWords: [],
-        };
+        return {};
       },
     },
     selection: {
@@ -126,6 +130,9 @@ export default {
     deleteWord(word) {
       this.$store.dispatch("deleteRelatedWord", word);
     },
+    updateAvailableMeanings() {
+      this.$store.dispatch("getRelatedWords", this.occurrence);
+    }
   },
 };
 </script>

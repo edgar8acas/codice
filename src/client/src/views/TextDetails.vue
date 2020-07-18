@@ -66,7 +66,6 @@
       <h2 class="title">{{ text.title }}</h2>
       <text-content
         class="content"
-        v-if="showContent"
         :filterOptions="filter"
         @changeOccurrence="changeOccurrence"
       ></text-content>
@@ -118,7 +117,6 @@ export default {
   data() {
     return {
       textId: this.$route.params.id,
-      showContent: true,
       currentWordId: null,
       onlyExclusive: false,
       processingConfirmation: false,

@@ -1,49 +1,35 @@
 export default function UserOccurrence(
-  data,
-  dictionaryWord = null,
-  matchingWords = []
-) {
-  for (const key of Object.keys(data)) {
-    if (key === "Word") {
-      this["relatedWord"] = data[key];
-      break;
-    }
-    this[key] = data[key];
+  {
+    userOccurrenceId,
+    selectedWordId,
+    userId,
+    essential,
+    visible,
+    textId,
+    start,
+    ending,
+    word,
+    Word,
   }
-  this.dictionaryWord = dictionaryWord;
-  this.matchingWords = matchingWords;
+) {
+  this.userOccurrenceId = userOccurrenceId;
+  this.selectedWordId = selectedWordId;
+  this.userId = userId;
+  this.essential = essential;
+  this.visible = visible;
+  this.textId = textId;
+  this.start = start;
+  this.ending = ending;
+  this.word = word;
+  this.selectedWordObject = Word;
 }
 
-Object.defineProperties(UserOccurrence.prototype, {
-  learntStyle: {
-    get: function () {
-      return this.dictionaryWord
-        ? this.dictionaryWord.isLearned
-          ? "learnt"
-          : "not-learned"
-        : "not-selected-word";
-    },
-    enumerable: true,
-  },
-  availableStyle: {
-    get: function () {
-      return this.availableMeanings ? "with-meanings" : "no-meanings";
-    },
-    enumerable: true,
-  },
-  essentialStyle: {
-    get: function () {
-      return this.essential ? "essential" : "unessential";
-    },
-    enumerable: true,
-  },
-  visibleStyle: {
-    get: function () {
-      return this.visible ? "visible" : "invisible";
-    },
-    enumerable: true,
-  },
-});
+UserOccurrence.prototype.selectDefault = function () {
+  if (this.matchingWords.length > 0) {
+    this.selectedWordId = this.matchingWords[0].wordId;
+    this.markedStatus = "ready";
+  }
+};
 
 /*Occurrence.prototype.toJSON = function() {
   return {

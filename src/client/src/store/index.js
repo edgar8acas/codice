@@ -42,6 +42,9 @@ export default new Vuex.Store({
     setAvailableWords(state, availableWords) {
       state.availableWords = availableWords;
     },
+    resetAvailableWords(state) {
+      state.availableWords = [];
+    },
     setTokenizedContent(state, tokens) {
       state.tokenizedContent = tokens;
     },
@@ -75,7 +78,11 @@ export default new Vuex.Store({
       state.availableWords[word.word].splice(index, 1);
     },
     addRelatedWords(state, words) {
+      console.log('heeere');
+      console.log(words);
+      
       if (words[0]) {
+        console.log('here');
         state.availableWords[words[0].word] = words;
       }
     },
@@ -166,9 +173,10 @@ export default new Vuex.Store({
     setSelectedForEveryOccurrence({ commit }, occurrence) {
       commit("setSelectedForEveryOccurrence", occurrence);
     },
-    async getTemplateByTextId({ commit }, textId) {
+    async getDataForLearning({ commit }, textId) {
+      commit("resetAvailableWords");
       const {
-        data: { dictionaryWords, text, userOccurrences },
+        data: { dictionaryWords, text, userOccurrences, availableWords },
       } = await axios.get(`/api/templates/?text=${textId}&user=${1}`);
 
       const occurrences = generateOccurrences({
@@ -177,6 +185,7 @@ export default new Vuex.Store({
       });
 
       commit("setOccurrences", occurrences);
+      commit("setAvailableWords", availableWords);
       commit("setDictionaryWords", dictionaryWords);
       commit("setCurrentTemplateText", text);
       const tokenizedContent = getTokenizedContent(occurrences, text);
@@ -243,7 +252,7 @@ export default new Vuex.Store({
     async getRelatedWords({ commit }, occurrence) {
       try {
         const {
-          data: { words },
+          data: { data: words },
         } = await axios.get(`/api/words/?word=${occurrence.word}`);
         commit("addRelatedWords", words);
       } catch (error) {
@@ -280,7 +289,7 @@ export default new Vuex.Store({
       return state.dictionaryWords.filter((dw) => !dw.isLearned);
     },
     availableMeaningsByWord: (state) => (word) => {
-      return state.availableWords[word];
+      return state.availableWords[word] || [];
     },
   },
   modules: {},
