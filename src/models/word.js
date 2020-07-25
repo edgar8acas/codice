@@ -95,6 +95,23 @@ module.exports = function(sequelize, DataTypes) {
         })
     ));
   }
+
+  /**Given a set of occurrences, return the available words for each */
+  Word.getAvailableWords = async function(occurrences) {
+    const uniqueWords = Array.from(new Set(occurrences.map(o => o.word))).sort((a, b) => a - b);
+    const availableWords = await Promise.all(
+      uniqueWords.map(word => 
+        Word.findAll({
+          where: { word }
+        })
+      )
+    );
+    const result = {}
+    availableWords.forEach((available, index) => {
+      result[uniqueWords[index]] = available;
+    })
+    return result;
+  }
   
-  return Word; 
+  return Word;
 }

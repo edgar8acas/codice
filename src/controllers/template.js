@@ -32,22 +32,8 @@ export default router
       
       const response = { text };
       if (userId === undefined) {
-        const uniqueWords = Array.from(new Set(occurrences.map(o => o.word))).sort((a, b) => a - b);
-        const availableWords = await Promise.all(
-          uniqueWords.map(word => 
-            Word.findAll({
-              where: { word }
-            })
-          )
-        );
-        
-        const resultObject = {}
-        availableWords.forEach((result, index) => {
-          resultObject[uniqueWords[index]] = result;
-        })
-        
         response.templateOccurrences = occurrences;
-        response.availableWords = resultObject;
+        response.availableWords = await Word.getAvailableWords(occurrences);
       } else {
         let userOccurrences = await UserOccurrence.findAll(query);
       
@@ -68,6 +54,7 @@ export default router
           )
         }
         response.userOccurrences = userOccurrences;
+        response.availableWords = await Word.getAvailableWords(userOccurrences);
       }
 
       

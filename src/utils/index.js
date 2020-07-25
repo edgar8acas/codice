@@ -16,7 +16,7 @@ export function paginate(model) {
     let { page, per_page, word } = req.query;
     if (!page || !per_page) {
       page = 1,
-      per_page = 3
+      per_page = 10
     }
     
     [page, per_page] = [page, per_page].map(Number);
