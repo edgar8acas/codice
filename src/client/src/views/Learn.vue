@@ -1,97 +1,28 @@
 <template>
-  <section class="central">
-    <div class="side-info">
-      <h2 class="section-title">Diccionario de la lección</h2>
-      <div class="dictionary">
-        Aprendidas ({{ learntWords.length }})
-        <ul>
-          <li
-            class="learned"
-            v-for="dictionaryWord in learntWords"
-            :key="dictionaryWord.dictionaryId"
-          >
-            {{ dictionaryWord.Word.word }}
-          </li>
-        </ul>
-        Por aprender ({{ unlearntWords.length }})
-        <ul>
-          <li
-            class="unlearned"
-            v-for="dictionaryWord in unlearntWords"
-            :key="dictionaryWord.dictionaryId"
-          >
-            {{ dictionaryWord.Word.word }}
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="learn-view">
-      <h2>Los bancos</h2>
+  <div class="learn-view">
+    <div class="learn_text">
+      <h2 class="learn__title">{{ currentTemplateText.title }}</h2>
       <text-content
-        class="text-content"
+        class="learn__text-content"
         @changeOccurrence="changeOccurrence"
       ></text-content>
-
-      <!--<div class="media-container">
-        <img v-if="occurrence.Word.imageUrl"
-          :src="occurrence.Word.imageUrl" 
-          :alt="occurrence.word" 
-          class="image" />
-        <img v-if="!occurrence.Word.imageUrl"
-          :src="require('../assets/img_placeholder.png')"
-          :alt="occurrence.word" 
-          class="image" />
-        <iframe v-if="formattedVideoUrl"
-          width="560" height="315" 
-          :src="formattedVideoUrl" 
-          frameborder="0" 
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-          allowfullscreen></iframe>
-        <div v-if="!occurrence.Word.videoUrl"
-          class="video">Sin video</div>
-      </div>-->
     </div>
-    <div class="side-info">
-      <h2 class="section-title">
-        {{ occurrence.word || "Información de ocurrencia" }}
-      </h2>
-      <div v-if="occurrence.word" class="word-detailed-info">
-        <div class="feature">
-          <span>{{ formatEssential }}</span>
-          <div class="help">
-            <b>Esencial: </b> La ocurrencia fue añadida por el administrador.
-            <br />
-            <b>No esencial: </b> La ocurrencia fue añadida por el usuario.
-          </div>
-        </div>
-        <div class="feature">
-          <span>{{ formatAvailableMeanings }}</span>
-          <div class="help">
-            <b>Definiciones disponibles: </b> Existen definiciones para la
-            ocurrencia. <br />
-            <b>Sin definiciones: </b> No existen definiciones para la
-            ocurrencia.
-          </div>
-        </div>
-        <div class="feature">
-          <span>{{ formatVisible }}</span>
-          <div class="help">
-            <b>Visible: </b> La palabra está resaltada en el texto. <br />
-            <b>No visible: </b> La palabra no está resaltada en el texto.
-          </div>
-        </div>
-      </div>
-      <div class="word-actions">
+    <media-container
+      class="learn__media-container"
+      :occurrence="occurrence"
+    >
+      <template v-slot:select-meaning>
         <button v-if="occurrence.word" class="ui button" @click="toggleSelectMeaning">
           Cambiar significado
         </button>
-        <button class="ui button" @click="toggleAddOccurrence">
-          Añadir ocurrencia
-        </button>
+      </template>
+    </media-container>
+    <div class="learn__word-actions">
+      
+      <button class="ui button" @click="toggleAddOccurrence">
+        Añadir ocurrencia
+      </button>
       </div>
-
-      <!--<mark-learned :occurrence="occurrence"></mark-learned>-->
-    </div>
 
     <sui-modal v-if="selectMeaning" v-model="selectMeaning">
       <sui-modal-header>Cambiar significado</sui-modal-header>
@@ -133,20 +64,20 @@
         </button>
       </sui-modal-actions>
     </sui-modal>
-  </section>
+  </div>
 </template>
 
 <script>
 import TextContent from "@/components/TextContent";
-// import MarkLearned from "@/components/MarkLearned";
+import MediaContainer from "@/components/MediaContainer";
 import WordDetails from "@/components/WordDetails";
 import { getSelectedWordDetails } from "@/utils/template";
 import { mapState, mapGetters } from "vuex";
 export default {
   components: {
-    WordDetails,
     TextContent,
-    // MarkLearned
+    MediaContainer,
+    WordDetails
   },
   data() {
     return {
@@ -162,15 +93,6 @@ export default {
   computed: {
     ...mapState(["occurrences", "currentTemplateText"]),
     ...mapGetters(["learntWords", "unlearntWords"]),
-    formattedVideoUrl() {
-      if (this.occurrence.Word.videoUrl) {
-        const videoUrl = this.occurrence.Word.videoUrl.match(
-          new RegExp("v=(.*)")
-        )[1];
-        return `https://www.youtube.com/embed/${videoUrl}`;
-      }
-      return null;
-    },
     formatEssential() {
       return this.occurrence.essential ? "Esencial" : "No esencial";
     },
@@ -206,7 +128,55 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+:root {
+  --learn-background: #abd1c6;
+  --learn-secondary: #004643;
+
+}
+.learn-view.main {
+  grid-column: 2 / 6;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 100%;
+  font-family: 'Mulish', sans-serif;
+}
+
+.learn__title {
+  font-family: 'Mulish', sans-serif;
+  font-size: 2.5em;
+  text-align: center;
+  font-weight: 800;
+}
+
+.learn__text-content {
+  height: 70vh;
+  overflow: scroll;
+  overflow-x: hidden;
+  font-size: 1.8em;
+  margin: 0 10px;
+  text-align: left;
+  line-height: 160%;
+}
+
+.learn__media_container {
+}
+
+.learn__word-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 1em;
+    grid-column: 1 / 3;
+    // border: 1px solid red;
+    margin-left: 20px;
+    margin-right: 20px;
+
+    > * {
+      margin-top: 10px;
+    }
+  }
+
 .central {
   display: grid;
   grid-template-columns: 20% 40% 20%;
@@ -247,16 +217,7 @@ export default {
     }
   }
 
-  .word-actions {
-    display: flex;
-    flex-direction: column;
-    margin-left: 20px;
-    margin-right: 20px;
-
-    > * {
-      margin-top: 10px;
-    }
-  }
+  
 }
 
 .btn {
@@ -303,34 +264,6 @@ ul {
   }
   .unlearned {
     background-color: #fff3b3;
-  }
-}
-.text-content {
-  height: 400px;
-  overflow: scroll;
-  overflow-x: hidden;
-  font-size: 1.5em;
-  margin: 0 10px;
-  text-align: left;
-  line-height: 160%;
-}
-
-.media-container {
-  display: flex;
-  flex-flow: row nowrap;
-  height: 200px;
-  margin-top: 20px;
-  > * {
-    flex-grow: 1;
-    height: 100%;
-  }
-  .video {
-    //color: red;
-    text-align: center;
-    //border: 1px solid red;
-  }
-  .image {
-    border: 1px solid blue;
   }
 }
 </style>

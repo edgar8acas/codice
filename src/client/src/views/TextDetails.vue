@@ -1,6 +1,6 @@
 <template>
   <section class="central">
-    <div class="details side-info">
+    <div class="details">
       <div class="side-card">
         <h2>Información</h2>
         <div class="details-box">

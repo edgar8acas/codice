@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 import Vue from "vue";
 import Vuex from "vuex";
 import Axios from "axios";
@@ -57,10 +59,14 @@ export default new Vuex.Store({
     setDictionaryWords(state, dictionaryWords) {
       state.dictionaryWords = dictionaryWords;
     },
-    updateSelectedWord(state, updated) {
-      let oc = state.occurrences.find((o) => o.start === updated.start);
-      oc = new UserOccurrence({ ...oc, ...updated });
-      console.log(oc);
+    updateSelectedWord(state, updated) {      
+      let index = state.occurrences.findIndex(
+        (o) => o.start === updated.start
+      );
+      if (index !== -1) {
+        state.occurrences[index] = new UserOccurrence(updated);
+      }
+      console.log(state.occurrences[index]);
     },
     updateMarkedStatus(state, { occurrenceStart, markedStatus }) {
       let ocurrence = state.occurrences.find(
@@ -78,11 +84,10 @@ export default new Vuex.Store({
       state.availableWords[word.word].splice(index, 1);
     },
     addRelatedWords(state, words) {
-      console.log('heeere');
       console.log(words);
       
       if (words[0]) {
-        console.log('here');
+        console.log('addRelatedWords');
         state.availableWords[words[0].word] = words;
       }
     },
@@ -135,33 +140,33 @@ export default new Vuex.Store({
       commit("setTexts", texts);
     },
     async processText({ state, commit }, textId) {
+      commit("resetAvailableWords");
       const res = await axios.post(`/api/texts/${textId}/process`);
       let processed = state.exclusivo ? getExclusiveWords(res.data) : res.data;
       const occurrences = findOccurrencesInText(processed);
       commit("setOccurrences", occurrences);
+      commit("setAvailableWords", res.data.availableWords);
       const tokenizedContent = getTokenizedContent(occurrences, res.data.text);
       commit("setTokenizedContent", tokenizedContent);
     },
     async updateSelectedWord({ commit }, occurrence) {
       try {
         const {
-          data: { updated, dictionaryWord, matchingWords },
+          data: { updated, matchingWords },
         } = await axios.put(
           `/api/user-occurrences/${occurrence.userOccurrenceId}/update-selected`,
           occurrence
         );
+        
         commit("updateSelectedWord", updated);
-        commit("addRelatedWords", matchingWords);
-        commit("updateDictionary", dictionaryWord);
+        //commit("addRelatedWords", matchingWords);
+        // commit("updateDictionary", dictionaryWord);
         //commit('addSuccess', data)
       } catch (error) {
         if (error.response) {
           commit("addError", error.response.data.error);
         }
       }
-    },
-    updateMarkedStatus({ commit }, updatedData) {
-      commit("updateMarkedStatus", updatedData);
     },
     async saveWord({ commit }, word) {
       const { data } = await axios.post(`/api/words`, word);

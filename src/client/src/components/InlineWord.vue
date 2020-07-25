@@ -37,7 +37,6 @@ export default {
   },
   methods: {
     selectMeaning() {
-      this.hover = true;
       this.$emit("changeOccurrence", this.start);
     },
   },

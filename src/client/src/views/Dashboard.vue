@@ -1,5 +1,5 @@
 <template>
-  <div id="dashboard-container">
+  <div class="dashboard-container">
     <header class="dash-header">
       <div class="logo">CÓDICE</div>
       <div class="top-buttons">
@@ -38,7 +38,7 @@ export default {
 </script>
 
 <style lang="scss">
-#dashboard-container {
+.dashboard-container {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: 50px 50px;
