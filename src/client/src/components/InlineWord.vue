@@ -32,6 +32,7 @@ export default {
           this.occurrence.visible !== undefined
             ? !this.occurrence.visible
             : false,
+        "current": this.occurrence.current
       };
     },
   },
@@ -72,6 +73,11 @@ export default {
       text-decoration: none;
       cursor: initial;
     }
+  }
+
+  &.current {
+    font-weight: bolder;
+    background-color: purple;
   }
 }
 

@@ -44,6 +44,10 @@ export default Vue.component("text-content", {
       availableMeanings: true,
       noAvailableMeanings: true,
     },
+    current: {
+      type: Object,
+      default: null
+    }
   },
   computed: {
     ...mapState(["tokenizedContent"]),
@@ -53,4 +57,10 @@ export default Vue.component("text-content", {
       this.$emit("changeOccurrence", start);
     },
   },
+  watch: {
+    current(oldVal, newVal) {
+      if(oldVal) oldVal.toggleCurrent();
+      newVal.toggleCurrent();
+    } 
+  }
 });

@@ -1,14 +1,16 @@
 <template>
-  <div class="learn-view">
-    <div class="learn_text">
+  <div class="learn">
+    <div class="learn__text">
+      <!-- TODO: Stick title to the top when scrolling -->
       <h2 class="learn__title">{{ currentTemplateText.title }}</h2>
       <text-content
         class="learn__text-content"
         @changeOccurrence="changeOccurrence"
+        :current="occurrence"
       ></text-content>
     </div>
-    <media-container
-      class="learn__media-container"
+    <selected-occurrence-info
+      class="learn__current-info"
       :occurrence="occurrence"
     >
       <template v-slot:select-meaning>
@@ -16,8 +18,8 @@
           Cambiar significado
         </button>
       </template>
-    </media-container>
-    <div class="learn__word-actions">
+    </selected-occurrence-info>
+    <!-- <div class="learn__word-actions">
       
       <button class="ui button" @click="toggleAddOccurrence">
         Añadir ocurrencia
@@ -63,28 +65,26 @@
           Añadir seleccionado
         </button>
       </sui-modal-actions>
-    </sui-modal>
+    </sui-modal> -->
   </div>
 </template>
 
 <script>
 import TextContent from "@/components/TextContent";
-import MediaContainer from "@/components/MediaContainer";
-import WordDetails from "@/components/WordDetails";
+import SelectedOccurrenceInfo from "@/components/SelectedOccurrenceInfo";
+// import WordDetails from "@/components/WordDetails";
 import { getSelectedWordDetails } from "@/utils/template";
 import { mapState, mapGetters } from "vuex";
 export default {
   components: {
     TextContent,
-    MediaContainer,
-    WordDetails
+    SelectedOccurrenceInfo,
+    // WordDetails
   },
   data() {
     return {
       textId: this.$route.params.id,
-      occurrence: {
-        Word: {}
-      },
+      occurrence: null,
       isLearnt: false,
       selectMeaning: false,
       addingOccurrence: false,
@@ -132,50 +132,54 @@ export default {
 :root {
   --learn-background: #abd1c6;
   --learn-secondary: #004643;
-
 }
-.learn-view.main {
-  grid-column: 2 / 6;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 100%;
+.learn.main {
+  grid-column: 2 / span 8;
   font-family: 'Mulish', sans-serif;
 }
 
-.learn__title {
-  font-family: 'Mulish', sans-serif;
-  font-size: 2.5em;
-  text-align: center;
-  font-weight: 800;
-}
-
-.learn__text-content {
-  height: 70vh;
+.learn__text {
+  width: 40%;
+  float: left;
   overflow: scroll;
   overflow-x: hidden;
-  font-size: 1.8em;
-  margin: 0 10px;
-  text-align: left;
-  line-height: 160%;
+  height: 100%;
+
+  .learn__title {
+    font-family: 'Mulish', sans-serif;
+    font-size: 2.5em;
+    text-align: center;
+    font-weight: 800;
+  }
+
+  .learn__text-content {
+    font-size: 1.8em;
+    text-align: left;
+    line-height: 160%;
+  }
+
 }
 
-.learn__media_container {
+.learn__current-info {
+  width: 60%;
+  float: right;
+  height: 80vh;
 }
 
 .learn__word-actions {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin-top: 1em;
-    grid-column: 1 / 3;
-    // border: 1px solid red;
-    margin-left: 20px;
-    margin-right: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 1em;
+  grid-column: 1 / 3;
+  // border: 1px solid red;
+  margin-left: 20px;
+  margin-right: 20px;
 
-    > * {
-      margin-top: 10px;
-    }
+  > * {
+    margin-top: 10px;
   }
+}
 
 .central {
   display: grid;

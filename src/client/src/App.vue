@@ -23,20 +23,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.section-title {
-  text-align: center;
+html {
+  box-sizing: border-box;
 }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 </style>

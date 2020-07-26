@@ -22,6 +22,7 @@ export default function UserOccurrence(
   this.ending = ending;
   this.word = word;
   this.selectedWordObject = Word;
+  this.current = false;
 }
 
 UserOccurrence.prototype.selectDefault = function () {
@@ -31,6 +32,9 @@ UserOccurrence.prototype.selectDefault = function () {
   }
 };
 
+UserOccurrence.prototype.toggleCurrent = function() {
+  this.current = !this.current;
+}
 /*Occurrence.prototype.toJSON = function() {
   return {
     start: this.start,

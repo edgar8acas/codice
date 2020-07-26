@@ -40,15 +40,15 @@ export default {
 <style lang="scss">
 .dashboard-container {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: 50px 50px;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: 5vh 5vh 85vh 5vh;
 
   .dash-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     background-color: #2185d0;
-    grid-column: 1 / 7;
+    grid-column: 1 / span 10;
     height: auto;
     font-size: 2em;
 
@@ -75,7 +75,7 @@ export default {
 
   .nav {
     display: flex;
-    grid-column: 1 / 7;
+    grid-column: 1 / span 10;
     background-color: #eee;
     padding-left: 30px;
     > * {
@@ -94,7 +94,7 @@ export default {
   }
 
   .main {
-    grid-column: 2 / 6;
+    grid-column: 2 / span 8;
     margin-top: 20px;
   }
 }
