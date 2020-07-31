@@ -95,7 +95,7 @@ export default {
 
 .inline-word:hover {
   text-decoration: underline;
-  cursor: help;
+  cursor: pointer;
 }
 
 .inline-word.conflicts {

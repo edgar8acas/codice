@@ -58,7 +58,7 @@ export default Vue.component("text-content", {
     },
   },
   watch: {
-    current(oldVal, newVal) {
+    current(newVal, oldVal) {
       if(oldVal) oldVal.toggleCurrent();
       newVal.toggleCurrent();
     } 

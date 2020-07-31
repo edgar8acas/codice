@@ -12,21 +12,24 @@
     <selected-occurrence-info
       class="learn__current-info"
       :occurrence="occurrence"
+      @selectMeaning="toggleSelectMeaning"
     >
-      <template v-slot:select-meaning>
-        <button v-if="occurrence.word" class="ui button" @click="toggleSelectMeaning">
-          Cambiar significado
+      <template v-slot:actions v-if="occurrence && occurrence.word">
+        <button 
+          class="ui button" 
+          @click="toggleSelectMeaning"
+        >
+          Elegir
         </button>
       </template>
     </selected-occurrence-info>
-    <!-- <div class="learn__word-actions">
-      
+    <!-- <div class="learn__word-actions">  
       <button class="ui button" @click="toggleAddOccurrence">
         Añadir ocurrencia
       </button>
-      </div>
+    </div> -->
 
-    <sui-modal v-if="selectMeaning" v-model="selectMeaning">
+    <sui-modal v-model="activeSelectMeaning">
       <sui-modal-header>Cambiar significado</sui-modal-header>
       <sui-modal-content class="scrolling">
         <word-details
@@ -43,10 +46,10 @@
       </sui-modal-actions>
     </sui-modal>
 
-    <sui-modal v-model="addingOccurrence">
+    <sui-modal v-model="activeAddingOccurrence">
       <sui-modal-header>Añadir ocurrencia</sui-modal-header>
       <sui-modal-content class="scrolling">
-        <div class="ui info message" v-if="addingOccurrence">
+        <div class="ui info message" v-if="activeAddingOccurrence">
           <div class="header">
             Instrucciones
           </div>
@@ -59,35 +62,35 @@
       <sui-modal-actions>
         <button
           class="primary ui button"
-          v-if="addingOccurrence"
+          v-if="activeAddingOccurrence"
           @click="addSelectedOccurrence"
         >
           Añadir seleccionado
         </button>
       </sui-modal-actions>
-    </sui-modal> -->
+    </sui-modal>
   </div>
 </template>
 
 <script>
 import TextContent from "@/components/TextContent";
 import SelectedOccurrenceInfo from "@/components/SelectedOccurrenceInfo";
-// import WordDetails from "@/components/WordDetails";
+import WordDetails from "@/components/WordDetails";
 import { getSelectedWordDetails } from "@/utils/template";
 import { mapState, mapGetters } from "vuex";
 export default {
   components: {
     TextContent,
     SelectedOccurrenceInfo,
-    // WordDetails
+    WordDetails
   },
   data() {
     return {
       textId: this.$route.params.id,
       occurrence: null,
       isLearnt: false,
-      selectMeaning: false,
-      addingOccurrence: false,
+      activeSelectMeaning: false,
+      activeAddingOccurrence: false,
     };
   },
   computed: {
@@ -113,11 +116,13 @@ export default {
       this.occurrence = this.occurrences.find((o) => o.start === start);
     },
     async toggleSelectMeaning() {
-      await this.$store.dispatch("getRelatedWords", this.occurrence);
-      this.selectMeaning = !this.selectMeaning;
+      if(!this.activeSelectMeaning) {
+        await this.$store.dispatch("getRelatedWords", this.occurrence);
+      }
+      this.activeSelectMeaning = !this.activeSelectMeaning;
     },
     toggleAddOccurrence() {
-      this.addingOccurrence = true;
+      this.activeAddingOccurrence = true;
     },
     async addSelectedOccurrence() {
       const details = getSelectedWordDetails(this.currentTemplateText);
@@ -251,23 +256,5 @@ export default {
 
 .inline-word.ready {
   color: blue;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-  > * {
-    display: block;
-    text-align: left;
-    border: 1px solid #c2c2c2;
-    padding: 5px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-  }
-  .learned {
-    background-color: #b3ffb3;
-  }
-  .unlearned {
-    background-color: #fff3b3;
-  }
 }
 </style>

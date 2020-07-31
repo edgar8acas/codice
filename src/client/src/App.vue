@@ -27,6 +27,10 @@ html {
   box-sizing: border-box;
 }
 
+body {
+  font-family: 'Mulish';
+}
+
 *, *:before, *:after {
   box-sizing: inherit;
 }

@@ -4,6 +4,9 @@
     <p class="card-body">
       <slot ></slot>
     </p>
+    <div class="actions">
+      <slot name="actions"></slot>
+    </div>
   </div>
 </template>
 
@@ -16,10 +19,11 @@
 
 .colored-card {
   display: flex;
+  flex-flow: column;
   justify-content: center;
   align-items: center;
   padding: 1em;
-  height: 120px;
+  height: auto;
   font-size: 1.5em;
   border-radius: 0.5em;
   background-color: hsl(var(--info-hue), var(--info-saturation), var(--info-lightness));
@@ -28,5 +32,9 @@
 .card-body {
   --info-lightness: 24%;
   color: hsl(var(--info-hue), var(--info-saturation), var(--info-lightness));
+}
+
+.actions button .ui.button {
+  background: hsl(var(--info-hue), var(--info-saturation), var(--info-lightness));
 }
 </style>
