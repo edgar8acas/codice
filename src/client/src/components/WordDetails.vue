@@ -4,10 +4,7 @@
       {{ occurrence.word || "Detalles de palabra" }}
     </h2>
     <div class="related-words-container">
-      <button
-        class="mini ui button"
-        @click="updateAvailableMeanings"
-      >
+      <button class="mini ui button" @click="updateAvailableMeanings">
         Refrescar
       </button>
       <div v-if="availableMeanings.length === 0">
@@ -132,7 +129,7 @@ export default {
     },
     updateAvailableMeanings() {
       this.$store.dispatch("getRelatedWords", this.occurrence);
-    }
+    },
   },
 };
 </script>

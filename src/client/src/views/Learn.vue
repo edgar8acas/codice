@@ -15,10 +15,7 @@
       @selectMeaning="toggleSelectMeaning"
     >
       <template v-slot:actions v-if="occurrence && occurrence.word">
-        <button 
-          class="ui button" 
-          @click="toggleSelectMeaning"
-        >
+        <button class="ui button" @click="toggleSelectMeaning">
           Elegir
         </button>
       </template>
@@ -82,7 +79,7 @@ export default {
   components: {
     TextContent,
     SelectedOccurrenceInfo,
-    WordDetails
+    WordDetails,
   },
   data() {
     return {
@@ -116,7 +113,7 @@ export default {
       this.occurrence = this.occurrences.find((o) => o.start === start);
     },
     async toggleSelectMeaning() {
-      if(!this.activeSelectMeaning) {
+      if (!this.activeSelectMeaning) {
         await this.$store.dispatch("getRelatedWords", this.occurrence);
       }
       this.activeSelectMeaning = !this.activeSelectMeaning;
@@ -140,7 +137,7 @@ export default {
 }
 .learn.main {
   grid-column: 2 / span 8;
-  font-family: 'Mulish', sans-serif;
+  font-family: "Mulish", sans-serif;
 }
 
 .learn__text {
@@ -151,7 +148,7 @@ export default {
   height: 100%;
 
   .learn__title {
-    font-family: 'Mulish', sans-serif;
+    font-family: "Mulish", sans-serif;
     font-size: 2.5em;
     text-align: center;
     font-weight: 800;
@@ -162,7 +159,6 @@ export default {
     text-align: left;
     line-height: 160%;
   }
-
 }
 
 .learn__current-info {
@@ -225,8 +221,6 @@ export default {
       }
     }
   }
-
-  
 }
 
 .btn {

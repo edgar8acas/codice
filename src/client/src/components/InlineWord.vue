@@ -32,7 +32,7 @@ export default {
           this.occurrence.visible !== undefined
             ? !this.occurrence.visible
             : false,
-        "current": this.occurrence.current
+        current: this.occurrence.current,
       };
     },
   },

@@ -17,7 +17,7 @@ export default {
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Krona+One&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@500;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Mulish:wght@500;800&display=swap");
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -28,10 +28,12 @@ html {
 }
 
 body {
-  font-family: 'Mulish';
+  font-family: "Mulish";
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 </style>

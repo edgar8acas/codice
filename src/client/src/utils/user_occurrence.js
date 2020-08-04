@@ -1,17 +1,15 @@
-export default function UserOccurrence(
-  {
-    userOccurrenceId,
-    selectedWordId,
-    userId,
-    essential,
-    visible,
-    textId,
-    start,
-    ending,
-    word,
-    Word,
-  }
-) {
+export default function UserOccurrence({
+  userOccurrenceId,
+  selectedWordId,
+  userId,
+  essential,
+  visible,
+  textId,
+  start,
+  ending,
+  word,
+  Word,
+}) {
   this.userOccurrenceId = userOccurrenceId;
   this.selectedWordId = selectedWordId;
   this.userId = userId;
@@ -32,9 +30,9 @@ UserOccurrence.prototype.selectDefault = function () {
   }
 };
 
-UserOccurrence.prototype.toggleCurrent = function() {
+UserOccurrence.prototype.toggleCurrent = function () {
   this.current = !this.current;
-}
+};
 /*Occurrence.prototype.toJSON = function() {
   return {
     start: this.start,

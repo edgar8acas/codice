@@ -2,7 +2,7 @@
   <div class="colored-card">
     <!-- TODO: add icons -->
     <p class="card-body">
-      <slot ></slot>
+      <slot></slot>
     </p>
     <div class="actions">
       <slot name="actions"></slot>
@@ -12,9 +12,9 @@
 
 <style lang="scss">
 :root {
-  --info-hue: 177; 
+  --info-hue: 177;
   --info-saturation: 100%;
-  --info-lightness: 87% 
+  --info-lightness: 87%;
 }
 
 .colored-card {
@@ -26,7 +26,11 @@
   height: auto;
   font-size: 1.5em;
   border-radius: 0.5em;
-  background-color: hsl(var(--info-hue), var(--info-saturation), var(--info-lightness));
+  background-color: hsl(
+    var(--info-hue),
+    var(--info-saturation),
+    var(--info-lightness)
+  );
 }
 
 .card-body {
@@ -35,6 +39,10 @@
 }
 
 .actions button .ui.button {
-  background: hsl(var(--info-hue), var(--info-saturation), var(--info-lightness));
+  background: hsl(
+    var(--info-hue),
+    var(--info-saturation),
+    var(--info-lightness)
+  );
 }
 </style>

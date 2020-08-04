@@ -46,8 +46,8 @@ export default Vue.component("text-content", {
     },
     current: {
       type: Object,
-      default: null
-    }
+      default: null,
+    },
   },
   computed: {
     ...mapState(["tokenizedContent"]),
@@ -59,8 +59,8 @@ export default Vue.component("text-content", {
   },
   watch: {
     current(newVal, oldVal) {
-      if(oldVal) oldVal.toggleCurrent();
+      if (oldVal) oldVal.toggleCurrent();
       newVal.toggleCurrent();
-    } 
-  }
+    },
+  },
 });

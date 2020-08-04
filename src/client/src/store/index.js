@@ -59,10 +59,8 @@ export default new Vuex.Store({
     setDictionaryWords(state, dictionaryWords) {
       state.dictionaryWords = dictionaryWords;
     },
-    updateSelectedWord(state, updated) {      
-      let index = state.occurrences.findIndex(
-        (o) => o.start === updated.start
-      );
+    updateSelectedWord(state, updated) {
+      let index = state.occurrences.findIndex((o) => o.start === updated.start);
       if (index !== -1) {
         state.occurrences[index] = new UserOccurrence(updated);
       }
@@ -85,9 +83,9 @@ export default new Vuex.Store({
     },
     addRelatedWords(state, words) {
       console.log(words);
-      
+
       if (words[0]) {
-        console.log('addRelatedWords');
+        console.log("addRelatedWords");
         state.availableWords[words[0].word] = words;
       }
     },
@@ -157,7 +155,7 @@ export default new Vuex.Store({
           `/api/user-occurrences/${occurrence.userOccurrenceId}/update-selected`,
           occurrence
         );
-        
+
         commit("updateSelectedWord", updated);
         //commit("addRelatedWords", matchingWords);
         // commit("updateDictionary", dictionaryWord);
