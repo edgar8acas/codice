@@ -47,8 +47,12 @@ export default new Vuex.Store({
     resetAvailableWords(state) {
       state.availableWords = [];
     },
-    setTokenizedContent(state, tokens) {
-      state.tokenizedContent = tokens;
+    setTokenizedContent(state, { occurrences, text, update = false}) {
+      const tokenizedContent = getTokenizedContent({ 
+        ocurrences: update ? state.occurrences : occurrences, 
+        text: update ? state.currentTemplateText : text
+      });
+      state.tokenizedContent = tokenizedContent;
     },
     resetTokenizedContent(state) {
       state.tokenizedContent = [];
@@ -64,7 +68,6 @@ export default new Vuex.Store({
       if (index !== -1) {
         state.occurrences[index] = new UserOccurrence(updated);
       }
-      console.log(state.occurrences[index]);
     },
     updateMarkedStatus(state, { occurrenceStart, markedStatus }) {
       let ocurrence = state.occurrences.find(
@@ -82,10 +85,7 @@ export default new Vuex.Store({
       state.availableWords[word.word].splice(index, 1);
     },
     addRelatedWords(state, words) {
-      console.log(words);
-
       if (words[0]) {
-        console.log("addRelatedWords");
         state.availableWords[words[0].word] = words;
       }
     },
@@ -144,8 +144,7 @@ export default new Vuex.Store({
       const occurrences = findOccurrencesInText(processed);
       commit("setOccurrences", occurrences);
       commit("setAvailableWords", res.data.availableWords);
-      const tokenizedContent = getTokenizedContent(occurrences, res.data.text);
-      commit("setTokenizedContent", tokenizedContent);
+      commit("setTokenizedContent", {occurrences, text: res.data.text});
     },
     async updateSelectedWord({ commit }, occurrence) {
       try {
@@ -157,6 +156,7 @@ export default new Vuex.Store({
         );
 
         commit("updateSelectedWord", updated);
+        commit("setTokenizedContent", { update: true });
         //commit("addRelatedWords", matchingWords);
         // commit("updateDictionary", dictionaryWord);
         //commit('addSuccess', data)
@@ -191,30 +191,22 @@ export default new Vuex.Store({
       commit("setAvailableWords", availableWords);
       commit("setDictionaryWords", dictionaryWords);
       commit("setCurrentTemplateText", text);
-      const tokenizedContent = getTokenizedContent(occurrences, text);
-      commit("setTokenizedContent", tokenizedContent);
+      commit("setTokenizedContent", { occurrences, text });
     },
     async getDataForTextDetails({ commit }, text) {
       commit("resetTokenizedContent");
-      const tokenizedContent = [];
 
-      if (text.status === "processed") {
-        const {
-          data: { templateOccurrences, availableWords },
-        } = await axios.get(`/api/templates/?text=${text.textId}`);
+      const {
+        data: { templateOccurrences, availableWords },
+      } = await axios.get(`/api/templates/?text=${text.textId}`);
 
-        const occurrences = generateOccurrences({
-          occurrences: templateOccurrences,
-          template: true,
-        });
-        commit("setOccurrences", occurrences);
-        commit("setAvailableWords", availableWords);
-        tokenizedContent.push(...getTokenizedContent(occurrences, text));
-      } else {
-        tokenizedContent.push(...getTokenizedContent([], text, true));
-      }
-
-      commit("setTokenizedContent", tokenizedContent);
+      const occurrences = generateOccurrences({
+        occurrences: templateOccurrences,
+        template: true,
+      });
+      commit("setOccurrences", occurrences);
+      commit("setAvailableWords", availableWords);
+      commit("setTokenizedContent", { occurrences, text, });
     },
     async changeLearntStatus({ commit }, dictionaryWord) {
       dictionaryWord.isLearned = !dictionaryWord.isLearned;

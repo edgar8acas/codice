@@ -101,14 +101,14 @@ export default {
       this.picked = "word-" + this.occurrence.selectedWordId;
       this.markedStatus = this.occurrence.markedStatus;
     },
-    picked(newVal) {
+    async picked(newVal) {
       if (newVal === "word-" + this.occurrence.selectedWordId) return;
 
-      this.$store.dispatch("updateSelectedWord", {
+      await this.$store.dispatch("updateSelectedWord", {
         ...this.occurrence,
         selectedWordId: Number(newVal.substring(5)),
       });
-      this.markedStatus = "ready";
+      this.$emit('changedMeaning');
     },
     markedStatus: {
       handler(newVal) {

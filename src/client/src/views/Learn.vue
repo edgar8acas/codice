@@ -33,6 +33,7 @@
           class="word-details"
           :occurrence="occurrence"
           :selection="true"
+          @changedMeaning="onChangedMeaning"
         >
         </word-details>
       </sui-modal-content>
@@ -126,6 +127,11 @@ export default {
       await this.$store.dispatch("addNewOccurrence", details);
       window.location.reload();
     },
+    onChangedMeaning() {
+      this.occurrence = this.occurrences.find(
+        o => o.start === this.occurrence.start
+      );
+    }
   },
 };
 </script>
