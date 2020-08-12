@@ -49,7 +49,8 @@ export default router
 
     try {
       const result = await UserOccurrence.update({
-        selectedWordId: body.selectedWordId
+        selectedWordId: body.selectedWordId,
+        visible: body.visible
       }, { 
         where: { userOccurrenceId },
         returning: true
@@ -76,5 +77,22 @@ export default router
       return res
         .status(500)
         .json({ error: 'Error al actualizar la ocurrencia.'});
+    }
+  })
+  .delete('/:id', async (req, res) => {
+    const {
+      params: { id }
+    } = req
+    try {
+      const occurrence = await UserOccurrence.findByPk(id);
+      const count = await occurrence.destroy();
+      return res
+        .status(200)
+        .json({ message: 'Ocurrencia eliminada', count});
+    } catch(e) {
+      console.log(e.message);
+      return res
+        .status(500)
+        .json({ error: 'Error al eliminar ocurrencia' })
     }
   })
