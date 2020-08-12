@@ -1,12 +1,18 @@
 <template>
   <div>
-    <h2 class="section-title">
-      {{ occurrence.word || "Detalles de palabra" }}
-    </h2>
-    <div class="related-words-container">
-      <button class="mini ui button" @click="updateAvailableMeanings">
-        Refrescar
+    <div class="related-words--header">
+      <h2>
+        {{ occurrence.word || "Detalles de palabra" }}
+      </h2>
+      <button 
+        class="related-words--refresh-meanings"
+        @click="updateAvailableMeanings"
+      >
+        <img :src="require('../assets/refresh-ccw.svg')"/>
       </button>
+    </div>
+    
+    <div class="related-words--list">
       <div v-if="availableMeanings.length === 0">
         No hay definiciones para la ocurrencia
       </div>
@@ -16,56 +22,62 @@
       <div v-else>
         Significados disponibles
       </div>
-      <div
+      <label
         v-for="word in availableMeanings"
         :key="word.wordId"
-        class="related-word"
+        class="related-words--list-item radiobutton"
       >
-        <div
-          class="flex-item image"
-          :style="{
-            backgroundImage:
-              'url(' + require('@/assets/img_placeholder.png') + ')',
-          }"
-        ></div>
-        <div class="flex-item info">
-          <span class="definition" style="font-weight: bold;">{{
-            word.definition || "Definición..."
-          }}</span>
-          <span class="definition">{{ word.type || "Tipo..." }}</span>
-          <span class="more">{{
-            word.wordId ? "Id de palabra: " + word.wordId : "Nuevo significado"
-          }}</span>
-          <br />
-          <div class="field" v-if="selection">
-            <label>Seleccionar</label>
-            <input
-              type="radio"
-              name="words-group"
-              v-model="picked"
-              :id="'word-' + word.wordId"
-              :value="'word-' + word.wordId"
-              placeholder='"Español" ó "Conocimiento del medio"'
-            />
+        <input
+            v-if="selection"
+            type="radio"
+            name="words-group"
+            v-model="picked"
+            :id="'word-' + word.wordId"
+            :value="'word-' + word.wordId"
+            placeholder='"Español" ó "Conocimiento del medio"'
+          />
+        <img
+          v-if="word.imageUrl"
+          :src="word.imageUrl"
+          :alt="word.word"
+          class="related-words--media"
+        />
+        <img
+          v-else
+          :src="require('../assets/img_placeholder.png')"
+          class="related-words--media"
+        />
+        <div class="related-words--item-info">
+          <div class="item-info--text">
+            <span class="item-info--definition">
+              {{ word.definition || "Definición..." }}
+            </span>
+            <span class="item-info--type">{{ word.type || "Tipo..." }}</span>
           </div>
-          <button
-            class="mini red ui button"
+          
+          <!--<span class="more">{{
+            word.wordId ? "Id de palabra: " + word.wordId : "Nuevo significado"
+          }}</span>-->
+          
+          <!--<span class="more">Más información</span>-->
+        </div>
+        <span class="checkmark" v-if="selection"></span>
+        <button
+            class="related-words--delete"
             v-if="!selection"
             @click="deleteWord(word)"
           >
-            Eliminar
-          </button>
-          <span class="more">Más información</span>
-        </div>
-      </div>
-      <div v-if="selection && occurrence.selectedWordId !== null">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+        </button>
+      </label>
+      <!--<div v-if="selection && occurrence.selectedWordId !== null">
         Guardar seleccionado para cada ocurrencia de
         <i>{{ occurrence.word }}</i>
         <br />
         <a class="btn-primary" @click.prevent="setSelectedForEveryOccurrence"
           >Guardar</a
         >
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
@@ -135,52 +147,125 @@ export default {
 </script>
 
 <style lang="scss">
-.word-details > h2 {
-  text-align: center;
-}
-.help.details-box {
-  color: #c2c2c2;
-  text-align: center;
-}
-.related-words-container {
+.related-words--header {
   display: flex;
-  flex-flow: column nowrap;
-  width: 100%;
-  align-items: center;
-}
-.related-word {
-  display: flex;
-  flex-flow: row nowrap;
-  padding: 10px;
-  width: 90%;
-  border-radius: 5px;
-  margin: 5px;
-  background-color: #d9d9d9;
-  .info {
-    box-sizing: border-box;
-    text-align: left;
-    margin-left: 0.5em;
-    .definition {
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: 1em;
-    }
-    .more {
-      font-size: 0.8em;
-    }
-    flex-grow: 1;
-  }
-  .image {
-    background-image: url("https://images.freeimages.com/images/large-previews/b3d/flowers-1375316.jpg");
-    background-size: cover;
-    border-radius: 5px;
-  }
+  justify-content: space-between;
+  align-items: baseline;
 }
 
-.flex-item {
-  width: 100px;
-  height: 100px;
+.related-words--refresh-meanings {
+  border: none;
+  background: none;
+  padding: 0.1em;
+}
+
+.related-words--list {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.related-words--list-item {
+  height: 60px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.radiobutton {
+  position: relative;
+}
+
+.radiobutton > input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 9999px;
+}
+
+.radiobutton:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+.radiobutton input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.radiobutton input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.radiobutton .checkmark:after {
+ 	top: 9px;
+	left: 9px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: white;
+}
+
+.related-words--list-item > .checkmark {
+  position: absolute;
+}
+
+.related-words--media {
+  width: 50px;
+  height: 50px;
+  border-radius: 3px;
+}
+
+.related-words--item-info {
+  margin-left: 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+  align-self: flex-start;
+}
+
+.item-info--text {
+  display: flex;
+  flex-flow: column;
+}
+
+.item-info--definition {
+  font-size: 1.2em;
+}
+
+.item-info--type {
+  font-size: 1.1em;
+  color: blue;
+}
+
+.related-words--delete {
+  border: none;
+  background-color: #db2828;
+  border-radius: 3px;
+  padding: 5px 3px;
+}
+.related-words--delete:hover {
+  background-color: #aa1c1c;
+}
+.related-words--delete > svg {
+  width: 20px;
+  height: 20px;
+  color: white;
 }
 </style>

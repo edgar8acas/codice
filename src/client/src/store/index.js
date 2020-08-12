@@ -266,7 +266,16 @@ export default new Vuex.Store({
         await dispatch("getTemplateByTextId", data.textId);
       } catch (error) {
         if (error.response) {
-          console.log;
+          commit("addError", error.response.data.error);
+        }
+      }
+    },
+    async deleteOccurrence({ commit }, id) {
+      try {
+        const res = await axios.delete(`/api/user-occurrences/${id}`)
+        commit('any')
+      } catch (error) {
+        if (error.response) {
           commit("addError", error.response.data.error);
         }
       }

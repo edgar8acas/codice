@@ -1,6 +1,9 @@
 <template>
   <div class="colored-card">
     <!-- TODO: add icons -->
+    <div class="card-header">
+      <slot name="menu"></slot>
+    </div>
     <p class="card-body">
       <slot></slot>
     </p>
@@ -31,6 +34,10 @@
     var(--info-saturation),
     var(--info-lightness)
   );
+}
+
+.card-header {
+  align-self: flex-end;
 }
 
 .card-body {

@@ -9,8 +9,32 @@
     >
       Elige un significado para
       <span class="word-select-meaning"> {{ occurrence.word }}</span>
-      <template v-slot:actions>
-        <slot name="actions"></slot>
+      <template v-slot:menu>
+        <dropdown-menu 
+          class="word-card--actions"
+        >
+          <template v-slot:button>
+            <img
+              src="../assets/menu.svg"
+              alt="Opciones de ocurrencia"
+              width="20px"
+              height="20px"
+            />
+          </template>
+          <li>
+            <button @click="emitSelectMeaning">
+              Cambiar significado
+            </button>
+          </li>
+          <li v-if="!occurrence.essential">
+            <button @click="emitDeleteOccurrence">Eliminar ocurrencia</button>
+          </li>
+          <li>
+            <button @click="emitToggleVisibility">
+              {{'Marcar como' + (occurrence.visible ? ' no ': ' ') + 'visible'}} 
+            </button>
+          </li>
+        </dropdown-menu>
       </template>
     </colored-card>
     <div v-else class="info-and-media-wrapper">
@@ -20,33 +44,31 @@
           <div class="word-card">
             <div class="word-card--header">
               <h1>{{ occurrence.word }}</h1>
-              <div class="word-card--actions">
-                <button
-                  @click="showDropdownMenu"
-                  class="word-card--dropdown-button dropdown-button"
-                >
+              <dropdown-menu 
+                class="word-card--actions"
+              >
+                <template v-slot:button>
                   <img
-                    src="../assets/chevron-down.svg"
+                    src="../assets/menu.svg"
                     alt="Opciones de ocurrencia"
                     width="20px"
                     height="20px"
                   />
-                </button>
-                <!-- This could be refactored into a component -->
-                <ul :class="dropdownClassObject">
-                  <li>
-                    <button @click="emitSelectMeaning">
-                      Cambiar significado
-                    </button>
-                  </li>
-                  <li>
-                    <button>Eliminar ocurrencia</button>
-                  </li>
-                  <li>
-                    <button>Marcar como no visible</button>
-                  </li>
-                </ul>
-              </div>
+                </template>
+                <li>
+                  <button @click="emitSelectMeaning">
+                    Cambiar significado
+                  </button>
+                </li>
+                <li v-if="!occurrence.essential">
+                  <button @click="emitDeleteOccurrence">Eliminar ocurrencia</button>
+                </li>
+                <li>
+                  <button @click="emitToggleVisibility">
+                    {{'Marcar como' + (occurrence.visible ? ' no ': ' ') + 'visible'}} 
+                  </button>
+                </li>
+              </dropdown-menu>
             </div>
 
             <div class="word-type">
@@ -103,9 +125,11 @@
 
 <script>
 import ColoredCard from "@/components/ColoredCard";
+import DropdownMenu from "@/components/DropdownMenu";
 export default {
   components: {
     ColoredCard,
+    DropdownMenu
   },
   data() {
     return {
@@ -130,20 +154,19 @@ export default {
       }
       return null;
     },
-    dropdownClassObject() {
-      return {
-        "word-card--dropdown-menu": true,
-        "dropdown-menu link-list": true,
-        active: this.optionsDropdownActive,
-      };
-    },
   },
   methods: {
-    showDropdownMenu() {
+    toggleOptionsMenu() {
       this.optionsDropdownActive = !this.optionsDropdownActive;
     },
     emitSelectMeaning() {
-      this.$emit("selectMeaning");
+      this.$emit("onSelectMeaning");
+    },
+    emitDeleteOccurrence() {
+      this.$emit("onDeleteOccurrence", this.occurrence.userOccurrenceId);
+    },
+    emitToggleVisibility() {
+      this.$emit("onToggleVisibility", this.occurrence);
     },
   },
 };
@@ -213,11 +236,6 @@ export default {
         font-size: 2em;
         flex: 1 1 auto;
       }
-
-      .word-card--dropdown-button {
-        font-size: 0.5em;
-        padding: 0;
-      }
     }
 
     .word-type {
@@ -254,52 +272,4 @@ export default {
   text-align: center;
 }
 
-.link-list {
-  list-style-type: none;
-}
-
-.link-list button {
-  display: block;
-  width: 100%;
-  border: none;
-  padding: 7px 15px 8px;
-  text-align: left;
-  font-size: 1rem;
-  background: none;
-  border-radius: 0;
-}
-
-.link-list button:hover,
-.link-list button:focus {
-  color: inherit;
-  background: #e7e8f1;
-}
-
-.dropdown-menu {
-  position: absolute;
-  display: none;
-  padding: 5px 0;
-  border-radius: 0.5em;
-  box-shadow: 0px 0px 10px 2px #c2c2c2;
-  background: white;
-  width: auto;
-  z-index: 1;
-  opacity: 1;
-}
-
-.word-card--dropdown-menu {
-  right: 0;
-  z-index: 10;
-  margin-top: 5px;
-}
-
-.dropdown-button {
-  border: none;
-  background: none;
-  padding: 0.2em;
-}
-
-.active {
-  display: block;
-}
 </style>

@@ -1,30 +1,49 @@
 <template>
   <div class="learn">
-    <div class="learn__text">
+    <div class="learn--header">
+      <div class="learn--header-left">
+        <h2 class="learn--title">{{ currentTemplateText.title }}</h2>
+        <dropdown-menu 
+          class="learn--header-text-actions"
+          :active="optionsMenuActive"
+        >
+          <template v-slot:button>
+            <button
+              @click="toggleOptionsMenu"
+              class="dropdown-button"
+            >
+            <img
+              src="../assets/menu.svg"
+              alt="Opciones del texto"
+              width="30px"
+              height="30px"
+            />
+          </button>
+          </template>
+          <li>
+            <button @click="toggleAddOccurrence">
+              Agregar palabra
+            </button>
+          </li>
+        </dropdown-menu>
+      </div>
+    </div>
+    <div class="learn--text">
       <!-- TODO: Stick title to the top when scrolling -->
-      <h2 class="learn__title">{{ currentTemplateText.title }}</h2>
       <text-content
-        class="learn__text-content"
+        class="learn--text-content"
         @changeOccurrence="changeOccurrence"
         :current="occurrence"
       ></text-content>
     </div>
     <selected-occurrence-info
-      class="learn__current-info"
+      class="learn--current-info"
       :occurrence="occurrence"
-      @selectMeaning="toggleSelectMeaning"
+      @onSelectMeaning="selectMeaning"
+      @onDeleteOccurrence="deleteOccurrence"
+      @onToggleVisibility="toggleVisibility"
     >
-      <template v-slot:actions v-if="occurrence && occurrence.word">
-        <button class="ui button" @click="toggleSelectMeaning">
-          Elegir
-        </button>
-      </template>
     </selected-occurrence-info>
-    <!-- <div class="learn__word-actions">  
-      <button class="ui button" @click="toggleAddOccurrence">
-        Añadir ocurrencia
-      </button>
-    </div> -->
 
     <sui-modal v-model="activeSelectMeaning">
       <sui-modal-header>Cambiar significado</sui-modal-header>
@@ -38,7 +57,7 @@
         </word-details>
       </sui-modal-content>
       <sui-modal-actions>
-        <sui-button positive @click.native="toggleSelectMeaning">
+        <sui-button positive @click.native="selectMeaning">
           Aceptar
         </sui-button>
       </sui-modal-actions>
@@ -74,6 +93,7 @@
 import TextContent from "@/components/TextContent";
 import SelectedOccurrenceInfo from "@/components/SelectedOccurrenceInfo";
 import WordDetails from "@/components/WordDetails";
+import DropdownMenu from "@/components/DropdownMenu";
 import { getSelectedWordDetails } from "@/utils/template";
 import { mapState, mapGetters } from "vuex";
 export default {
@@ -81,6 +101,7 @@ export default {
     TextContent,
     SelectedOccurrenceInfo,
     WordDetails,
+    DropdownMenu
   },
   data() {
     return {
@@ -89,6 +110,7 @@ export default {
       isLearnt: false,
       activeSelectMeaning: false,
       activeAddingOccurrence: false,
+      optionsMenuActive: false
     };
   },
   computed: {
@@ -113,11 +135,23 @@ export default {
     changeOccurrence(start) {
       this.occurrence = this.occurrences.find((o) => o.start === start);
     },
-    async toggleSelectMeaning() {
+    toggleOptionsMenu() {
+      this.optionsMenuActive = !this.optionsMenuActive;
+    },
+    async selectMeaning() {
       if (!this.activeSelectMeaning) {
         await this.$store.dispatch("getRelatedWords", this.occurrence);
       }
       this.activeSelectMeaning = !this.activeSelectMeaning;
+    },
+    async deleteOccurrence(id) {
+      await this.$store.dispatch("deleteOccurrence", id);
+      // TODO: Avoid reloading the page
+      window.location.reload();
+    },
+    async toggleVisibility(occurrence) {
+      occurrence.visible = !occurrence.visible;
+      await this.$store.dispatch("updateSelectedWord", occurrence);
     },
     toggleAddOccurrence() {
       this.activeAddingOccurrence = true;
@@ -125,6 +159,7 @@ export default {
     async addSelectedOccurrence() {
       const details = getSelectedWordDetails(this.currentTemplateText);
       await this.$store.dispatch("addNewOccurrence", details);
+      // TODO: Avoid reloading the page
       window.location.reload();
     },
     onChangedMeaning() {
@@ -146,28 +181,41 @@ export default {
   font-family: "Mulish", sans-serif;
 }
 
-.learn__text {
+.learn--header {
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+  border-bottom: 3px solid var(--learn-secondary);
+}
+
+.learn--header-left {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 40%;
+}
+
+.learn--text {
   width: 40%;
   float: left;
   overflow: scroll;
   overflow-x: hidden;
   height: 100%;
-
-  .learn__title {
-    font-family: "Mulish", sans-serif;
-    font-size: 2.5em;
-    text-align: center;
-    font-weight: 800;
-  }
-
-  .learn__text-content {
-    font-size: 1.8em;
-    text-align: left;
-    line-height: 160%;
-  }
 }
 
-.learn__current-info {
+.learn--text-content {
+  font-size: 1.8em;
+  text-align: left;
+  line-height: 160%;
+}
+
+.learn--title {
+  font-family: "Mulish", sans-serif;
+  font-size: 2.5em;
+  text-align: left;
+  font-weight: 800;
+}
+
+.learn--current-info {
   width: 60%;
   float: right;
   height: 80vh;
