@@ -1,6 +1,6 @@
 <template>
   <div class="media-container">
-    <colored-card v-if="!occurrence" class="info center-card">
+    <colored-card v-if="!isOccurrence" class="info center-card">
       Selecciona una palabra para ver su significado
     </colored-card>
     <colored-card
@@ -10,9 +10,7 @@
       Elige un significado para
       <span class="word-select-meaning"> {{ occurrence.word }}</span>
       <template v-slot:menu>
-        <dropdown-menu 
-          class="word-card--actions"
-        >
+        <dropdown-menu class="word-card--actions">
           <template v-slot:button>
             <img
               src="../assets/menu.svg"
@@ -31,7 +29,9 @@
           </li>
           <li>
             <button @click="emitToggleVisibility">
-              {{'Marcar como' + (occurrence.visible ? ' no ': ' ') + 'visible'}} 
+              {{
+                "Marcar como" + (occurrence.visible ? " no " : " ") + "visible"
+              }}
             </button>
           </li>
         </dropdown-menu>
@@ -44,9 +44,7 @@
           <div class="word-card">
             <div class="word-card--header">
               <h1>{{ occurrence.word }}</h1>
-              <dropdown-menu 
-                class="word-card--actions"
-              >
+              <dropdown-menu class="word-card--actions">
                 <template v-slot:button>
                   <img
                     src="../assets/menu.svg"
@@ -61,11 +59,26 @@
                   </button>
                 </li>
                 <li v-if="!occurrence.essential">
-                  <button @click="emitDeleteOccurrence">Eliminar ocurrencia</button>
+                  <button @click="emitDeleteOccurrence">
+                    Eliminar ocurrencia
+                  </button>
                 </li>
                 <li>
                   <button @click="emitToggleVisibility">
-                    {{'Marcar como' + (occurrence.visible ? ' no ': ' ') + 'visible'}} 
+                    {{
+                      "Marcar como" +
+                      (occurrence.visible ? " no " : " ") +
+                      "visible"
+                    }}
+                  </button>
+                </li>
+                <li>
+                  <button @click="emitToggleIsLearned">
+                    {{
+                      "Marcar como" +
+                      (dictionary.isLearned ? " no " : " ") +
+                      "aprendida"
+                    }}
                   </button>
                 </li>
               </dropdown-menu>
@@ -126,10 +139,12 @@
 <script>
 import ColoredCard from "@/components/ColoredCard";
 import DropdownMenu from "@/components/DropdownMenu";
+import UserOccurrence from "@/utils/user_occurrence";
+import { mapState } from "vuex";
 export default {
   components: {
     ColoredCard,
-    DropdownMenu
+    DropdownMenu,
   },
   data() {
     return {
@@ -140,11 +155,20 @@ export default {
     occurrence: {
       required: true,
       default: function () {
-        return null;
+        return {};
       },
     },
   },
   computed: {
+    ...mapState(["dictionary"]),
+    dictionary() {
+      return this.$store.getters.getDictionaryWordByWordId(
+        this.occurrence.selectedWordId
+      );
+    },
+    isOccurrence() {
+      return this.occurrence instanceof UserOccurrence;
+    },
     formattedVideoUrl() {
       if (this.occurrence.selectedWordObject.videoUrl) {
         const videoUrl = this.occurrence.selectedWordObject.videoUrl.match(
@@ -168,6 +192,9 @@ export default {
     emitToggleVisibility() {
       this.$emit("onToggleVisibility", this.occurrence);
     },
+    emitToggleIsLearned() {
+      this.$emit("onToggleIsLearned", this.dictionary);
+    },
   },
 };
 </script>
@@ -177,6 +204,7 @@ export default {
   display: flex;
   padding: 0 1em;
   position: relative;
+  height: -webkit-fill-available;
 }
 
 .media {
@@ -194,7 +222,7 @@ export default {
 }
 
 .word-information {
-  height: 60%;
+  height: 40%;
 }
 
 .associated-media {
@@ -271,5 +299,4 @@ export default {
   display: block;
   text-align: center;
 }
-
 </style>

@@ -10,7 +10,7 @@ function escapeForRegExp(str) {
 export function getTokenizedContent({
   ocurrences,
   text,
-  onlyNewLines = false
+  onlyNewLines = false,
 }) {
   const newLineOccurrences = findNewLinesInText(text);
   const tokens = [];
@@ -119,19 +119,12 @@ function findNewLinesInText(text) {
   return newLines;
 }
 /** Transform the row response of occurrence objects and creates instances of Occurrence or UserOccurrences */
-export function generateOccurrences({
-  occurrences,
-  template = false,
-  dictionaryWords,
-}) {
+export function generateOccurrences({ occurrences, template = false }) {
   return occurrences.map((o) => {
     if (template) {
       return new Occurrence(o);
     } else {
-      return new UserOccurrence(
-        o,
-        dictionaryWords.find((dw) => dw.Word.wordId === o.Word.wordId)
-      );
+      return new UserOccurrence(o);
     }
   });
 }
@@ -156,40 +149,4 @@ export function getSelectedWordDetails(text) {
     ),
     textId: text.textId,
   };
-  //const range = selection.getRangeAt(0);
-  /*const textContentNode = range.startContainer.parentNode;
-  const textContentRange = new Range();
-  textContentRange.selectNode(textContentNode);
-  const startContainerRange = new Range();
-  startContainerRange.selectNode(range.startContainer);
-
-  let startCharOfStartContainer = 0;
-  for (let i = 0; i < startContainerRange.startOffset; i++) {
-    const node = textContentNode.childNodes[i];
-    
-    //text-node
-    if (node.nodeType === 3) {
-      startCharOfStartContainer += node.length;
-    }
-
-    //element-node
-    if (node.nodeType === 1) {
-      /*if (node.nodeName === 'br') 
-        //startCharOfStartContainer += 1
-      else 
-        startCharOfStartContainer += node.innerText.length
-    }
-  }
-
-  const startOfWord = startCharOfStartContainer + range.startOffset;
-  const endOfWord = startCharOfStartContainer + range.startOffset + (range.endOffset - range.startOffset);
-  console.log(startCharOfStartContainer, range.startOffset);
-  console.log(textContentNode.innerText.substring(startOfWord, endOfWord));
-  
-  
-  console.log(selection)
-  console.log(range)
-  console.log(textContentNode, textContentNode.nodeType);
-  console.log(startContainerRange, range.startContainer.nodeType);
-  */
 }

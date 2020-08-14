@@ -1,8 +1,6 @@
 <template>
   <div class="dropdown">
-    <button
-      class="dropdown-button"
-    >
+    <button class="dropdown-button">
       <slot name="button">
         Menu
       </slot>
@@ -18,11 +16,11 @@ export default {
   computed: {
     dropdownClassObject() {
       return {
-        "dropdown-content link-list": true
+        "dropdown-content link-list": true,
       };
     },
-  }
-}
+  },
+};
 </script>
 
 <style>
@@ -39,13 +37,13 @@ export default {
 .dropdown-content {
   position: absolute;
   display: none;
-  
+
   border-radius: 0.5em;
   box-shadow: 0px 0px 10px 2px #c2c2c2;
-  background: #FFF;
+  background: #fff;
   width: auto;
   opacity: 1;
-  
+
   padding: 5px 0;
   left: 0;
   top: 100%;
@@ -94,5 +92,4 @@ export default {
   color: inherit;
   background: #e7e8f1;
 }
-
 </style>

@@ -3,22 +3,19 @@
     <div class="learn--header">
       <div class="learn--header-left">
         <h2 class="learn--title">{{ currentTemplateText.title }}</h2>
-        <dropdown-menu 
+        <dropdown-menu
           class="learn--header-text-actions"
           :active="optionsMenuActive"
         >
           <template v-slot:button>
-            <button
-              @click="toggleOptionsMenu"
-              class="dropdown-button"
-            >
-            <img
-              src="../assets/menu.svg"
-              alt="Opciones del texto"
-              width="30px"
-              height="30px"
-            />
-          </button>
+            <button @click="toggleOptionsMenu" class="dropdown-button">
+              <img
+                src="../assets/menu.svg"
+                alt="Opciones del texto"
+                width="30px"
+                height="30px"
+              />
+            </button>
           </template>
           <li>
             <button @click="toggleAddOccurrence">
@@ -36,14 +33,32 @@
         :current="occurrence"
       ></text-content>
     </div>
-    <selected-occurrence-info
-      class="learn--current-info"
-      :occurrence="occurrence"
-      @onSelectMeaning="selectMeaning"
-      @onDeleteOccurrence="deleteOccurrence"
-      @onToggleVisibility="toggleVisibility"
-    >
-    </selected-occurrence-info>
+    <div class="learn--tab-component">
+      <div class="learn--tab-component-nav">
+        <button
+          v-for="tab in tabs"
+          :key="tab.component"
+          :class="[
+            'learn--tab-button',
+            { 'learn--active-tab': currentTab.component === tab.component },
+          ]"
+          @click="currentTab = tab"
+        >
+          {{ tab.name }}
+        </button>
+      </div>
+      <keep-alive>
+        <component
+          v-bind:is="this.currentTab.component"
+          :occurrence="occurrence"
+          @onSelectMeaning="selectMeaning"
+          @onDeleteOccurrence="deleteOccurrence"
+          @onToggleVisibility="toggleVisibility"
+          @onToggleIsLearned="toggleIsLearned"
+        >
+        </component>
+      </keep-alive>
+    </div>
 
     <sui-modal v-model="activeSelectMeaning">
       <sui-modal-header>Cambiar significado</sui-modal-header>
@@ -92,6 +107,7 @@
 <script>
 import TextContent from "@/components/TextContent";
 import SelectedOccurrenceInfo from "@/components/SelectedOccurrenceInfo";
+import LearnDictionary from "@/components/LearnDictionary";
 import WordDetails from "@/components/WordDetails";
 import DropdownMenu from "@/components/DropdownMenu";
 import { getSelectedWordDetails } from "@/utils/template";
@@ -100,17 +116,26 @@ export default {
   components: {
     TextContent,
     SelectedOccurrenceInfo,
+    LearnDictionary,
     WordDetails,
-    DropdownMenu
+    DropdownMenu,
   },
   data() {
     return {
       textId: this.$route.params.id,
-      occurrence: null,
+      occurrence: {},
       isLearnt: false,
       activeSelectMeaning: false,
       activeAddingOccurrence: false,
-      optionsMenuActive: false
+      optionsMenuActive: false,
+      currentTab: {
+        name: "Palabra actual",
+        component: "selected-occurrence-info",
+      },
+      tabs: [
+        { name: "Palabra actual", component: "selected-occurrence-info" },
+        { name: "Diccionario", component: "learn-dictionary" },
+      ],
     };
   },
   computed: {
@@ -153,6 +178,10 @@ export default {
       occurrence.visible = !occurrence.visible;
       await this.$store.dispatch("updateSelectedWord", occurrence);
     },
+    async toggleIsLearned(dictionaryWord) {
+      dictionaryWord.isLearned = !dictionaryWord.isLearned;
+      await this.$store.dispatch("updateDictionaryWord", dictionaryWord);
+    },
     toggleAddOccurrence() {
       this.activeAddingOccurrence = true;
     },
@@ -164,9 +193,9 @@ export default {
     },
     onChangedMeaning() {
       this.occurrence = this.occurrences.find(
-        o => o.start === this.occurrence.start
+        (o) => o.start === this.occurrence.start
       );
-    }
+    },
   },
 };
 </script>
@@ -215,10 +244,36 @@ export default {
   font-weight: 800;
 }
 
-.learn--current-info {
+.learn--tab-component {
   width: 60%;
   float: right;
   height: 80vh;
+}
+
+.learn--tab-component-nav {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.learn--tab-button {
+  flex-grow: 1;
+  border: none;
+  background: none;
+  font-size: 1.3em;
+  padding: 6px 9px;
+  border-bottom: 4px solid lightblue;
+}
+
+.learn--tab-button:hover {
+  background-color: #f1f8fb;
+}
+
+.learn--active-tab.learn--tab-button:hover {
+  background-color: lightblue;
+}
+
+.learn--active-tab {
+  background-color: lightblue;
 }
 
 .learn__word-actions {

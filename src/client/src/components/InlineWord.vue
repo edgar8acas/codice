@@ -1,8 +1,16 @@
 <template>
-  <span @click="selectMeaning" :class="classObject">{{ word }}</span>
+  <span @click="selectMeaning" :class="classObject">
+    {{ word }}
+    <!-- Dev purposes -->
+    <span v-if="development">
+      <sup style="color: blue;">{{ this.occurrence.userOccurrenceId }}</sup>
+      <sub style="color: green;">{{ this.occurrence.selectedWordId }}</sub>
+    </span>
+  </span>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {};
@@ -11,6 +19,12 @@ export default {
     occurrence: Object,
   },
   computed: {
+    ...mapState(["dictionary", "development"]),
+    dictionary() {
+      return this.$store.getters.getDictionaryWordByWordId(
+        this.occurrence.selectedWordId
+      );
+    },
     availableMeanings() {
       return this.$store.getters.availableMeaningsByWord(this.word);
     },
@@ -28,11 +42,29 @@ export default {
             ? this.occurrence.essential
             : false,
         "available-meanings": this.availableMeanings.length > 0,
+        "not-available-meanings": this.availableMeanings.length === 0,
         invisible:
           this.occurrence.visible !== undefined
             ? !this.occurrence.visible
             : false,
         current: this.occurrence.current,
+        learned:
+          this.dictionary !== undefined
+            ? this.dictionary.isLearned
+              ? true
+              : false
+            : false,
+        "not-learned":
+          this.dictionary !== undefined
+            ? !this.dictionary.isLearned
+              ? true
+              : false
+            : false,
+        "unselected-meaning": !this.occurrence.selectedWordId,
+        process:
+          (!this.occurrence.occurrenceId &&
+            !this.occurrence.userOccurrenceId) ||
+          this.occurrence.occurrenceId,
       };
     },
   },
@@ -47,55 +79,59 @@ export default {
 <style lang="scss" scoped>
 .inline-word {
   display: inline-block;
-  border-radius: 5px;
-
-  //no essential
-  border-bottom: 4px solid black;
-
-  &.essential {
-    border-bottom: 4px solid blue;
-  }
-
-  //no available meanings
-  background-color: #f2711c;
-  color: white;
-
-  &.available-meanings {
-    background-color: #21ba45;
-  }
-
-  &.invisible {
-    background-color: initial;
-    border: none;
-    color: inherit;
-
-    &:hover {
-      text-decoration: none;
-      cursor: initial;
-    }
-  }
-
-  &.current {
-    font-weight: bolder;
-    background-color: purple;
-  }
-}
-
-.inline-word.learnt {
-  color: #246eb9;
-  text-shadow: #2bd9fe 1px 0 10px;
-  font-weight: bold;
-}
-
-.inline-word.not-learnt {
-  color: #f06543;
-  text-shadow: #c05136 1px 0 10px;
-  font-weight: bold;
 }
 
 .inline-word:hover {
-  text-decoration: underline;
   cursor: pointer;
+}
+
+.inline-word.learned {
+  color: hsl(197, 71%, 46%);
+  border-bottom: 3px solid hsl(197, 71%, 46%);
+}
+
+.inline-word.not-learned {
+  color: #ff3737;
+  border-bottom: 3px solid #ff3737;
+}
+
+.inline-word.unselected-meaning {
+  color: #edc800;
+  border-bottom: 3px solid #edc800;
+}
+
+.inline-word.current {
+  font-weight: bolder;
+  color: white;
+  background-color: purple;
+  border-bottom: none;
+  border-radius: 5px;
+}
+
+.inline-word.invisible {
+  background-color: initial;
+  border: none;
+  color: inherit;
+  font-weight: initial;
+
+  &:hover {
+    text-decoration: none;
+    cursor: initial;
+  }
+}
+
+.inline-word.process.available-meanings {
+  background-color: #21ba45;
+  color: white;
+  border-bottom: 3px solid #21ba45;
+  border-radius: 5px;
+}
+
+.inline-word.process.not-available-meanings {
+  background-color: #f2711c;
+  color: white;
+  border-bottom: 3px solid #f2711c;
+  border-radius: 5px;
 }
 
 .inline-word.conflicts {

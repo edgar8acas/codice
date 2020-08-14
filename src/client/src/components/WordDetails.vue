@@ -4,14 +4,14 @@
       <h2>
         {{ occurrence.word || "Detalles de palabra" }}
       </h2>
-      <button 
+      <button
         class="related-words--refresh-meanings"
         @click="updateAvailableMeanings"
       >
-        <img :src="require('../assets/refresh-ccw.svg')"/>
+        <img :src="require('../assets/refresh-ccw.svg')" />
       </button>
     </div>
-    
+
     <div class="related-words--list">
       <div v-if="availableMeanings.length === 0">
         No hay definiciones para la ocurrencia
@@ -28,14 +28,14 @@
         class="related-words--list-item radiobutton"
       >
         <input
-            v-if="selection"
-            type="radio"
-            name="words-group"
-            v-model="picked"
-            :id="'word-' + word.wordId"
-            :value="'word-' + word.wordId"
-            placeholder='"Español" ó "Conocimiento del medio"'
-          />
+          v-if="selection"
+          type="radio"
+          name="words-group"
+          v-model="picked"
+          :id="'word-' + word.wordId"
+          :value="'word-' + word.wordId"
+          placeholder='"Español" ó "Conocimiento del medio"'
+        />
         <img
           v-if="word.imageUrl"
           :src="word.imageUrl"
@@ -53,36 +53,47 @@
               {{ word.definition || "Definición..." }}
             </span>
             <span class="item-info--type">{{ word.type || "Tipo..." }}</span>
+            <!-- Dev purposes -->
+            <span v-if="development">
+              <span class="item-info--type">{{
+                word.wordId || "Tipo..."
+              }}</span>
+            </span>
           </div>
-          
-          <!--<span class="more">{{
-            word.wordId ? "Id de palabra: " + word.wordId : "Nuevo significado"
-          }}</span>-->
-          
-          <!--<span class="more">Más información</span>-->
         </div>
         <span class="checkmark" v-if="selection"></span>
         <button
-            class="related-words--delete"
-            v-if="!selection"
-            @click="deleteWord(word)"
+          class="related-words--delete"
+          v-if="!selection"
+          @click="deleteWord(word)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="feather feather-trash-2"
           >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path
+              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+            ></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
         </button>
       </label>
-      <!--<div v-if="selection && occurrence.selectedWordId !== null">
-        Guardar seleccionado para cada ocurrencia de
-        <i>{{ occurrence.word }}</i>
-        <br />
-        <a class="btn-primary" @click.prevent="setSelectedForEveryOccurrence"
-          >Guardar</a
-        >
-      </div>-->
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   props: {
     occurrence: {
@@ -104,6 +115,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(["development"]),
     availableMeanings() {
       return this.$store.getters.availableMeaningsByWord(this.occurrence.word);
     },
@@ -120,7 +132,7 @@ export default {
         ...this.occurrence,
         selectedWordId: Number(newVal.substring(5)),
       });
-      this.$emit('changedMeaning');
+      this.$emit("changedMeaning");
     },
     markedStatus: {
       handler(newVal) {
@@ -140,6 +152,7 @@ export default {
       this.$store.dispatch("deleteRelatedWord", word);
     },
     updateAvailableMeanings() {
+      console.log(12345 + "wordDetails");
       this.$store.dispatch("getRelatedWords", this.occurrence);
     },
   },
@@ -200,7 +213,7 @@ export default {
 }
 
 .radiobutton input:checked ~ .checkmark {
-  background-color: #2196F3;
+  background-color: #2196f3;
 }
 
 .checkmark:after {
@@ -214,12 +227,12 @@ export default {
 }
 
 .radiobutton .checkmark:after {
- 	top: 9px;
-	left: 9px;
-	width: 8px;
-	height: 8px;
-	border-radius: 50%;
-	background: white;
+  top: 9px;
+  left: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
 }
 
 .related-words--list-item > .checkmark {

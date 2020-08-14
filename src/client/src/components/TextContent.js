@@ -59,7 +59,9 @@ export default Vue.component("text-content", {
   },
   watch: {
     current(newVal, oldVal) {
-      if (oldVal) oldVal.toggleCurrent();
+      if (oldVal instanceof UserOccurrence || oldVal instanceof Occurrence) {
+        oldVal.toggleCurrent();
+      }
       newVal.toggleCurrent();
     },
   },
