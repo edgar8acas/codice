@@ -1,5 +1,5 @@
 import express from 'express';
-import { Dictionary } from '@models';
+import { Dictionary, Word } from '@models';
 
 const router = express.Router();
 
@@ -17,16 +17,22 @@ export default router
           .status(404)
           .json({ msg: 'Palabra de diccionario no encontrada'})
       
-      item = await item.update({
+      await item.update({
         isLearned: body.isLearned
       });
 
-    return res
-    .status(201)
-    .json(item)
+      const updated = await Dictionary.findByPk(
+        item.dictionaryId, 
+        {
+          include: [{ model: Word }]
+        });
+      return res
+        .status(201)
+        .json(updated);
     } catch(e) {
+      console.log(e);
       return res
         .status(500)
-        .json({ msg: e })
+        .json({ msg: "Error del servidor"})
     }
   })

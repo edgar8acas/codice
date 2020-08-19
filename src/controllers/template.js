@@ -34,6 +34,7 @@ export default router
       if (userId === undefined) {
         response.templateOccurrences = occurrences;
         response.availableWords = await Word.getAvailableWords(occurrences);
+        response.dictionaryWords = [];
       } else {
         let userOccurrences = await UserOccurrence.findAll(query);
       
@@ -53,35 +54,24 @@ export default router
             })
           )
         }
+        const wordIds = Array.from( 
+          new Set( userOccurrences.map(o => o.dataValues.selectedWordId ))
+        );
+        const dictionaryWords = await Dictionary.findAll({
+          where: {
+            [Op.and]: [
+              { wordId: {[Op.in]: wordIds}},
+              { userId: userId }
+            ]          
+          },
+          include: [{ model: Word }]
+        })
+
         response.userOccurrences = userOccurrences;
+        response.dictionaryWords = dictionaryWords;
         response.availableWords = await Word.getAvailableWords(userOccurrences);
       }
-
       
-      //const wordIds = Array.from( new Set( userOccurrences.map(o => o.wordId )) );
-
-      /*let dictionaryWords = await Dictionary.findAll({
-        where: {
-          [Op.and]: [
-            { wordId: {[Op.in]: wordIds}},
-            { userId: userId }
-          ]          
-        },
-        include: [{ model: Word }]
-      })
-
-      if( dictionaryWords.length === 0 ) {
-        dictionaryWords = await Dictionary.bulkCreate(
-          wordIds.map(id => {
-            return {
-              userId: userId,
-              wordId: id,
-            }
-          })
-        )
-      }*/
-
-      response.dictionaryWords = [];
       return res
         .status(200)
         .json(response);

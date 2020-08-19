@@ -1,5 +1,5 @@
 import express from 'express';
-import { UserOccurrence, Word, User } from '@models';
+import { UserOccurrence, Word, Dictionary } from '@models';
 const router = express.Router();
 
 export default router
@@ -64,13 +64,37 @@ export default router
       const matchingWords = await Word.findAll({
         where: { word: updated.word }
       });
+      
+      let dictionaryWord = await Dictionary.findOne({
+        where: { 
+          wordId: result[1][0].selectedWordId,
+          userId: result[1][0].userId 
+        },
+        include: [{ model: Word }]
+      });
+
+      if (!dictionaryWord) {
+        //TODO: Validate
+        await Dictionary.create({
+          wordId: result[1][0].selectedWordId,
+          userId: result[1][0].userId,
+          isLearned: false
+        });
+        dictionaryWord = await Dictionary.findOne({
+          where: { 
+            wordId: result[1][0].selectedWordId,
+            userId: result[1][0].userId 
+          },
+          include: [{ model: Word }]
+        });
+      }
 
       return res
         .status(200)
         .json({
           updated,
           matchingWords,
-          dictionaryWord: {}
+          dictionaryWord
         });
     } catch (error) {
       console.log(error);
