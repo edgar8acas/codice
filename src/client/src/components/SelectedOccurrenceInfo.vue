@@ -140,7 +140,8 @@
 import ColoredCard from "@/components/ColoredCard";
 import DropdownMenu from "@/components/DropdownMenu";
 import UserOccurrence from "@/utils/user_occurrence";
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
+import { GET_DICTIONARY_BY_WORD_ID } from "../store/getter-types";
 export default {
   components: {
     ColoredCard,
@@ -160,11 +161,9 @@ export default {
     },
   },
   computed: {
-    ...mapState(["dictionary"]),
+    ...mapGetters([GET_DICTIONARY_BY_WORD_ID]),
     dictionary() {
-      return this.$store.getters.getDictionaryWordByWordId(
-        this.occurrence.selectedWordId
-      );
+      return this[GET_DICTIONARY_BY_WORD_ID](this.occurrence.selectedWordId);
     },
     isOccurrence() {
       return this.occurrence instanceof UserOccurrence;

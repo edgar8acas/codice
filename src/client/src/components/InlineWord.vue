@@ -10,7 +10,13 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
+
+import {
+  GET_MEANINGS_BY_WORD,
+  GET_DICTIONARY_BY_WORD_ID,
+} from "./../store/getter-types";
+
 export default {
   data() {
     return {};
@@ -19,14 +25,14 @@ export default {
     occurrence: Object,
   },
   computed: {
-    ...mapState(["dictionary", "development"]),
+    ...mapState(["development", "meanings"]),
+    ...mapGetters([GET_MEANINGS_BY_WORD]),
+    ...mapGetters([GET_DICTIONARY_BY_WORD_ID]),
     dictionary() {
-      return this.$store.getters.getDictionaryWordByWordId(
-        this.occurrence.selectedWordId
-      );
+      return this[GET_DICTIONARY_BY_WORD_ID](this.occurrence.selectedWordId);
     },
-    availableMeanings() {
-      return this.$store.getters.availableMeaningsByWord(this.word);
+    meanings() {
+      return this[GET_MEANINGS_BY_WORD](this.word);
     },
     word() {
       return this.occurrence.word;
@@ -41,8 +47,8 @@ export default {
           this.occurrence.essential !== undefined
             ? this.occurrence.essential
             : false,
-        "available-meanings": this.availableMeanings.length > 0,
-        "not-available-meanings": this.availableMeanings.length === 0,
+        "available-meanings": this.meanings.length > 0,
+        "not-available-meanings": this.meanings.length === 0,
         invisible:
           this.occurrence.visible !== undefined
             ? !this.occurrence.visible

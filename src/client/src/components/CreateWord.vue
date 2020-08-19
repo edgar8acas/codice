@@ -25,6 +25,9 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+import { SAVE_MEANING } from "../store/action-types";
+
 export default {
   props: {
     forWord: String,
@@ -47,8 +50,9 @@ export default {
     };
   },
   methods: {
+    ...mapActions([SAVE_MEANING]),
     saveWord() {
-      this.$store.dispatch("saveWord", {
+      this[SAVE_MEANING]({
         word: this.forWord,
         definition: this.definition,
         type: this.type,

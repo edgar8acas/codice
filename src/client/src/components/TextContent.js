@@ -1,12 +1,13 @@
 import Vue from "vue";
-import { mapState } from "vuex";
 import Occurrence from "@/utils/occurrence";
 import UserOccurrence from "@/utils/user_occurrence";
 import InlineWord from "@/components/InlineWord";
 
+import { mapState } from "vuex";
+
 export default Vue.component("text-content", {
   render: function (h) {
-    const children = this.tokenizedContent.map((chunk) => {
+    const children = this.template.tokenizedText.map((chunk) => {
       if (typeof chunk === "string") return chunk;
       if (
         (chunk instanceof Occurrence || chunk instanceof UserOccurrence) &&
@@ -50,7 +51,7 @@ export default Vue.component("text-content", {
     },
   },
   computed: {
-    ...mapState(["tokenizedContent"]),
+    ...mapState(["template"]),
   },
   methods: {
     changeOccurrence(start) {

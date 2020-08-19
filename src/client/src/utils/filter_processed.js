@@ -24,7 +24,7 @@ const exclusivo = {
   segundo: [],
 };
 
-export default function getExclusiveWords(processed) {
+export function getExclusiveWords(processed) {
   for (const key in processed.conflicts) {
     if (!exclusivo.primero.find((word) => word === key)) {
       delete processed.conflicts[key];

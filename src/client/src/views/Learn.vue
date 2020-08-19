@@ -2,7 +2,7 @@
   <div class="learn">
     <div class="learn--header">
       <div class="learn--header-left">
-        <h2 class="learn--title">{{ currentTemplateText.title }}</h2>
+        <h2 class="learn--title">{{ text.title }}</h2>
         <dropdown-menu
           class="learn--header-text-actions"
           :active="optionsMenuActive"
@@ -89,7 +89,7 @@
             Selecciona la ocurrencia y da click en <b>Añadir seleccionado</b>.
           </p>
         </div>
-        <pre>{{ currentTemplateText.rawContent }}</pre>
+        <pre>{{ text.rawContent }}</pre>
       </sui-modal-content>
       <sui-modal-actions>
         <button
@@ -111,7 +111,18 @@ import LearnDictionary from "@/components/LearnDictionary";
 import WordDetails from "@/components/WordDetails";
 import DropdownMenu from "@/components/DropdownMenu";
 import { getSelectedWordDetails } from "@/utils/template";
-import { mapState, mapGetters } from "vuex";
+
+import { mapState, mapActions } from "vuex";
+import {
+  GET_DATA_FOR_LEARNING,
+  UPDATE_DICTIONARY,
+  UPDATE_OCCURRENCE,
+  GET_MEANINGS_FOR_WORD,
+  ADD_USER_OCCURRENCE,
+  GET_TEXT_BY_ID,
+  DELETE_USER_OCCURRENCE,
+} from "./../store/action-types";
+
 export default {
   components: {
     TextContent,
@@ -139,8 +150,11 @@ export default {
     };
   },
   computed: {
-    ...mapState(["occurrences", "currentTemplateText"]),
-    ...mapGetters(["learntWords", "unlearntWords"]),
+    ...mapState("texts", ["texts"]),
+    ...mapState(["template"]),
+    text() {
+      return this.texts.find((text) => text.textId === Number(this.textId));
+    },
     formatEssential() {
       return this.occurrence.essential ? "Esencial" : "No esencial";
     },
@@ -154,45 +168,55 @@ export default {
     },
   },
   async mounted() {
-    await this.$store.dispatch("getDataForLearning", this.textId);
+    await this[GET_TEXT_BY_ID](this.textId);
+    await this[GET_DATA_FOR_LEARNING](this.textId);
   },
   methods: {
+    ...mapActions("texts", [GET_TEXT_BY_ID]),
+    ...mapActions("learn", [GET_DATA_FOR_LEARNING, ADD_USER_OCCURRENCE]),
+    ...mapActions([
+      GET_MEANINGS_FOR_WORD,
+      UPDATE_OCCURRENCE,
+      DELETE_USER_OCCURRENCE,
+    ]),
     changeOccurrence(start) {
-      this.occurrence = this.occurrences.find((o) => o.start === start);
+      this.occurrence = this.template.occurrences.find(
+        (o) => o.start === start
+      );
     },
     toggleOptionsMenu() {
       this.optionsMenuActive = !this.optionsMenuActive;
     },
     async selectMeaning() {
       if (!this.activeSelectMeaning) {
-        await this.$store.dispatch("getRelatedWords", this.occurrence);
+        await this[GET_MEANINGS_FOR_WORD](this.occurrence);
       }
       this.activeSelectMeaning = !this.activeSelectMeaning;
     },
     async deleteOccurrence(id) {
-      await this.$store.dispatch("deleteOccurrence", id);
+      await this[DELETE_USER_OCCURRENCE](id);
       // TODO: Avoid reloading the page
       window.location.reload();
     },
     async toggleVisibility(occurrence) {
       occurrence.visible = !occurrence.visible;
-      await this.$store.dispatch("updateSelectedWord", occurrence);
+      await this[UPDATE_OCCURRENCE](occurrence);
     },
     async toggleIsLearned(dictionaryWord) {
       dictionaryWord.isLearned = !dictionaryWord.isLearned;
-      await this.$store.dispatch("updateDictionaryWord", dictionaryWord);
+      await this[UPDATE_DICTIONARY](dictionaryWord);
     },
     toggleAddOccurrence() {
       this.activeAddingOccurrence = true;
     },
     async addSelectedOccurrence() {
-      const details = getSelectedWordDetails(this.currentTemplateText);
-      await this.$store.dispatch("addNewOccurrence", details);
+      const details = getSelectedWordDetails(this.text);
+      await this[ADD_USER_OCCURRENCE](details);
       // TODO: Avoid reloading the page
       window.location.reload();
     },
     onChangedMeaning() {
-      this.occurrence = this.occurrences.find(
+      this.occurrence = this.template.occurrences.find(
         (o) => o.start === this.occurrence.start
       );
     },

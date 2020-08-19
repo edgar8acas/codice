@@ -13,7 +13,7 @@
     </div>
 
     <div class="related-words--list">
-      <div v-if="availableMeanings.length === 0">
+      <div v-if="meanings.length === 0">
         No hay definiciones para la ocurrencia
       </div>
       <div v-else-if="selection">
@@ -23,7 +23,7 @@
         Significados disponibles
       </div>
       <label
-        v-for="word in availableMeanings"
+        v-for="word in meanings"
         :key="word.wordId"
         class="related-words--list-item radiobutton"
       >
@@ -93,7 +93,16 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
+
+import { GET_MEANINGS_BY_WORD } from "./../store/getter-types";
+
+import {
+  UPDATE_OCCURRENCE,
+  GET_MEANINGS_FOR_WORD,
+  DELETE_MEANING,
+} from "./../store/action-types";
+
 export default {
   props: {
     occurrence: {
@@ -116,8 +125,9 @@ export default {
   },
   computed: {
     ...mapState(["development"]),
-    availableMeanings() {
-      return this.$store.getters.availableMeaningsByWord(this.occurrence.word);
+    ...mapGetters([GET_MEANINGS_BY_WORD]),
+    meanings() {
+      return this[GET_MEANINGS_BY_WORD](this.occurrence.word);
     },
   },
   watch: {
@@ -127,33 +137,24 @@ export default {
     },
     async picked(newVal) {
       if (newVal === "word-" + this.occurrence.selectedWordId) return;
-
-      await this.$store.dispatch("updateSelectedWord", {
+      await this[UPDATE_OCCURRENCE]({
         ...this.occurrence,
         selectedWordId: Number(newVal.substring(5)),
       });
       this.$emit("changedMeaning");
     },
-    markedStatus: {
-      handler(newVal) {
-        if (newVal === this.occurrence.markedStatus) return;
-        this.$store.dispatch("updateMarkedStatus", {
-          occurrenceStart: this.occurrence.start,
-          markedStatus: newVal,
-        });
-      },
-    },
   },
   methods: {
+    ...mapActions([UPDATE_OCCURRENCE, DELETE_MEANING]),
+    ...mapActions([GET_MEANINGS_FOR_WORD]),
     setSelectedForEveryOccurrence() {
       this.$store.dispatch("setSelectedForEveryOccurrence", this.occurrence);
     },
-    deleteWord(word) {
-      this.$store.dispatch("deleteRelatedWord", word);
+    async deleteWord(word) {
+      await this[DELETE_MEANING](word);
     },
     updateAvailableMeanings() {
-      console.log(12345 + "wordDetails");
-      this.$store.dispatch("getRelatedWords", this.occurrence);
+      this[GET_MEANINGS_FOR_WORD](this.occurrence);
     },
   },
 };

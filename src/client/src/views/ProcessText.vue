@@ -50,7 +50,12 @@
 <script>
 import WordDetails from "@/components/WordDetails";
 import CreateWord from "@/components/CreateWord";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
+import {
+  GET_TEXT_BY_ID,
+  PROCESS_TEXT,
+  SAVE_PROCESSED_TEXT,
+} from "../store/action-types";
 
 export default {
   components: {
@@ -66,11 +71,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(["occurrences"]),
+    ...mapState("texts", ["texts"]),
+    ...mapState(["template"]),
     text() {
-      return this.$store.state.texts.find(
-        (text) => text.textId === this.textId
-      );
+      return this.texts.find((text) => text.textId === Number(this.textId));
     },
     processed() {
       return this.text.status === "processed" ||
@@ -80,10 +84,13 @@ export default {
     },
   },
   async mounted() {
-    await this.$store.dispatch("processText", this.textId);
+    await this[GET_TEXT_BY_ID](this.textId);
+    await this[PROCESS_TEXT](this.textId);
     this.showTextContent = true;
   },
   methods: {
+    ...mapActions("process", [PROCESS_TEXT, SAVE_PROCESSED_TEXT]),
+    ...mapActions("texts", [GET_TEXT_BY_ID]),
     isEmpty(obj) {
       for (var key in obj) {
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
@@ -93,11 +100,13 @@ export default {
       return true;
     },
     async save() {
-      await this.$store.dispatch("saveOccurrences", this.textId);
+      await this[SAVE_PROCESSED_TEXT](this.textId);
       this.$router.replace({ name: "Texts" });
     },
     changeOccurrence(start) {
-      this.occurrence = this.occurrences.find((o) => o.start === start);
+      this.occurrence = this.template.occurrences.find(
+        (o) => o.start === start
+      );
     },
     setDefault() {
       this.$store.dispatch("setDefault");

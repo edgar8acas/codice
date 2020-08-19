@@ -82,7 +82,11 @@
         <form class="ui form">
           <div class="field">
             <div class="ui checkbox">
-              <input type="checkbox" name="exclusivo" v-model="onlyExclusive" />
+              <input
+                type="checkbox"
+                name="exclusivo"
+                v-model="options.lexicoExclusivo"
+              />
               <label>Léxico exclusivo</label>
             </div>
           </div>
@@ -106,7 +110,8 @@
 import TextContent from "@/components/TextContent";
 import WordDetails from "@/components/WordDetails";
 import CreateWord from "@/components/CreateWord";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
+import { GET_TEMPLATE_DATA } from "./../store/action-types";
 
 export default {
   components: {
@@ -128,11 +133,11 @@ export default {
     };
   },
   computed: {
-    ...mapState(["occurrences"]),
+    ...mapState("texts", ["texts"]),
+    ...mapState("process", ["options"]),
+    ...mapState(["template"]),
     text() {
-      return this.$store.state.texts.find(
-        (text) => text.textId === this.textId
-      );
+      return this.texts.find((text) => text.textId === this.textId);
     },
     processed() {
       return this.text.status === "processed" ||
@@ -158,19 +163,17 @@ export default {
   },
   async mounted() {
     this.$store.dispatch("setProcessingOptions", false);
-    await this.$store.dispatch("getDataForTextDetails", this.text);
-  },
-  watch: {
-    onlyExclusive(newVal) {
-      this.$store.dispatch("setProcessingOptions", newVal);
-    },
+    await this[GET_TEMPLATE_DATA](this.text);
   },
   methods: {
+    ...mapActions([GET_TEMPLATE_DATA]),
     displayContent() {
       this.showContent = true;
     },
     async changeOccurrence(start) {
-      const foundOccurrence = this.occurrences.find((o) => o.start === start);
+      const foundOccurrence = this.template.occurrences.find(
+        (o) => o.start === start
+      );
       this.occurrence = foundOccurrence;
     },
     toggleProcessingConfirmation() {

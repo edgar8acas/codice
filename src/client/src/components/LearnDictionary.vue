@@ -2,7 +2,7 @@
   <div class="dictionary">
     <div class="dictionary--word-list">
       <span
-        v-for="word in dictionary"
+        v-for="word in template.dictionary"
         :key="word.dictionaryId"
         :class="['dictionary-word', { learned: word.isLearned }]"
       >
@@ -23,7 +23,8 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["dictionary", "development"]),
+    ...mapState(["development", "template"]),
+    ...mapState("learn"),
   },
 };
 </script>

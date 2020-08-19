@@ -3,6 +3,10 @@ import Vuetable from "vuetable-2/src/components/Vuetable";
 import VuetablePagination from "vuetable-2/src/components/VuetablePagination";
 import VuetablePaginationInfo from "vuetable-2/src/components/VuetablePaginationInfo";
 import TextRowActions from "@/components/TextRowActions";
+import { createNamespacedHelpers } from "vuex";
+const { mapActions } = createNamespacedHelpers("texts");
+import { SET_FETCHED_TEXTS } from "./../store/action-types";
+
 export default {
   components: {
     Vuetable,
@@ -51,6 +55,7 @@ export default {
     );
   },
   methods: {
+    ...mapActions([SET_FETCHED_TEXTS]),
     renderVuetable(h) {
       return h("vuetable", {
         ref: "vuetable",
@@ -149,7 +154,7 @@ export default {
       this.$refs.paginationInfo.setPaginationData(paginationData);
     },
     onLoadSuccess(response) {
-      this.$store.dispatch("setTexts", response.data.data);
+      this[SET_FETCHED_TEXTS](response.data.data);
     },
     onChangePage(page) {
       this.$refs.vuetable.changePage(page);
