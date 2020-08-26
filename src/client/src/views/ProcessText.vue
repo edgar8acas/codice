@@ -2,7 +2,7 @@
   <div>
     <section class="central">
       <div class="side-info">
-        <h2 class="section-title">Instrucciones para el administrador</h2>
+        <h2 class="section-title">Instrucciones</h2>
         <p class="instructions">
           Aquí se muestran todas las ocurrencias de las palabras esenciales
           obtenidas por el procesamiento.
@@ -13,20 +13,11 @@
           significado tiene cada una de ellas.
           <br />
           <br />
-          Si ninguna de los significados es apropiado, seleccionar el último
-          generará uno nuevo.
-          <br />
-          <br />
-          Debes elegir un significado para cada ocurrencia antes de guardar la
-          plantilla. Por lo que <strong>todas</strong> las ocurrencias deben
-          mostrarse en <strong style="color: green;">verde</strong>.
+          Es recomendable que cada ocurrencia tenga al menos un significado asociado. 
         </p>
-        <a class="btn-primary" @click.prevent="setDefault" v-if="!processed"
-          >Predeterminado</a
-        >
         <br />
-        <a class="btn-primary" @click.prevent="save" v-if="!processed"
-          >Guardar</a
+        <button class="ui button primary" @click="save" v-if="!processed"
+          >Guardar ocurrencias</button
         >
       </div>
       <div class="template">
@@ -136,6 +127,7 @@ export default {
 .instructions {
   text-align: left;
   padding: 10px;
+  font-size: 1.1em;
 }
 
 [class~="conflicts"] > div {

@@ -25,8 +25,7 @@
         </dropdown-menu>
       </div>
     </div>
-    <div class="learn--text">
-      <!-- TODO: Stick title to the top when scrolling -->
+    <div class="learn--text"> 
       <text-content
         class="learn--text-content"
         @changeOccurrence="changeOccurrence"
@@ -317,13 +316,12 @@ export default {
 
 .central {
   display: grid;
-  grid-template-columns: 20% 40% 20%;
+  grid-template-columns: 25% 50% 25%;
   justify-content: center;
   column-gap: 0.5em;
 }
 .side-info {
   border-radius: 5px;
-  border: 1px solid #c2c2c2;
   text-align: center;
 
   .word-detailed-info {
