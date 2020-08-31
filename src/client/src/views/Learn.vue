@@ -50,10 +50,6 @@
         <component
           v-bind:is="this.currentTab.component"
           :occurrence="occurrence"
-          @onSelectMeaning="selectMeaning"
-          @onDeleteOccurrence="deleteOccurrence"
-          @onToggleVisibility="toggleVisibility"
-          @onToggleIsLearned="toggleIsLearned"
         >
         </component>
       </keep-alive>
@@ -105,7 +101,7 @@
 
 <script>
 import TextContent from "@/components/TextContent";
-import SelectedOccurrenceInfo from "@/components/SelectedOccurrenceInfo";
+import WordMeanings from "@/components/WordMeanings";
 import LearnDictionary from "@/components/LearnDictionary";
 import WordDetails from "@/components/WordDetails";
 import DropdownMenu from "@/components/DropdownMenu";
@@ -125,7 +121,7 @@ import {
 export default {
   components: {
     TextContent,
-    SelectedOccurrenceInfo,
+    WordMeanings,
     LearnDictionary,
     WordDetails,
     DropdownMenu,
@@ -140,10 +136,10 @@ export default {
       optionsMenuActive: false,
       currentTab: {
         name: "Palabra actual",
-        component: "selected-occurrence-info",
+        component: "word-meanings",
       },
       tabs: [
-        { name: "Palabra actual", component: "selected-occurrence-info" },
+        { name: "Palabra actual", component: "word-meanings" },
         { name: "Diccionario", component: "learn-dictionary" },
       ],
     };

@@ -93,9 +93,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
-
-import { GET_MEANINGS_BY_WORD } from "./../store/getter-types";
+import { mapState, mapActions } from "vuex";
+import { wordMeanings } from "./../mixins/wordMeanings";
 
 import {
   UPDATE_OCCURRENCE,
@@ -105,18 +104,12 @@ import {
 
 export default {
   props: {
-    occurrence: {
-      type: Object,
-      required: true,
-      default: function () {
-        return {};
-      },
-    },
     selection: {
       type: Boolean,
       default: false,
     },
   },
+  mixins: [ wordMeanings ],
   data() {
     return {
       picked: "",
@@ -125,10 +118,6 @@ export default {
   },
   computed: {
     ...mapState(["development"]),
-    ...mapGetters([GET_MEANINGS_BY_WORD]),
-    meanings() {
-      return this[GET_MEANINGS_BY_WORD](this.occurrence.word);
-    },
   },
   watch: {
     occurrence() {
