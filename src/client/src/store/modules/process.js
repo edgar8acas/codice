@@ -6,18 +6,18 @@ import {
 } from "../mutation-types";
 
 import { findOccurrencesInText } from "@/utils/template";
-import { getExclusiveWords } from "@/utils/filter_processed";
+import { filterExclusiveWords } from "@/utils/filter_processed";
 import axios from "../axios";
 
 const actions = {
   async [PROCESS_TEXT]({ state, commit }, textId) {
     const {
-      data: { conflicts, ready, availableWords, text },
+      data: { essentialWords, availableWords, text },
     } = await axios.post(`/api/texts/${textId}/process`);
 
     const processed = state.options.lexicoExclusivo
-      ? getExclusiveWords({ conflicts, ready })
-      : { conflicts, ready };
+      ? filterExclusiveWords(essentialWords)
+      : essentialWords;
     const occurrences = findOccurrencesInText({ ...processed, text });
     commit(SET_OCCURRENCES, occurrences, { root: true });
     commit(SET_MEANINGS, availableWords, { root: true });
