@@ -97,22 +97,14 @@ export default router
 
       const texts = await Text.getTextsToProcess(text.textId);
       const processed = await processTexts(texts);
-      const conflicts = await Word.compareBeforeSaving(
-        processed.find(processed => processed.textId === Number(textId)).essentialWords
-      );
+      
+      const essentialWords = processed.find(p => p.textId === Number(textId)).essentialWords;
 
-      const occurrencesLike = [
-        ...Object.keys(conflicts.ready),
-        ...Object.keys(conflicts.conflicts)
-      ].map(word => { 
-        return { word } 
-      })
-
-      const availableWords = await Word.getAvailableWords(occurrencesLike);
+      const availableWords = await Word.getAvailableWords(essentialWords);
 
       return res
         .status(200)
-        .json({text, ...conflicts, availableWords});
+        .json({text, essentialWords, availableWords});
     } catch (error) {
       return res
         .status(500)

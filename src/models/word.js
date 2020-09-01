@@ -96,9 +96,9 @@ module.exports = function(sequelize, DataTypes) {
     ));
   }
 
-  /**Given a set of occurrences, return the available words for each */
+  /**Given an array of essential words, return the available words from it */
   Word.getAvailableWords = async function(occurrences) {
-    const uniqueWords = Array.from(new Set(occurrences.map(o => o.word))).sort((a, b) => a - b);
+    const uniqueWords = [...occurrences].sort((a, b) => a - b);
     const availableWords = await Promise.all(
       uniqueWords.map(word => 
         Word.findAll({
