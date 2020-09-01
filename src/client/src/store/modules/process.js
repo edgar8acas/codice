@@ -18,7 +18,7 @@ const actions = {
     const processed = state.options.lexicoExclusivo
       ? filterExclusiveWords(essentialWords)
       : essentialWords;
-    const occurrences = findOccurrencesInText({ ...processed, text });
+    const occurrences = findOccurrencesInText({ processed, text });
     commit(SET_OCCURRENCES, occurrences, { root: true });
     commit(SET_MEANINGS, availableWords, { root: true });
     commit(SET_TOKENIZED_TEXT, { occurrences, text }, { root: true });

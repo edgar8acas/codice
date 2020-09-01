@@ -24,28 +24,6 @@ export function getTokenizedContent({
   return tokenizedContent;
 }
 
-/** In case words is a conflict/ready structure, transform it to array of words */
-function prepareWordsArray(words, isConflicts = false) {
-  if (isConflicts) {
-    //merge conflicts structure in single array
-    let joined = [];
-    for (const property of ["conflicts", "ready"]) {
-      joined = [
-        ...joined,
-        ...Object.entries({ ...words[property] }) //avoid mutating the object
-          .map(([key, value]) => {
-            let mWord = value.length > 0 ? [[...value]] : [[]]; //avoid mutating the array
-            mWord.unshift(property);
-            mWord.push(key); //Word string
-            return mWord;
-          }),
-      ];
-    }
-    return joined;
-  }
-  return words;
-}
-
 /** It receives the text content, ordered new lines and occurrences tokens,
  * and returns an array where each element can be either a chunk of the content text,
  * an occurrence or a new line in the order they appear in text.
@@ -80,27 +58,20 @@ export function splitContentFromTokens(tokens, text) {
   throw new TypeError("Occurrences is not an array");
 }
 
-export function findOccurrencesInText({ text, conflicts, ready }) {
-  const mWords = prepareWordsArray(
-    { conflicts: { ...conflicts }, ready: { ...ready } },
-    true
-  );
+export function findOccurrencesInText({ text, processed }) {
   let occurrences = [];
-  mWords.forEach((related) => {
-    const status = "conflicts";
-    const regex = getRegexFromWord(related[2]);
+  processed.forEach((word) => {
+    const regex = getRegexForWord(word);
 
     for (const match of text.rawContent.matchAll(regex)) {
       occurrences.push(
         new Occurrence(
           {
-            word: related[2],
+            word: word,
             start: match.index,
             ending: match.index + match[0].length,
             textId: text.textId,
-            markedStatus: status,
-          },
-          related[1]
+          }
         )
       );
     }
@@ -129,7 +100,7 @@ export function generateOccurrences({ occurrences, template = false }) {
   });
 }
 
-function getRegexFromWord(word) {
+function getRegexForWord(word) {
   return new RegExp("\\b" + escapeForRegExp(word) + "\\b", "gi");
 }
 
