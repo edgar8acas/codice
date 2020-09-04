@@ -33,6 +33,10 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.BOOLEAN,
         allowNull: true
       },
+      tokenPosition: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      }
     },
     {
       tableName: 'user_occurrences',

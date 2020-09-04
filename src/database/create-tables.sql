@@ -43,7 +43,9 @@ CREATE TABLE template_occurrences (
     word varchar NOT NULL,
     text_id integer REFERENCES texts (text_id),
     created_at timestamp NOT NULL DEFAULT now(),
-    updated_at timestamp NOT NULL
+    updated_at timestamp NOT NULL,
+
+    word_position smallint NOT NULL
 );
 
 CREATE TABLE user_occurrences (
@@ -58,7 +60,9 @@ CREATE TABLE user_occurrences (
     visible boolean NOT NULL,
     available_meanings boolean NOT NULL,
     created_at timestamp NOT NULL DEFAULT now(),
-    updated_at timestamp NOT NULL
+    updated_at timestamp NOT NULL,
+
+    word_position smallint NOT NULL
 );
 
 CREATE TABLE dictionary_words (

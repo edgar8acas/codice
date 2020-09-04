@@ -20,6 +20,10 @@ module.exports = function (sequelize, DataTypes) {
       word: {
         type: DataTypes.STRING,
         allowNull: false
+      },
+      tokenPosition: {
+        type: DataTypes.INTEGER,
+        allowNull: false
       }
     },
     {
