@@ -1,5 +1,6 @@
 import express from 'express';
 import { Text, Word, TemplateOccurrence, UserOccurrence, Dictionary } from '@models';
+import { extractWordFromOccurrence } from '@utils/helpers';
 import Sequelize from 'sequelize';
 
 const Op = Sequelize.Op;
@@ -33,7 +34,12 @@ export default router
       const response = { text };
       if (userId === undefined) {
         response.templateOccurrences = occurrences;
-        response.availableWords = await Word.getAvailableWords(occurrences);
+
+        response.availableWords = await Word.getAvailableWords(
+          Array.from(
+            new Set( occurrences.map(extractWordFromOccurrence) )
+          )
+        );
         response.dictionaryWords = [];
       } else {
         let userOccurrences = await UserOccurrence.findAll(query);
@@ -69,13 +75,16 @@ export default router
 
         response.userOccurrences = userOccurrences;
         response.dictionaryWords = dictionaryWords;
-        response.availableWords = await Word.getAvailableWords(userOccurrences);
+        response.availableWords = await Word.getAvailableWords(Array.from(
+          new Set( occurrences.map(extractWordFromOccurrence) )
+        ));
       }
       
       return res
         .status(200)
         .json(response);
     } catch (error) {
+      console.log(error);
       return res
         .status(500)
         .json();
