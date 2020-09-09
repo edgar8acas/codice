@@ -8,6 +8,7 @@ import learn from "./modules/learn";
 import template from "./modules/template";
 import meanings from "./modules/meanings";
 import process from "./modules/process";
+import textContent from "./modules/text-content";
 
 Vue.config.productionTip = false;
 Vue.use(Vuex);
@@ -19,6 +20,7 @@ export default new Vuex.Store({
     template,
     meanings,
     process,
+    textContent
   },
   state: {
     user: {

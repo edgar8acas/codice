@@ -67,7 +67,9 @@
       <text-content
         class="content"
         :filterOptions="filter"
-        @changeOccurrence="changeOccurrence"
+        :isProcessing="false"
+        :hasOccurrences="true"
+        :text="text"
       ></text-content>
     </div>
     <div class="side-info" v-if="occurrence">
@@ -111,7 +113,7 @@ import TextContent from "@/components/TextContent";
 import WordDetails from "@/components/WordDetails";
 import CreateWord from "@/components/CreateWord";
 import { mapState, mapActions } from "vuex";
-import { GET_TEMPLATE_DATA } from "./../store/action-types";
+import { GET_TEMPLATE_DATA, GET_TEXT_BY_ID } from "./../store/action-types";
 
 export default {
   components: {
@@ -125,11 +127,11 @@ export default {
       currentWordId: null,
       onlyExclusive: false,
       processingConfirmation: false,
-      occurrence: null,
+      occurrence: {},
       filter: {
         availableMeanings: false,
         noAvailableMeanings: false,
-      },
+      }
     };
   },
   computed: {
@@ -137,7 +139,7 @@ export default {
     ...mapState("process", ["options"]),
     ...mapState(["template"]),
     text() {
-      return this.texts.find((text) => text.textId === this.textId);
+      return this.texts.find((text) => text.textId === Number(this.textId));
     },
     processed() {
       return this.text.status === "processed" ||
@@ -162,11 +164,12 @@ export default {
     },
   },
   async mounted() {
-    this.$store.dispatch("setProcessingOptions", false);
+    await this[GET_TEXT_BY_ID](this.textId);
     await this[GET_TEMPLATE_DATA](this.text);
   },
   methods: {
     ...mapActions([GET_TEMPLATE_DATA]),
+    ...mapActions("texts", [GET_TEXT_BY_ID]),
     displayContent() {
       this.showContent = true;
     },

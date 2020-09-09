@@ -2,11 +2,11 @@
   <div>
     <div class="related-words--header">
       <h2>
-        {{ occurrence.word || "Detalles de palabra" }}
+        {{ selected || "Detalles de palabra" }}
       </h2>
       <button
         class="related-words--refresh-meanings"
-        @click="updateAvailableMeanings"
+        @click="GET_MEANINGS_FOR_WORD(selected)"
       >
         <img :src="require('../assets/refresh-ccw.svg')" />
       </button>
@@ -65,7 +65,7 @@
         <button
           class="related-words--delete"
           v-if="!selection"
-          @click="deleteWord(word)"
+          @click="DELETE_MEANING(word)"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -136,15 +136,6 @@ export default {
   methods: {
     ...mapActions([UPDATE_OCCURRENCE, DELETE_MEANING]),
     ...mapActions([GET_MEANINGS_FOR_WORD]),
-    setSelectedForEveryOccurrence() {
-      this.$store.dispatch("setSelectedForEveryOccurrence", this.occurrence);
-    },
-    async deleteWord(word) {
-      await this[DELETE_MEANING](word);
-    },
-    updateAvailableMeanings() {
-      this[GET_MEANINGS_FOR_WORD](this.occurrence);
-    },
   },
 };
 </script>

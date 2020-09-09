@@ -1,24 +1,17 @@
 import { GET_MEANINGS_BY_WORD } from "./../store/getter-types";
-import { mapGetters} from "vuex";
+import { mapGetters, mapState} from "vuex";
 
 export const wordMeanings = {
   data() {
     return {
     }
   },
-  props: {
-    occurrence: {
-      type: Object,
-      required: true,
-      default: function () {
-        return {};
-      },
-    },
-  },
+  props: {},
   computed: {
     ...mapGetters([GET_MEANINGS_BY_WORD]),
+    ...mapState("textContent", ["selected"]),
     meanings() {
-      return this[GET_MEANINGS_BY_WORD](this.occurrence.word);
+      return this[GET_MEANINGS_BY_WORD](this.selected);
     },
   }
 }

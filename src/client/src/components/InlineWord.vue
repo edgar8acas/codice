@@ -1,5 +1,10 @@
 <template>
-  <span @click="selectMeaning" :class="classObject">
+  <span 
+    @click="CHANGE_SELECTED_INLINE_WORD(occurrence.word)" 
+    :class="classObject" 
+    :token-position="occurrence.position" 
+    :token-word="occurrence.word"
+  >
     {{ word }}
     <!-- Dev purposes -->
     <span v-if="development">
@@ -10,7 +15,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
+import { CHANGE_SELECTED_INLINE_WORD } from '../store/action-types';
 
 import {
   GET_MEANINGS_BY_WORD,
@@ -26,6 +32,7 @@ export default {
   },
   computed: {
     ...mapState(["development", "meanings"]),
+    ...mapState("textContent", ["selected"]),
     ...mapGetters([GET_MEANINGS_BY_WORD]),
     ...mapGetters([GET_DICTIONARY_BY_WORD_ID]),
     dictionary() {
@@ -37,8 +44,8 @@ export default {
     word() {
       return this.occurrence.word;
     },
-    start() {
-      return this.occurrence.start;
+    position() {
+      return this.occurrence.position;
     },
     classObject() {
       return {
@@ -53,7 +60,7 @@ export default {
           this.occurrence.visible !== undefined
             ? !this.occurrence.visible
             : false,
-        current: this.occurrence.current,
+        "currently-selected": this.occurrence.word === this.selected,
         learned:
           this.dictionary !== undefined
             ? this.dictionary.isLearned
@@ -75,9 +82,7 @@ export default {
     },
   },
   methods: {
-    selectMeaning() {
-      this.$emit("changeOccurrence", this.start);
-    },
+    ...mapActions("textContent", [CHANGE_SELECTED_INLINE_WORD])
   },
 };
 </script>
@@ -104,14 +109,6 @@ export default {
 .inline-word.unselected-meaning {
   color: #edc800;
   border-bottom: 3px solid #edc800;
-}
-
-.inline-word.current {
-  font-weight: bolder;
-  color: white;
-  background-color: purple;
-  border-bottom: none;
-  border-radius: 5px;
 }
 
 .inline-word.invisible {
@@ -148,5 +145,13 @@ export default {
 .inline-word.ready {
   color: white;
   background-color: green;
+}
+
+.inline-word.currently-selected {
+  font-weight: bolder;
+  color: white;
+  background-color: purple !important;
+  border-bottom: none;
+  border-radius: 5px;
 }
 </style>

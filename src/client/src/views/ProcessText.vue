@@ -24,15 +24,16 @@
         <h2 class="section-title">{{ text.title }}</h2>
         <text-content
           class="content"
-          :isChoosing="true"
-          @changeOccurrence="changeOccurrence"
+          :isProcessing="true"
+          :hasOccurrences="true"
+          :text="text"
           v-if="showTextContent"
         ></text-content>
       </div>
       <div class="side-info">
         <word-details class="word-details" :occurrence="occurrence">
         </word-details>
-        <create-word :forWord="occurrence.word"></create-word>
+        <create-word></create-word>
       </div>
     </section>
   </div>
