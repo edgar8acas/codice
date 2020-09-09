@@ -45,7 +45,7 @@ CREATE TABLE template_occurrences (
     created_at timestamp NOT NULL DEFAULT now(),
     updated_at timestamp NOT NULL,
 
-    word_position smallint NOT NULL
+    position_in_text smallint NOT NULL
 );
 
 CREATE TABLE user_occurrences (
@@ -62,7 +62,7 @@ CREATE TABLE user_occurrences (
     created_at timestamp NOT NULL DEFAULT now(),
     updated_at timestamp NOT NULL,
 
-    word_position smallint NOT NULL
+    position_in_text smallint NOT NULL
 );
 
 CREATE TABLE dictionary_words (

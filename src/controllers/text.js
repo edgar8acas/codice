@@ -100,11 +100,11 @@ export default router
       
       const essentialWords = processed.find(p => p.textId === Number(textId)).essentialWords;
 
-      const availableWords = await Word.getAvailableWords(essentialWords);
+      const availableMeanings = await Word.getAvailableWords(essentialWords);
 
       return res
         .status(200)
-        .json({text, essentialWords, availableWords});
+        .json({text, essentialWords, availableMeanings});
     } catch (error) {
       return res
         .status(500)
@@ -138,12 +138,12 @@ export default router
     try {
       const toSaveInTemplate = occurrences.map(
         o => {
-          return { 
-            wordId: o.selectedWordId, 
-            textId: o.textId,
+          return {
+            textId: item.textId,
             start: o.start,
             ending: o.ending,
-            word: o.word
+            word: o.token,
+            positionInText: o.position
           }
         })
       const savedInTemplate = await TemplateOccurrence.bulkCreate(toSaveInTemplate);

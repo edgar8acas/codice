@@ -33,7 +33,7 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.BOOLEAN,
         allowNull: true
       },
-      tokenPosition: {
+      positionInText: {
         type: DataTypes.INTEGER,
         allowNull: false
       }

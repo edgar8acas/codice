@@ -21,7 +21,7 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING,
         allowNull: false
       },
-      tokenPosition: {
+      positionInText: {
         type: DataTypes.INTEGER,
         allowNull: false
       }
