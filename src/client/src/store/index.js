@@ -28,7 +28,7 @@ export default new Vuex.Store({
     },
     errors: [],
     success: [],
-    development: true,
+    development: false,
   },
   mutations: {
     setDefaultOccurrences(state) {

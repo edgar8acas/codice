@@ -33,10 +33,11 @@ export default {
   computed: {
     ...mapState(["development", "meanings"]),
     ...mapState("textContent", ["selected"]),
+    ...mapState("learn", ["addingWord"]),
     ...mapGetters([GET_MEANINGS_BY_WORD]),
     ...mapGetters([GET_DICTIONARY_BY_WORD_ID]),
     dictionary() {
-      return this[GET_DICTIONARY_BY_WORD_ID](this.occurrence.selectedWordId);
+      return this[GET_DICTIONARY_BY_WORD_ID](this.occurrence.word);
     },
     meanings() {
       return this[GET_MEANINGS_BY_WORD](this.word);
@@ -78,6 +79,7 @@ export default {
           (!this.occurrence.occurrenceId &&
             !this.occurrence.userOccurrenceId) ||
           this.occurrence.occurrenceId,
+        "is-adding-word": this.addingWord
       };
     },
   },
@@ -94,21 +96,6 @@ export default {
 
 .inline-word:hover {
   cursor: pointer;
-}
-
-.inline-word.learned {
-  color: hsl(197, 71%, 46%);
-  border-bottom: 3px solid hsl(197, 71%, 46%);
-}
-
-.inline-word.not-learned {
-  color: #ff3737;
-  border-bottom: 3px solid #ff3737;
-}
-
-.inline-word.unselected-meaning {
-  color: #edc800;
-  border-bottom: 3px solid #edc800;
 }
 
 .inline-word.invisible {
@@ -137,16 +124,6 @@ export default {
   border-radius: 5px;
 }
 
-.inline-word.conflicts {
-  color: white;
-  background-color: red;
-}
-
-.inline-word.ready {
-  color: white;
-  background-color: green;
-}
-
 .inline-word.currently-selected {
   font-weight: bolder;
   color: white;
@@ -154,4 +131,33 @@ export default {
   border-bottom: none;
   border-radius: 5px;
 }
+
+.inline-word.is-adding-word {
+  background-color: #ebebeb;
+  color: gray;
+}
+
+.inline-word.learned.currently-selected {
+  color: white;
+  background-color: hsl(197, 71%, 46%) !important;
+}
+
+.inline-word.not-learned.currently-selected {
+  color: white;
+  background-color: #ff3737 !important;
+}
+
+.inline-word.learned {
+  color: hsl(197, 71%, 46%);
+  border-bottom: 3px solid hsl(197, 71%, 46%);
+  background: transparent;
+}
+
+.inline-word.not-learned {
+  color: #ff3737;
+  background: transparent;
+}
+
+
+
 </style>

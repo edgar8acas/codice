@@ -14,10 +14,13 @@ import {
   REPLACE_OCCURRENCE_WITH_UPDATED,
   REPLACE_DICTIONARY_WITH_UPDATED,
 } from "../mutation-types";
-import { GET_DICTIONARY_BY_WORD_ID, ESSENTIAL_WORDS } from "../getter-types";
+import { 
+  GET_DICTIONARY_BY_WORD_ID,
+  ESSENTIAL_WORDS,
+  GET_OCCURRENCE_BY_POSITION
+} from "../getter-types";
 
 import axios from "./../axios";
-import { getTokenizedContent } from "@/utils/template";
 import UserOccurrence from "@/utils/user_occurrence";
 import DictionaryWord from "@/utils/dictionary_word";
 
@@ -67,13 +70,6 @@ const actions = {
 };
 
 const mutations = {
-  [SET_TOKENIZED_TEXT](state, { occurrences, text, update = false }) {
-    state.tokenizedText = getTokenizedContent({
-      ocurrences: update ? state.occurrences : occurrences,
-      text: update ? state.currentTemplateText : text,
-    });
-    state.text = text;
-  },
   [SET_OCCURRENCES](state, occurrences) {
     state.occurrences = occurrences;
   },
@@ -116,12 +112,19 @@ const state = () => ({
 });
 
 const getters = {
-  [GET_DICTIONARY_BY_WORD_ID]: (state) => (wordId) => {
-    return state.dictionary.find((w) => w.wordId === wordId);
+  [GET_DICTIONARY_BY_WORD_ID]: (state) => (word) => {
+    return state.dictionary.find((d) => {
+      return d.word === word
+    });
   },
   [ESSENTIAL_WORDS]: (state, getters, rootState) => {
     return Object.keys(rootState.meanings.meanings);
-  }
+  },
+  [GET_OCCURRENCE_BY_POSITION]: (state) => (position) => {
+    return state.occurrences.find((o) => {
+      return o.positionInText === position
+    });
+  },
 };
 
 export default {

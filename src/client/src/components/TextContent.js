@@ -1,15 +1,16 @@
 import Vue from "vue";
 import InlineWord from "@/components/InlineWord";
+import ToAddWord from "@/components/ToAddWord";
 
 import { mapState, mapActions, mapGetters } from "vuex";
-import { SET_FOUND_OCCURRENCES } from "../store/action-types";
-import { ESSENTIAL_WORDS } from "../store/getter-types";
+import { SET_FOUND_OCCURRENCES, SET_TO_ADD_OCCURRENCES, DESELECT_INLINE_WORD, DESELECT_TO_ADD_WORD } from "../store/action-types";
+import { ESSENTIAL_WORDS, GET_OCCURRENCE_BY_POSITION } from "../store/getter-types";
 
 export default Vue.component("text-content", {
   /* eslint-disable no-unused-vars */
   render: function (h) {
     return (
-      <p>{
+      <p onClick={(e) => this.handleDeselect(e)}>{
         this.tokens.map(t => {
           if(typeof t === 'object') {
             if(t.type === 'line-break') {
@@ -26,7 +27,8 @@ export default Vue.component("text-content", {
   data() {
     return {
       tokens: [],
-      foundOccurrences: []
+      foundOccurrences: [],
+      toAddOccurrences: []
     };
   },
   props: {
@@ -38,13 +40,18 @@ export default Vue.component("text-content", {
       type: Boolean,
       default: false
     },
+    isLearning: {
+      type: Boolean,
+      default: false
+    },
     text: {
       type: Object
     },
   },
   computed: {
     ...mapState(["template"]),
-    ...mapGetters([ESSENTIAL_WORDS])
+    ...mapGetters([ESSENTIAL_WORDS, GET_OCCURRENCE_BY_POSITION]),
+    ...mapState("learn", ["addingWord"]),
   },
   methods: {
     mergeContentAndTokens(text) {
@@ -100,11 +107,15 @@ export default Vue.component("text-content", {
             token: word,
             type: 'word',
             position,
-            isEssential: this.isEssentialWord(word)
+            isEssential: this.isEssentialWord(word),
+            textId: this.text.textId
           };
           tokens.push(occurrence);
           if (occurrence.isEssential && this.isProcessing) {
             this.foundOccurrences.push(occurrence);
+          }
+          if (this.addingWord) {
+            this.toAddOccurrences.push(occurrence)
           }
         }
       }
@@ -121,10 +132,17 @@ export default Vue.component("text-content", {
       const word = token.token
       let element = <span>{word}</span>;
 
+      if(this.addingWord) {
+        element = <ToAddWord position={token.position} word={word}></ToAddWord>
+      }
+
       if(token.isEssential) {
-        const occurrence = {
+        let occurrence = {
           position: token.position,
           word: word
+        }
+        if (this.isLearning) {
+          occurrence = this[GET_OCCURRENCE_BY_POSITION](token.position);
         }
         element = <InlineWord
                     occurrence={occurrence}
@@ -139,10 +157,23 @@ export default Vue.component("text-content", {
         return this[ESSENTIAL_WORDS].includes(word);
       }
     },
-    ...mapActions("process", [SET_FOUND_OCCURRENCES])
+    handleDeselect(e) {
+      if(e.target === e.currentTarget) {
+        this[DESELECT_INLINE_WORD]();
+        this[DESELECT_TO_ADD_WORD]();
+      }
+    },
+    ...mapActions("process", [SET_FOUND_OCCURRENCES]),
+    ...mapActions("learn", [SET_TO_ADD_OCCURRENCES, DESELECT_TO_ADD_WORD]),
+    ...mapActions("textContent", [DESELECT_INLINE_WORD]),
   },
   mounted() {
     this.tokens = this.mergeContentAndTokens(this.text);
-    this[SET_FOUND_OCCURRENCES](this.foundOccurrences);
+    if(this.isProcessing) {
+      this[SET_FOUND_OCCURRENCES](this.foundOccurrences);
+    }
+    if(this.addingWord) {
+      this[SET_TO_ADD_OCCURRENCES](this.toAddOccurrences);
+    }
   }
 });

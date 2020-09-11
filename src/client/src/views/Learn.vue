@@ -3,33 +3,19 @@
     <div class="learn--header">
       <div class="learn--header-left">
         <h2 class="learn--title">{{ text.title }}</h2>
-        <dropdown-menu
-          class="learn--header-text-actions"
-          :active="optionsMenuActive"
-        >
-          <template v-slot:button>
-            <button @click="toggleOptionsMenu" class="dropdown-button">
-              <img
-                src="../assets/menu.svg"
-                alt="Opciones del texto"
-                width="30px"
-                height="30px"
-              />
-            </button>
-          </template>
-          <li>
-            <button @click="toggleAddOccurrence">
-              Agregar palabra
-            </button>
-          </li>
-        </dropdown-menu>
+          <LearnButton @click.native="addSelectedOccurrence" class="has-image" v-if="selectedToAdd.length > 0">
+            <template v-slot:image>
+              <svg height="14pt" viewBox="0 0 448 448" width="14pt" xmlns="http://www.w3.org/2000/svg"><path d="m408 184h-136c-4.417969 0-8-3.582031-8-8v-136c0-22.089844-17.910156-40-40-40s-40 17.910156-40 40v136c0 4.417969-3.582031 8-8 8h-136c-22.089844 0-40 17.910156-40 40s17.910156 40 40 40h136c4.417969 0 8 3.582031 8 8v136c0 22.089844 17.910156 40 40 40s40-17.910156 40-40v-136c0-4.417969 3.582031-8 8-8h136c22.089844 0 40-17.910156 40-40s-17.910156-40-40-40zm0 0"/></svg>
+            </template>
+            Agregar palabra
+          </LearnButton>
       </div>
     </div>
-    <div class="learn--text"> 
+    <div class="learn--text">
       <text-content
         class="learn--text-content"
-        @changeOccurrence="changeOccurrence"
-        :current="occurrence"
+        :text="text"
+        :isLearning="true"
       ></text-content>
     </div>
     <div class="learn--tab-component">
@@ -55,47 +41,7 @@
       </keep-alive>
     </div>
 
-    <sui-modal v-model="activeSelectMeaning">
-      <sui-modal-header>Cambiar significado</sui-modal-header>
-      <sui-modal-content class="scrolling">
-        <word-details
-          class="word-details"
-          :occurrence="occurrence"
-          :selection="true"
-          @changedMeaning="onChangedMeaning"
-        >
-        </word-details>
-      </sui-modal-content>
-      <sui-modal-actions>
-        <sui-button positive @click.native="selectMeaning">
-          Aceptar
-        </sui-button>
-      </sui-modal-actions>
-    </sui-modal>
-
-    <sui-modal v-model="activeAddingOccurrence">
-      <sui-modal-header>Añadir ocurrencia</sui-modal-header>
-      <sui-modal-content class="scrolling">
-        <div class="ui info message" v-if="activeAddingOccurrence">
-          <div class="header">
-            Instrucciones
-          </div>
-          <p>
-            Selecciona la ocurrencia y da click en <b>Añadir seleccionado</b>.
-          </p>
-        </div>
-        <pre>{{ text.rawContent }}</pre>
-      </sui-modal-content>
-      <sui-modal-actions>
-        <button
-          class="primary ui button"
-          v-if="activeAddingOccurrence"
-          @click="addSelectedOccurrence"
-        >
-          Añadir seleccionado
-        </button>
-      </sui-modal-actions>
-    </sui-modal>
+    
   </div>
 </template>
 
@@ -105,7 +51,7 @@ import WordMeanings from "@/components/WordMeanings";
 import LearnDictionary from "@/components/LearnDictionary";
 import WordDetails from "@/components/WordDetails";
 import DropdownMenu from "@/components/DropdownMenu";
-import { getSelectedWordDetails } from "@/utils/template";
+import LearnButton from "@/components/LearnButton";
 
 import { mapState, mapActions } from "vuex";
 import {
@@ -116,6 +62,7 @@ import {
   ADD_USER_OCCURRENCE,
   GET_TEXT_BY_ID,
   DELETE_USER_OCCURRENCE,
+  TOGGLE_ADDING_WORD,
 } from "./../store/action-types";
 
 export default {
@@ -125,14 +72,13 @@ export default {
     LearnDictionary,
     WordDetails,
     DropdownMenu,
+    LearnButton
   },
   data() {
     return {
       textId: this.$route.params.id,
       occurrence: {},
       isLearnt: false,
-      activeSelectMeaning: false,
-      activeAddingOccurrence: false,
       optionsMenuActive: false,
       currentTab: {
         name: "Palabra actual",
@@ -147,6 +93,7 @@ export default {
   computed: {
     ...mapState("texts", ["texts"]),
     ...mapState(["template"]),
+    ...mapState("learn", ["addingWord", "selectedToAdd"]),
     text() {
       return this.texts.find((text) => text.textId === Number(this.textId));
     },
@@ -168,25 +115,18 @@ export default {
   },
   methods: {
     ...mapActions("texts", [GET_TEXT_BY_ID]),
-    ...mapActions("learn", [GET_DATA_FOR_LEARNING, ADD_USER_OCCURRENCE]),
+    ...mapActions("learn", [
+      GET_DATA_FOR_LEARNING,
+      ADD_USER_OCCURRENCE,
+      TOGGLE_ADDING_WORD
+    ]),
     ...mapActions([
       GET_MEANINGS_FOR_WORD,
       UPDATE_OCCURRENCE,
       DELETE_USER_OCCURRENCE,
     ]),
-    changeOccurrence(start) {
-      this.occurrence = this.template.occurrences.find(
-        (o) => o.start === start
-      );
-    },
     toggleOptionsMenu() {
       this.optionsMenuActive = !this.optionsMenuActive;
-    },
-    async selectMeaning() {
-      if (!this.activeSelectMeaning) {
-        await this[GET_MEANINGS_FOR_WORD](this.occurrence);
-      }
-      this.activeSelectMeaning = !this.activeSelectMeaning;
     },
     async deleteOccurrence(id) {
       await this[DELETE_USER_OCCURRENCE](id);
@@ -205,15 +145,9 @@ export default {
       this.activeAddingOccurrence = true;
     },
     async addSelectedOccurrence() {
-      const details = getSelectedWordDetails(this.text);
-      await this[ADD_USER_OCCURRENCE](details);
+      await this[ADD_USER_OCCURRENCE]();
       // TODO: Avoid reloading the page
       window.location.reload();
-    },
-    onChangedMeaning() {
-      this.occurrence = this.template.occurrences.find(
-        (o) => o.start === this.occurrence.start
-      );
     },
   },
 };
