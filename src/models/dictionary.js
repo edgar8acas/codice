@@ -12,6 +12,10 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         default: false
+      },
+      word: {
+        type: DataTypes.STRING,
+        allowNull: false
       }
     },
     {
@@ -20,8 +24,6 @@ module.exports = function (sequelize, DataTypes) {
       underscored: true
     }
   )
-
-  Dictionary.belongsTo(Word, { foreignKey: 'wordId'});
   Dictionary.belongsTo(User, { foreignKey: 'userId'});
 
   return Dictionary;

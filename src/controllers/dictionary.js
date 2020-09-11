@@ -22,10 +22,8 @@ export default router
       });
 
       const updated = await Dictionary.findByPk(
-        item.dictionaryId, 
-        {
-          include: [{ model: Word }]
-        });
+        item.dictionaryId
+      );
       return res
         .status(201)
         .json(updated);

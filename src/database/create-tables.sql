@@ -67,7 +67,7 @@ CREATE TABLE user_occurrences (
 
 CREATE TABLE dictionary_words (
     dictionary_id serial PRIMARY KEY,
-    word_id integer REFERENCES words (word_id),
+    word varchar NOT NULL,
     user_id integer REFERENCES users (user_id),
     is_learned bool DEFAULT false,
     created_at timestamp NOT NULL DEFAULT now(),

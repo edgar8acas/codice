@@ -1,39 +1,56 @@
 import express from 'express';
+import Sequelize from 'sequelize';
+const Op = Sequelize.Op;
 import { UserOccurrence, Word, Dictionary } from '@models';
 const router = express.Router();
 
 export default router
   .post('/', async (req, res) => {
     const {
-      body
+      body: {
+        occurrences
+      }
     } = req
 
     try {
+      // TODO: Will fail for different users
       const existent = await UserOccurrence.findOne({
         where: {
-          start: body.start,
-          textId: body.textId
+          [Op.and]: [{ 
+            positionInText: { [Op.in]: occurrences.map(o => o.position) }
+          },
+          {
+            textId: occurrences[0].textId
+          }]
         }
       });
-  
+
       if (existent) {
         return res
           .status(500)
           .json({ error: 'Error al crear ocurrencia: es posible que ya exista.'})
       }
       //TODO: validate occurrence
-      const item = await UserOccurrence.create(
-        {
-          ...body,
-          essential: false,
-          visible: true,
-          userId: 1
-        }
-      );
+      const userOccurrences = await UserOccurrence.bulkCreate(
+        occurrences.map(o => {
+          return {
+            textId: o.textId,
+            start: o.start,
+            ending: o.ending,
+            word: o.token.toLowerCase(),
+            positionInText: o.position,
+            essential: false,
+            visible: true,
+            userId: 1
+          }
+        })
+      )
 
       return res
       .status(201)
-      .json(item);
+      .json({
+        userOccurrences
+      });
     } catch(e) {
       console.log(e);
       return res

@@ -53,31 +53,45 @@ export default router
                 start: o.start,
                 ending: o.ending,
                 word: o.word,
+                positionInText: o.positionInText,
                 essential: true,
                 visible: true,
                 availableMeanings: false
               }
             })
           )
+          
         }
-        const wordIds = Array.from( 
-          new Set( userOccurrences.map(o => o.dataValues.selectedWordId ))
+        const words = Array.from( 
+          new Set( userOccurrences.map(o => o.dataValues.word ))
         );
-        const dictionaryWords = await Dictionary.findAll({
+
+        response.availableWords = await Word.getAvailableWords(Array.from(
+          new Set( userOccurrences.map(extractWordFromOccurrence) )
+        ));
+        
+        let dictionaryWords = await Dictionary.findAll({
           where: {
             [Op.and]: [
-              { wordId: {[Op.in]: wordIds}},
+              { word: {[Op.in]: words}},
               { userId: userId }
             ]          
-          },
-          include: [{ model: Word }]
+          }
         })
 
+        if(dictionaryWords.length === 0) {
+          dictionaryWords = await Dictionary.bulkCreate(
+            words.map(w => ({
+              word: w,
+              userId: userId,
+              isLearned: false,
+            }))
+          )
+          console.log(dictionaryWords);
+        }
         response.userOccurrences = userOccurrences;
         response.dictionaryWords = dictionaryWords;
-        response.availableWords = await Word.getAvailableWords(Array.from(
-          new Set( occurrences.map(extractWordFromOccurrence) )
-        ));
+        
       }
       
       return res
