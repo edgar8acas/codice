@@ -23,8 +23,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["development", "template"]),
-    ...mapState("learn"),
+    ...mapState(["development", "template"])
   },
 };
 </script>

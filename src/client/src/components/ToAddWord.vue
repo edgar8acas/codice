@@ -1,5 +1,7 @@
 <template>
-  <span :class="classObject" @click="CHANGE_SELECTED_TO_ADD_WORD(word)">{{ word }}</span>
+  <span 
+    :class="classObject"
+    @click="CHANGE_SELECTED_TO_ADD_WORD(word)">{{ word }}</span>
 </template>
 
 <script>

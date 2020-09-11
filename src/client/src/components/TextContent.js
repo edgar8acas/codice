@@ -14,7 +14,7 @@ export default Vue.component("text-content", {
         this.tokens.map(t => {
           if(typeof t === 'object') {
             if(t.type === 'line-break') {
-              return this.generateLineBreaks(t.token);
+              return this.generateLineBreaks(t);
             } else {
               return this.generateWord(t);
             }
@@ -104,7 +104,7 @@ export default Vue.component("text-content", {
           position++;
           const occurrence = {
             ...tokenData,
-            token: word,
+            word,
             type: 'word',
             position,
             isEssential: this.isEssentialWord(word),
@@ -113,15 +113,14 @@ export default Vue.component("text-content", {
           tokens.push(occurrence);
           if (occurrence.isEssential && this.isProcessing) {
             this.foundOccurrences.push(occurrence);
-          }
-          if (this.addingWord) {
-            this.toAddOccurrences.push(occurrence)
+          } else if(!occurrence.isEssential) {
+            this.toAddOccurrences.push(occurrence);
           }
         }
       }
       return tokens;
     },
-    generateLineBreaks(token) {
+    generateLineBreaks({ token }) {
       const textNode = [];
       for (let i = 0; i < token.length; i++) {
         textNode.push(<br />);
@@ -129,26 +128,28 @@ export default Vue.component("text-content", {
       return textNode;
     },
     generateWord(token) {
-      const word = token.token
-      let element = <span>{word}</span>;
+      const { word, position, isEssential } = token;
 
-      if(this.addingWord) {
-        element = <ToAddWord position={token.position} word={word}></ToAddWord>
-      }
+      if(isEssential) {
+        let occurrence = { position, word };
 
-      if(token.isEssential) {
-        let occurrence = {
-          position: token.position,
-          word: word
-        }
         if (this.isLearning) {
-          occurrence = this[GET_OCCURRENCE_BY_POSITION](token.position);
+          occurrence = this[GET_OCCURRENCE_BY_POSITION](position);
         }
-        element = <InlineWord
-                    occurrence={occurrence}
-                  ></InlineWord>
+
+        return (
+          <InlineWord
+            occurrence={occurrence}
+          ></InlineWord>
+        );
       }
-      return element;
+
+      return (
+        <ToAddWord 
+          position={position} 
+          word={word}
+        ></ToAddWord>
+      );
     },
     isEssentialWord(word) {
       if(this.isProcessing) {
@@ -157,8 +158,8 @@ export default Vue.component("text-content", {
         return this[ESSENTIAL_WORDS].includes(word);
       }
     },
-    handleDeselect(e) {
-      if(e.target === e.currentTarget) {
+    handleDeselect({ target, currentTarget}) {
+      if(target === currentTarget) {
         this[DESELECT_INLINE_WORD]();
         this[DESELECT_TO_ADD_WORD]();
       }
@@ -172,8 +173,6 @@ export default Vue.component("text-content", {
     if(this.isProcessing) {
       this[SET_FOUND_OCCURRENCES](this.foundOccurrences);
     }
-    if(this.addingWord) {
-      this[SET_TO_ADD_OCCURRENCES](this.toAddOccurrences);
-    }
-  }
+    this[SET_TO_ADD_OCCURRENCES](this.toAddOccurrences);
+  },
 });

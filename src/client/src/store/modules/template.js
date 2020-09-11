@@ -17,7 +17,8 @@ import {
 import { 
   GET_DICTIONARY_BY_WORD_ID,
   ESSENTIAL_WORDS,
-  GET_OCCURRENCE_BY_POSITION
+  GET_OCCURRENCE_BY_POSITION,
+  GET_DICTIONARY_BY_WORD
 } from "../getter-types";
 
 import axios from "./../axios";
@@ -112,18 +113,23 @@ const state = () => ({
 });
 
 const getters = {
-  [GET_DICTIONARY_BY_WORD_ID]: (state) => (word) => {
-    return state.dictionary.find((d) => {
-      return d.word === word
-    });
+  [GET_DICTIONARY_BY_WORD_ID]: (state) => (wordId) => {
+    return state.dictionary.find(
+      (d) => d.selectedWordId === wordId
+    );
+  },
+  [GET_DICTIONARY_BY_WORD]: (state) => (word) => {
+    return state.dictionary.find(
+      (d) => d.word === word
+    );
   },
   [ESSENTIAL_WORDS]: (state, getters, rootState) => {
     return Object.keys(rootState.meanings.meanings);
   },
   [GET_OCCURRENCE_BY_POSITION]: (state) => (position) => {
-    return state.occurrences.find((o) => {
-      return o.positionInText === position
-    });
+    return state.occurrences.find(
+      (o) => o.positionInText === position
+    );
   },
 };
 

@@ -1,9 +1,7 @@
 <template>
   <span 
     @click="CHANGE_SELECTED_INLINE_WORD(occurrence.word)" 
-    :class="classObject" 
-    :token-position="occurrence.position" 
-    :token-word="occurrence.word"
+    :class="classObject"
   >
     {{ word }}
     <!-- Dev purposes -->
@@ -19,8 +17,8 @@ import { mapState, mapGetters, mapActions } from "vuex";
 import { CHANGE_SELECTED_INLINE_WORD } from '../store/action-types';
 
 import {
+  GET_DICTIONARY_BY_WORD,
   GET_MEANINGS_BY_WORD,
-  GET_DICTIONARY_BY_WORD_ID,
 } from "./../store/getter-types";
 
 export default {
@@ -35,9 +33,9 @@ export default {
     ...mapState("textContent", ["selected"]),
     ...mapState("learn", ["addingWord"]),
     ...mapGetters([GET_MEANINGS_BY_WORD]),
-    ...mapGetters([GET_DICTIONARY_BY_WORD_ID]),
+    ...mapGetters([GET_DICTIONARY_BY_WORD]),
     dictionary() {
-      return this[GET_DICTIONARY_BY_WORD_ID](this.occurrence.word);
+      return this[GET_DICTIONARY_BY_WORD](this.occurrence.word);
     },
     meanings() {
       return this[GET_MEANINGS_BY_WORD](this.word);
