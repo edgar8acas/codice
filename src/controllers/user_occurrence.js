@@ -11,7 +11,7 @@ export default router
         occurrences
       }
     } = req
-
+    const userId = 1;
     try {
       // TODO: Will fail for different users
       const existent = await UserOccurrence.findOne({
@@ -41,16 +41,26 @@ export default router
             positionInText: o.position,
             essential: false,
             visible: true,
-            userId: 1
+            userId
           }
         })
       )
+      
+      const word = occurrences[0].word.toLowerCase();
+      const foundOrCreated = await Dictionary.findOrCreate({
+        where: { word, userId},
+        defaults: { word, userId, isLearned: false }
+      })
+      
+      const result = {
+        userOccurrences,
+        createdDictionaryWord: foundOrCreated[1],
+        dictionaryWord: foundOrCreated[0]
+      }
 
       return res
       .status(201)
-      .json({
-        userOccurrences
-      });
+      .json(result);
     } catch(e) {
       console.log(e);
       return res

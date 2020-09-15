@@ -70,28 +70,26 @@ export default router
           new Set( userOccurrences.map(extractWordFromOccurrence) )
         ));
         
-        let dictionaryWords = await Dictionary.findAll({
-          where: {
-            [Op.and]: [
-              { word: {[Op.in]: words}},
-              { userId: userId }
-            ]          
-          }
-        })
-
-        if(dictionaryWords.length === 0) {
-          dictionaryWords = await Dictionary.bulkCreate(
-            words.map(w => ({
-              word: w,
-              userId: userId,
-              isLearned: false,
-            }))
-          )
-          console.log(dictionaryWords);
-        }
-        response.userOccurrences = userOccurrences;
-        response.dictionaryWords = dictionaryWords;
+        const foundOrCreated = await Promise.all(
+          words.map(word => {
+            return Dictionary.findOrCreate({
+              where: {
+                [Op.and]: [
+                  { word },
+                  { userId }
+                ]
+              },
+              defaults: {
+                word,
+                userId,
+                isLearned: false,
+              }
+            })
+          })
+        )
         
+        response.userOccurrences = userOccurrences;
+        response.dictionaryWords = foundOrCreated.map(result => result[0]);
       }
       
       return res
