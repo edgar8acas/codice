@@ -37,7 +37,7 @@ export default router
             textId: o.textId,
             start: o.start,
             ending: o.ending,
-            word: o.token.toLowerCase(),
+            word: o.word.toLowerCase(),
             positionInText: o.position,
             essential: false,
             visible: true,
