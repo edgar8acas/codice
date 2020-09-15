@@ -142,7 +142,7 @@ export default router
             textId: item.textId,
             start: o.start,
             ending: o.ending,
-            word: o.token,
+            word: o.word,
             positionInText: o.position
           }
         })
