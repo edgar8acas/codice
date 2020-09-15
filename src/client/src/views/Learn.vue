@@ -78,8 +78,6 @@ export default {
     return {
       textId: this.$route.params.id,
       occurrence: {},
-      isLearnt: false,
-      optionsMenuActive: false,
       currentTab: {
         name: "Palabra actual",
         component: "word-meanings",
@@ -95,18 +93,7 @@ export default {
     ...mapState(["template"]),
     ...mapState("textContent", ["selected"]),
     text() {
-      return this.texts.find((text) => text.textId === Number(this.textId));
-    },
-    formatEssential() {
-      return this.occurrence.essential ? "Esencial" : "No esencial";
-    },
-    formatAvailableMeanings() {
-      return this.occurrence.availableMeanings
-        ? "Definiciones disponibles"
-        : "Sin definiciones";
-    },
-    formatVisible() {
-      return this.occurrence.visible ? "Visible" : "No visible";
+      return this.texts.find((text) => text.textId === Number(this.textId)) || {};
     },
   },
   async mounted() {
@@ -125,9 +112,6 @@ export default {
       UPDATE_OCCURRENCE,
       DELETE_USER_OCCURRENCE,
     ]),
-    toggleOptionsMenu() {
-      this.optionsMenuActive = !this.optionsMenuActive;
-    },
     async deleteOccurrence(id) {
       await this[DELETE_USER_OCCURRENCE](id);
       // TODO: Avoid reloading the page
@@ -140,9 +124,6 @@ export default {
     async toggleIsLearned(dictionaryWord) {
       dictionaryWord.isLearned = !dictionaryWord.isLearned;
       await this[UPDATE_DICTIONARY](dictionaryWord);
-    },
-    toggleAddOccurrence() {
-      this.activeAddingOccurrence = true;
     },
     async addSelectedOccurrence() {
       await this[ADD_USER_OCCURRENCE]();
