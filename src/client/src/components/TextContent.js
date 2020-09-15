@@ -26,7 +26,6 @@ export default Vue.component("text-content", {
   },
   data() {
     return {
-      tokens: [],
       foundOccurrences: [],
       toAddOccurrences: []
     };
@@ -52,10 +51,19 @@ export default Vue.component("text-content", {
     ...mapState(["template"]),
     ...mapGetters([ESSENTIAL_WORDS, GET_OCCURRENCE_BY_POSITION]),
     ...mapState("learn", ["addingWord"]),
+    tokens: { 
+      get: function () {
+        return this.mergeContentAndTokens(this.text);
+      },
+      set: function (tokens){
+      }
+    }
   },
   methods: {
     mergeContentAndTokens(text) {
       const content = text.rawContent;
+      if(content === undefined) return [];
+
       let tokens = this.tokenize(content);
       const splitted = tokens.flatMap((t, i) => {
         let start;
@@ -169,7 +177,6 @@ export default Vue.component("text-content", {
     ...mapActions("textContent", [DESELECT_INLINE_WORD]),
   },
   mounted() {
-    this.tokens = this.mergeContentAndTokens(this.text);
     if(this.isProcessing) {
       this[SET_FOUND_OCCURRENCES](this.foundOccurrences);
     }
