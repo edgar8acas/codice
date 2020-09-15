@@ -3,7 +3,7 @@
     <div class="learn--header">
       <div class="learn--header-left">
         <h2 class="learn--title">{{ text.title }}</h2>
-          <LearnButton @click.native="addSelectedOccurrence" class="has-image" v-if="selectedToAdd.length > 0">
+          <LearnButton @click.native="addSelectedOccurrence" class="has-image" v-if="selected.length > 0">
             <template v-slot:image>
               <svg height="14pt" viewBox="0 0 448 448" width="14pt" xmlns="http://www.w3.org/2000/svg"><path d="m408 184h-136c-4.417969 0-8-3.582031-8-8v-136c0-22.089844-17.910156-40-40-40s-40 17.910156-40 40v136c0 4.417969-3.582031 8-8 8h-136c-22.089844 0-40 17.910156-40 40s17.910156 40 40 40h136c4.417969 0 8 3.582031 8 8v136c0 22.089844 17.910156 40 40 40s40-17.910156 40-40v-136c0-4.417969 3.582031-8 8-8h136c22.089844 0 40-17.910156 40-40s-17.910156-40-40-40zm0 0"/></svg>
             </template>
@@ -93,7 +93,7 @@ export default {
   computed: {
     ...mapState("texts", ["texts"]),
     ...mapState(["template"]),
-    ...mapState("learn", ["addingWord", "selectedToAdd"]),
+    ...mapState("textContent", ["selected"]),
     text() {
       return this.texts.find((text) => text.textId === Number(this.textId));
     },

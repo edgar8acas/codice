@@ -18,9 +18,9 @@ const actions = {
     commit(SET_DICTIONARY, dictionaryWords, { root: true });
     commit(SET_CURRENT_TEXT, text);
   },
-  async [ADD_USER_OCCURRENCE]({ commit, dispatch, state }) {
+  async [ADD_USER_OCCURRENCE]({ commit, dispatch, state, rootState }) {
     try {
-      const occurrences = state.toAddOccurrences.filter(o => o.token.toLowerCase() === state.selectedToAdd)
+      const occurrences = state.toAddOccurrences.filter(o => o.word.toLowerCase() === rootState.textContent.selected)
       const { data } = await axios.post(
         `/api/user-occurrences/`,
         {occurrences}

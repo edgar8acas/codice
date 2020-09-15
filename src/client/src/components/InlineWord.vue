@@ -1,6 +1,6 @@
 <template>
   <span 
-    @click="CHANGE_SELECTED_INLINE_WORD(occurrence.word)" 
+    @click="CHANGE_SELECTED_WORD(occurrence.word)" 
     :class="classObject"
   >
     {{ word }}
@@ -14,7 +14,7 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
-import { CHANGE_SELECTED_INLINE_WORD } from '../store/action-types';
+import { CHANGE_SELECTED_WORD } from '../store/action-types';
 
 import {
   GET_DICTIONARY_BY_WORD,
@@ -82,7 +82,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("textContent", [CHANGE_SELECTED_INLINE_WORD])
+    ...mapActions("textContent", [CHANGE_SELECTED_WORD])
   },
 };
 </script>

@@ -1,12 +1,12 @@
 <template>
   <span 
     :class="classObject"
-    @click="CHANGE_SELECTED_TO_ADD_WORD(word)">{{ word }}</span>
+    @click="CHANGE_SELECTED_WORD(word)">{{ word }}</span>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import { CHANGE_SELECTED_TO_ADD_WORD } from '../store/action-types'
+import { CHANGE_SELECTED_WORD } from '../store/action-types'
 export default {
   props: {
     position: Number,
@@ -16,13 +16,13 @@ export default {
     classObject() {
       return {
         "to-add-word": true,
-        "similar-selected": this.word === this.selectedToAdd
+        "similar-selected": this.word === this.selected
       }
     },
-    ...mapState("learn", ["selectedToAdd"])
+    ...mapState("textContent", ["selected"])
   },
   methods: {
-    ...mapActions("learn", [CHANGE_SELECTED_TO_ADD_WORD])
+    ...mapActions("textContent", [CHANGE_SELECTED_WORD])
   }
 }
 </script>
