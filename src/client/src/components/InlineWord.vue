@@ -31,7 +31,6 @@ export default {
   computed: {
     ...mapState(["development", "meanings"]),
     ...mapState("textContent", ["selected"]),
-    ...mapState("learn", ["addingWord"]),
     ...mapGetters([GET_MEANINGS_BY_WORD]),
     ...mapGetters([GET_DICTIONARY_BY_WORD]),
     dictionary() {
@@ -72,12 +71,10 @@ export default {
               ? true
               : false
             : false,
-        "unselected-meaning": !this.occurrence.selectedWordId,
         process:
           (!this.occurrence.occurrenceId &&
             !this.occurrence.userOccurrenceId) ||
           this.occurrence.occurrenceId,
-        "is-adding-word": this.addingWord
       };
     },
   },
@@ -90,6 +87,7 @@ export default {
 <style lang="scss" scoped>
 .inline-word {
   display: inline-block;
+  font-weight: bolder;
 }
 
 .inline-word:hover {
@@ -108,31 +106,31 @@ export default {
   }
 }
 
-.inline-word.process.available-meanings {
-  background-color: #21ba45;
-  color: white;
-  border-bottom: 3px solid #21ba45;
-  border-radius: 5px;
-}
-
-.inline-word.process.not-available-meanings {
-  background-color: #f2711c;
-  color: white;
-  border-bottom: 3px solid #f2711c;
-  border-radius: 5px;
-}
-
 .inline-word.currently-selected {
-  font-weight: bolder;
-  color: white;
-  background-color: purple !important;
   border-bottom: none;
   border-radius: 5px;
 }
 
-.inline-word.is-adding-word {
-  background-color: #ebebeb;
-  color: gray;
+.inline-word.process.available-meanings {
+  color: #21ba45;
+  border-radius: 5px;
+}
+
+.inline-word.process.not-available-meanings {
+  color: #f2711c;
+  border-radius: 5px;
+}
+
+.inline-word.process.available-meanings.currently-selected {
+  color: white;
+  border-radius: 5px;
+  background-color: #21ba45;
+}
+
+.inline-word.process.not-available-meanings.currently-selected {
+  color: white;
+  border-radius: 5px;
+  background-color: #f2711c;
 }
 
 .inline-word.learned.currently-selected {
@@ -147,7 +145,6 @@ export default {
 
 .inline-word.learned {
   color: hsl(197, 71%, 46%);
-  border-bottom: 3px solid hsl(197, 71%, 46%);
   background: transparent;
 }
 
