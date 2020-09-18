@@ -13,7 +13,7 @@ export function paginate(model) {
   return async (req, res, next) => {
     const name = model.getTableName();
     
-    let { page, per_page, word } = req.query;
+    let { page, per_page, word, search } = req.query;
     if (!page || !per_page) {
       page = 1,
       per_page = 10
@@ -37,6 +37,12 @@ export function paginate(model) {
           word
         };
         delete query.offset;
+      }
+
+      if(search && name === 'words') {
+        query.where = {
+          word: {[Op.like]: `%${search}%`}
+        }
       }
 
       const { count, rows } = await model.findAndCountAll(query);
