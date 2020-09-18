@@ -132,18 +132,34 @@ export default router
   })
   .delete('/:id', async (req, res) => {
     const {
-      params: { id }
+      params: { id },
+      query: { word, ids }
     } = req
+
     try {
-      const occurrence = await UserOccurrence.findByPk(id);
-      const count = await occurrence.destroy();
+      if(word) {
+        const occurrenceIds = ids.split('-').map(id => Number(id));
+        await Promise.all(
+          occurrenceIds.map(id =>
+            UserOccurrence.destroy({
+              where: {
+                userOccurrenceId: id
+              }
+            })
+          )
+        );
+      } else {
+        const occurrence = await UserOccurrence.findByPk(id);
+        count = await occurrence.destroy();
+      }
+      
       return res
         .status(200)
-        .json({ message: 'Ocurrencia eliminada', count});
+        .json({ message: 'Ocurrencia(s) eliminada(s)'});
     } catch(e) {
       console.log(e.message);
       return res
         .status(500)
-        .json({ error: 'Error al eliminar ocurrencia' })
+        .json({ error: 'Error al eliminar.' })
     }
   })
