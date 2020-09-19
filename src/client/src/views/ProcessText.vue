@@ -42,6 +42,7 @@
 <script>
 import WordDetails from "@/components/WordDetails";
 import CreateWord from "@/components/CreateWord";
+import TextContent from "@/components/TextContent";
 import { mapState, mapActions } from "vuex";
 import {
   GET_TEXT_BY_ID,
@@ -53,6 +54,7 @@ export default {
   components: {
     CreateWord,
     WordDetails,
+    TextContent
   },
   data() {
     return {

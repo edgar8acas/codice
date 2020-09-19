@@ -3,6 +3,7 @@ import {
   UPDATE_OCCURRENCE,
   UPDATE_DICTIONARY,
   DELETE_USER_OCCURRENCE,
+  DELETE_USER_OCCURRENCES_BY_WORD
 } from "../action-types";
 import {
   SET_TOKENIZED_TEXT,
@@ -18,7 +19,8 @@ import {
   GET_DICTIONARY_BY_WORD_ID,
   ESSENTIAL_WORDS,
   GET_OCCURRENCE_BY_POSITION,
-  GET_DICTIONARY_BY_WORD
+  GET_DICTIONARY_BY_WORD,
+  GET_OCCURRENCES_BY_WORD
 } from "../getter-types";
 
 import axios from "./../axios";
@@ -54,7 +56,11 @@ const actions = {
       }
     }
   },
-  async [UPDATE_DICTIONARY]({ commit }, dictionaryWord) {
+  async [UPDATE_DICTIONARY]({ commit, state }, word) {
+    const dictionaryWord  = state.dictionary.find(
+      (d) => d.word === word
+    );
+    dictionaryWord.isLearned = !dictionaryWord.isLearned;
     const { data: updated } = await axios.put(
       `/api/dictionary-words/`,
       dictionaryWord
@@ -68,6 +74,17 @@ const actions = {
       console.log(error);
     }
   },
+  async [DELETE_USER_OCCURRENCES_BY_WORD] ({ state }, word) {
+    try {
+      const occurrences = state.occurrences.filter(
+        (o) => o.word === word
+      );
+      const ids = occurrences.map(o => o.userOccurrenceId).join('-')
+      await axios.delete(`/api/user-occurrences/${word}/?word=true&ids=${ids}`);
+    } catch (error) { 
+      console.log(error);
+    }
+  }
 };
 
 const mutations = {
@@ -129,6 +146,11 @@ const getters = {
   [GET_OCCURRENCE_BY_POSITION]: (state) => (position) => {
     return state.occurrences.find(
       (o) => o.positionInText === position
+    );
+  },
+  [GET_OCCURRENCES_BY_WORD]: (state) => (word) => {
+    return state.occurrences.find(
+      (o) => o.word === word
     );
   },
 };

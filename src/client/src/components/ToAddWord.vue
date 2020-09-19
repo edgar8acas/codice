@@ -1,7 +1,7 @@
 <template>
   <span 
     :class="classObject"
-    @click="CHANGE_SELECTED_WORD(word)">{{ word }}</span>
+    @click="CHANGE_SELECTED_WORD(occurrence.word)">{{ occurrence.word }}</span>
 </template>
 
 <script>
@@ -9,14 +9,13 @@ import { mapActions, mapState } from 'vuex'
 import { CHANGE_SELECTED_WORD } from '../store/action-types'
 export default {
   props: {
-    position: Number,
-    word: String
+    occurrence: Object
   },
   computed: {
     classObject() {
       return {
         "to-add-word": true,
-        "similar-selected": this.word === this.selected
+        "similar-selected": this.occurrence.word === this.selected
       }
     },
     ...mapState("textContent", ["selected"])
