@@ -80,7 +80,7 @@ export default {
         ]
       } else {
         return [
-          { name: 'Agregar palabra', slug: 'add'}
+          { name: 'Agregar a mi diccionario', slug: 'add'}
         ]
       }
     }
