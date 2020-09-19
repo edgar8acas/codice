@@ -1,7 +1,13 @@
 <template>
   <div>
+    <form class="ui form">
+      <div class="field">
+        <label>Búsqueda</label>
+        <input type="text" name="word" v-model="search" placeholder=""/>
+      </div>
+    </form>
     <catalog-table
-      api-url="http://localhost:3000/api/words"
+      :api-url="`http://localhost:3000/api/words?search=${search}`"
       :fields="fields"
       @showWordDetails="this.showWordDetails"
     >
@@ -49,6 +55,7 @@ export default {
       fields: FieldDefs,
       showDetailsModal: false,
       word: {},
+      search: ''
     };
   },
   methods: {
