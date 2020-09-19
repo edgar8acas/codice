@@ -47,10 +47,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    hasOccurrences: {
-      type: Boolean,
-      default: false
-    },
     isLearning: {
       type: Boolean,
       default: false

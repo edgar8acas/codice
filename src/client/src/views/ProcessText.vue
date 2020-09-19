@@ -25,7 +25,6 @@
         <text-content
           class="content"
           :isProcessing="true"
-          :hasOccurrences="true"
           :text="text"
           v-if="showTextContent"
         ></text-content>

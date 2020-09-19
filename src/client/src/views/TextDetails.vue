@@ -68,7 +68,6 @@
         class="content"
         :filterOptions="filter"
         :isProcessing="false"
-        :hasOccurrences="true"
         :text="text"
       ></text-content>
     </div>
