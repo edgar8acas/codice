@@ -1,17 +1,3 @@
-<template>
-  <span 
-    @click="CHANGE_SELECTED_WORD(occurrence.word)" 
-    :class="classObject"
-  >
-    {{ word }}
-    <!-- Dev purposes -->
-    <span v-if="development">
-      <sup style="color: blue;">{{ this.occurrence.userOccurrenceId }}</sup>
-      <sub style="color: green;">{{ this.occurrence.selectedWordId }}</sub>
-    </span>
-  </span>
-</template>
-
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
 import { CHANGE_SELECTED_WORD } from '../store/action-types';
@@ -22,6 +8,17 @@ import {
 } from "./../store/getter-types";
 
 export default {
+  /* eslint-disable no-unused-vars */
+  render(h) {
+    return (
+      <span 
+        vOn:click={() => this[CHANGE_SELECTED_WORD](this.occurrence.word)}
+        class={this.classObject}
+      >
+        {this.word}
+      </span>
+    )
+  },
   data() {
     return {};
   },
