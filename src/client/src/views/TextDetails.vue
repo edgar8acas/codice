@@ -60,6 +60,10 @@
           </button>
         </sui-message>
       </div>
+
+      <div class="side-card" v-if="processed">
+        <symbology :items="contentSymbology"/>
+      </div>
     </div>
 
     <div class="template">
@@ -111,14 +115,19 @@
 import TextContent from "@/components/TextContent";
 import WordDetails from "@/components/WordDetails";
 import CreateWord from "@/components/CreateWord";
+import Symbology from "@/components/Symbology";
+
 import { mapState, mapActions } from "vuex";
 import { GET_TEMPLATE_DATA, GET_TEXT_BY_ID } from "./../store/action-types";
+
+import { colors } from "@/assets/colors"
 
 export default {
   components: {
     TextContent,
     WordDetails,
     CreateWord,
+    Symbology
   },
   data() {
     return {
@@ -130,7 +139,11 @@ export default {
       filter: {
         availableMeanings: false,
         noAvailableMeanings: false,
-      }
+      },
+      contentSymbology: [
+        { color: colors.GREEN, description: 'Ocurrencias con significado' },
+        { color: colors.ORANGE, description: 'Ocurrencias sin significado' }
+      ]
     };
   },
   computed: {

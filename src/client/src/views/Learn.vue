@@ -34,7 +34,9 @@
         </component>
       </keep-alive>
     </div>
-
+    <div class="learn--symbology">
+      <symbology :items="contentSymbology"/>
+    </div>
     
   </div>
 </template>
@@ -45,9 +47,12 @@ import WordMeanings from "@/components/WordMeanings";
 import LearnDictionary from "@/components/LearnDictionary";
 import WordDetails from "@/components/WordDetails";
 import DropdownMenu from "@/components/DropdownMenu";
+import Symbology from "@/components/Symbology";
 import LearnButton from "@/components/LearnButton";
 
 import { mapState, mapActions } from "vuex";
+import { colors } from "@/assets/colors"
+
 import {
   GET_DATA_FOR_LEARNING,
   UPDATE_DICTIONARY,
@@ -66,7 +71,8 @@ export default {
     LearnDictionary,
     WordDetails,
     DropdownMenu,
-    LearnButton
+    LearnButton,
+    Symbology
   },
   data() {
     return {
@@ -80,6 +86,10 @@ export default {
         { name: "Palabra actual", component: "word-meanings" },
         { name: "Diccionario", component: "learn-dictionary" },
       ],
+      contentSymbology: [
+        { color: colors.BLUE, description: 'Palabra aprendida' },
+        { color: colors.RED, description: 'Palabra no aprendida' }
+      ]
     };
   },
   computed: {
@@ -131,9 +141,18 @@ export default {
 .learn.main {
   grid-column: 2 / span 8;
   font-family: "Mulish", sans-serif;
+  display: grid;
+  grid-template-areas:
+                "hd hd hd hd"
+                "a a c c"
+                "a a c c"
+                "a a c c"
+                "b b c c";
+  height: 80vh;
 }
 
 .learn--header {
+  grid-area: hd;
   padding-bottom: 20px;
   margin-bottom: 10px;
   border-bottom: 3px solid var(--learn-secondary);
@@ -147,11 +166,12 @@ export default {
 }
 
 .learn--text {
-  width: 40%;
-  float: left;
+  grid-area: a;
+  // width: 40%;
+  // float: left;
   overflow: scroll;
   overflow-x: hidden;
-  height: 100%;
+  // height: 100%;
 }
 
 .learn--text-content {
@@ -168,9 +188,10 @@ export default {
 }
 
 .learn--tab-component {
-  width: 60%;
-  float: right;
-  height: 80vh;
+  grid-area: c;
+  // width: 60%;
+  // float: right;
+  // height: 80vh;
 }
 
 .learn--tab-component-nav {
@@ -212,6 +233,10 @@ export default {
   > * {
     margin-top: 10px;
   }
+}
+
+.learn--symbology {
+  grid-area: b;
 }
 
 .central {
