@@ -13,21 +13,26 @@ export function paginate(model) {
   return async (req, res, next) => {
     const name = model.getTableName();
     
-    let { page, per_page, word, search } = req.query;
+    let { 
+      page, 
+      per_page, 
+      word, 
+      search, 
+      sort
+    } = req.query;
     if (!page || !per_page) {
       page = 1,
       per_page = 10
     }
     
     [page, per_page] = [page, per_page].map(Number);
-
+  
     const start = (page - 1) * per_page;
     const end = page * per_page;
 
     const result = {}
     try {
       const query = {
-        order: [name.substring(0, name.length - 1) + 'Id'],
         offset: start,
         limit: per_page
       }
@@ -36,7 +41,6 @@ export function paginate(model) {
         query.where = {
           word
         };
-        delete query.offset;
       }
 
       if(search && name === 'words') {
@@ -44,6 +48,10 @@ export function paginate(model) {
           word: {[Op.like]: `%${search}%`}
         }
       }
+
+      // It only supports one column ordering for now
+      const [sort_by, order] = sort.split('|');
+      query.order = [[sort_by, order.toUpperCase()]];
 
       const { count, rows } = await model.findAndCountAll(query);
       

@@ -27,7 +27,8 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM('PROCESSED', 'UNPROCESSED'),
+        type: DataTypes.ENUM('processed', 'unprocessed'),
+        default: 'processed',
         allowNull: true
       },
       rawContent: {

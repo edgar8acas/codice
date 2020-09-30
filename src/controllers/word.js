@@ -50,3 +50,26 @@ export default router
         .json({ msg: 'Error al eliminar el elemento'})
     }
   })
+  .put('/:id', async (req, res) => {
+    const { 
+      params: { id },
+      body
+    } = req;
+    try {
+      const wordId = Number(id);
+      // TODO: Validation 
+      const updated = await Word.update(body, {
+        where: {
+          wordId
+        }
+      });
+      return res
+        .status(200)
+        .json( { count: updated[0]});
+    } catch (e) {
+      console.error(e);
+      return res
+        .status(500)
+        .json({ msg: 'Error al actualizar el elemento'});
+    }
+  })

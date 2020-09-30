@@ -34,16 +34,15 @@ export default router
   })
   .post('/', async (req, res) => {
     const { body } = req;
-
     try {
       const item = await Text.create(
         validateText(body)
       );
-
       return res
       .status(201)
       .json(item);
     } catch(e) {
+      console.log(e);
       return res
         .status(500)
         .json({ error: e.message })
