@@ -1,4 +1,4 @@
-import { SET_FETCHED_TEXTS, ADD_TEXT, GET_TEXT_BY_ID } from "../action-types";
+import { SET_FETCHED_TEXTS, ADD_TEXT, GET_TEXT_BY_ID, SET_SUCCESS, SET_ERROR } from "../action-types";
 import { SET_TEXTS, ADD_OR_REPLACE_TEXT } from "../mutation-types";
 import axios from "./../axios";
 
@@ -7,12 +7,13 @@ const actions = {
     //CatalogTable makes the api call
     commit(SET_TEXTS, payload);
   },
-  async [ADD_TEXT](ctx, text) {
+  async [ADD_TEXT]({ commit }, text) {
     try {
-      const res = axios.post("/api/texts/", text);
-      console.log(res);
+      const res = await axios.post("/api/texts/", text);
+      commit(SET_SUCCESS, res);
     } catch (error) {
-      console.log(error.response.data.error);
+      commit(SET_ERROR)
+      return new Promise.reject(new Error('Algo salió mal...'));
     }
   },
   async [GET_TEXT_BY_ID]({ commit }, id) {

@@ -23,11 +23,13 @@ export default [
     title: "Imagen",
     name: "imageUrl",
     callback: "formatUrl",
+    sortField: "imageUrl"
   },
   {
     title: "Video",
     name: "videoUrl",
     callback: "formatUrl",
+    sortField: "videoUrl"
   },
   "__slot:actions",
 ];

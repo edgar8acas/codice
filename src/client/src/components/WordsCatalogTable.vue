@@ -112,7 +112,7 @@ export default {
       );
     },
     formatUrl(value) {
-      return value ? value.substring(0, 60) + "..." : "Sin url";
+      return value ? value.substring(0, 30) + "..." : "Sin url";
     },
     onPaginationData(paginationData) {
       this.$refs.pagination.setPaginationData(paginationData);

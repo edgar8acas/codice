@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Colores</h2>
+    <h2>Significado</h2>
     <div v-for="i in items" :key="i.color" class="symbol">
       <div class="color" :style="{ backgroundColor: i.color }"></div>
       {{ i.description }}

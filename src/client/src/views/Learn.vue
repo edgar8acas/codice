@@ -149,6 +149,7 @@ export default {
                 "a a c c"
                 "b b c c";
   height: 80vh;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 .learn--header {

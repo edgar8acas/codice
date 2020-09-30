@@ -25,7 +25,10 @@
     <sui-modal v-model="showDetailsModal">
       <sui-modal-header>Editar definición</sui-modal-header>
       <sui-modal-content class="scrolling">
-        <edit-word :word="word"></edit-word>
+        <div class="definition-details-wrapper">
+          <edit-word :word="word"></edit-word>
+          <media-details :word="word"></media-details>
+        </div>
       </sui-modal-content>
       <sui-modal-actions>
         <button class="primary ui button" @click="saveWord">Guardar</button>
@@ -37,6 +40,7 @@
 <script>
 import CatalogTable from "@/components/WordsCatalogTable.vue";
 import EditWord from "@/components/EditWord.vue";
+import MediaDetails from "@/components/MediaDetails.vue";
 import FieldDefs from "@/components/WordsFieldDefs.js";
 import Alert from "@/components/Alert.vue";
 import { mapActions } from 'vuex';
@@ -46,7 +50,8 @@ export default {
   components: {
     CatalogTable,
     EditWord,
-    Alert
+    Alert,
+    MediaDetails
   },
   data() {
     return {
@@ -92,12 +97,16 @@ export default {
 .word-search {
   width: 25vw;
 }
-.word-actions {
-  
+
+.definition-details-wrapper {
+  display: grid;
+  grid-template-columns: 50% 50%;
 }
+
 .add-definition-button {
   align-self: center;
   font-size: 1.1rem !important;
   align-self: flex-end;
 }
+
 </style>
