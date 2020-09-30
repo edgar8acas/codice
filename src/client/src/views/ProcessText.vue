@@ -1,47 +1,38 @@
 <template>
   <div>
     <section class="central">
-      <div class="side-info">
-        <h2 class="section-title">Instrucciones para el administrador</h2>
-        <p class="instructions">
-          Aquí se muestran todas las ocurrencias de las palabras esenciales
-          obtenidas por el procesamiento.
-          <br />
-          <br />
-          Para generar la plantilla con la que el texto se mostrará a los
-          usuarios que quieran visualizarla, es necesario que especifiques qué
-          significado tiene cada una de ellas.
-          <br />
-          <br />
-          Si ninguna de los significados es apropiado, seleccionar el último
-          generará uno nuevo.
-          <br />
-          <br />
-          Debes elegir un significado para cada ocurrencia antes de guardar la
-          plantilla. Por lo que <strong>todas</strong> las ocurrencias deben
-          mostrarse en <strong style="color: green;">verde</strong>.
-        </p>
-        <a class="btn-primary" @click.prevent="setDefault" v-if="!processed"
-          >Predeterminado</a
-        >
-        <br />
-        <a class="btn-primary" @click.prevent="save" v-if="!processed"
-          >Guardar</a
-        >
+      <div class="details">
+        <div class="side-card">
+          <h2>Instrucciones</h2>
+          <p class="instructions">
+            Aquí se muestran todas las ocurrencias de las palabras esenciales
+            obtenidas por el procesamiento.
+          </p>
+          <p class="instructions">
+            Al seleccionar una ocurrencia se mostrarán las definiciones disponibles en la sección Detalles de palabra.
+          </p>
+          <p class="instructions">
+            Es recomendable que cada ocurrencia tenga al menos una definición asociada.
+          </p>
+          <symbology :items="contentSymbology"/>
+          <button class="ui button primary" @click="save" v-if="!processed"
+            >Guardar ocurrencias</button
+          >
+        </div>
       </div>
       <div class="template">
         <h2 class="section-title">{{ text.title }}</h2>
         <text-content
-          class="content"
-          :isChoosing="true"
-          @changeOccurrence="changeOccurrence"
+          class="text-content"
+          :isProcessing="true"
+          :text="text"
           v-if="showTextContent"
         ></text-content>
       </div>
       <div class="side-info">
         <word-details class="word-details" :occurrence="occurrence">
         </word-details>
-        <create-word :forWord="occurrence.word"></create-word>
+        <create-word></create-word>
       </div>
     </section>
   </div>
@@ -50,7 +41,12 @@
 <script>
 import WordDetails from "@/components/WordDetails";
 import CreateWord from "@/components/CreateWord";
+import TextContent from "@/components/TextContent";
+import Symbology from "@/components/Symbology";
 import { mapState, mapActions } from "vuex";
+
+import { colors } from "@/assets/colors"
+
 import {
   GET_TEXT_BY_ID,
   PROCESS_TEXT,
@@ -61,6 +57,8 @@ export default {
   components: {
     CreateWord,
     WordDetails,
+    TextContent,
+    Symbology
   },
   data() {
     return {
@@ -68,6 +66,10 @@ export default {
       loading: false,
       occurrence: {},
       showTextContent: false,
+      contentSymbology: [
+        { color: colors.GREEN, description: 'Ocurrencias con significado' },
+        { color: colors.ORANGE, description: 'Ocurrencias sin significado' }
+      ]
     };
   },
   computed: {
@@ -135,7 +137,7 @@ export default {
 
 .instructions {
   text-align: left;
-  padding: 10px;
+  font-size: 1.2rem;
 }
 
 [class~="conflicts"] > div {

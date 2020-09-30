@@ -60,14 +60,19 @@
           </button>
         </sui-message>
       </div>
+
+      <div class="side-card" v-if="processed">
+        <symbology :items="contentSymbology"/>
+      </div>
     </div>
 
     <div class="template">
       <h2 class="title">{{ text.title }}</h2>
       <text-content
-        class="content"
+        class="text-content"
         :filterOptions="filter"
-        @changeOccurrence="changeOccurrence"
+        :isProcessing="false"
+        :text="text"
       ></text-content>
     </div>
     <div class="side-info" v-if="occurrence">
@@ -110,14 +115,19 @@
 import TextContent from "@/components/TextContent";
 import WordDetails from "@/components/WordDetails";
 import CreateWord from "@/components/CreateWord";
+import Symbology from "@/components/Symbology";
+
 import { mapState, mapActions } from "vuex";
-import { GET_TEMPLATE_DATA } from "./../store/action-types";
+import { GET_TEMPLATE_DATA, GET_TEXT_BY_ID } from "./../store/action-types";
+
+import { colors } from "@/assets/colors"
 
 export default {
   components: {
     TextContent,
     WordDetails,
     CreateWord,
+    Symbology
   },
   data() {
     return {
@@ -125,11 +135,15 @@ export default {
       currentWordId: null,
       onlyExclusive: false,
       processingConfirmation: false,
-      occurrence: null,
+      occurrence: {},
       filter: {
         availableMeanings: false,
         noAvailableMeanings: false,
       },
+      contentSymbology: [
+        { color: colors.GREEN, description: 'Ocurrencias con significado' },
+        { color: colors.ORANGE, description: 'Ocurrencias sin significado' }
+      ]
     };
   },
   computed: {
@@ -137,7 +151,7 @@ export default {
     ...mapState("process", ["options"]),
     ...mapState(["template"]),
     text() {
-      return this.texts.find((text) => text.textId === this.textId);
+      return this.texts.find((text) => text.textId === Number(this.textId));
     },
     processed() {
       return this.text.status === "processed" ||
@@ -162,11 +176,12 @@ export default {
     },
   },
   async mounted() {
-    this.$store.dispatch("setProcessingOptions", false);
+    await this[GET_TEXT_BY_ID](this.textId);
     await this[GET_TEMPLATE_DATA](this.text);
   },
   methods: {
     ...mapActions([GET_TEMPLATE_DATA]),
+    ...mapActions("texts", [GET_TEXT_BY_ID]),
     displayContent() {
       this.showContent = true;
     },
@@ -197,7 +212,7 @@ export default {
   column-gap: 0.5em;
 }
 
-.content {
+.text-content {
   height: 60vh;
   overflow: scroll;
   overflow-x: hidden;

@@ -24,7 +24,7 @@ export default {
       default() {
         return [
           {
-            field: "textId",
+            field: "wordId",
             direction: "asc",
           },
         ];
@@ -36,6 +36,11 @@ export default {
         return {};
       },
     },
+    queryParams: {
+      sort: '',
+      page: 'page',
+      perPage: 'per_page'
+    }
   },
   render(h) {
     return h(
@@ -44,7 +49,6 @@ export default {
         class: { "table-container": true },
       },
       [
-        this.renderPaginationTop(h),
         this.renderVuetable(h),
         this.renderPagination(h),
       ]
@@ -60,6 +64,8 @@ export default {
           paginationPath: "",
           perPage: 4,
           sortOrder: this.sortOrder,
+          queryParams: this.queryParams,
+          trackBy: 'wordId'
         },
         on: {
           "vuetable:pagination-data": this.onPaginationData,
@@ -105,41 +111,10 @@ export default {
         ]
       );
     },
-    renderPaginationTop(h) {
-      return h(
-        "div",
-        {
-          class: {
-            "vuetable-pagination": true,
-            ui: true,
-            basic: true,
-            segment: true,
-            grid: true,
-          },
-        },
-        [
-          h("vuetable-pagination-info", {
-            ref: "paginationInfoTop",
-            props: {
-              infoTemplate: "Mostrando {from} a {to} de {total} palabras",
-            },
-          }),
-          h("vuetable-pagination", {
-            ref: "paginationTop",
-            on: {
-              "vuetable-pagination:change-page": this.onChangePage,
-            },
-          }),
-        ]
-      );
-    },
     formatUrl(value) {
-      return value ? value.substring(0, 60) + "..." : "Sin url";
+      return value ? value.substring(0, 30) + "..." : "Sin url";
     },
     onPaginationData(paginationData) {
-      this.$refs.paginationTop.setPaginationData(paginationData);
-      this.$refs.paginationInfoTop.setPaginationData(paginationData);
-
       this.$refs.pagination.setPaginationData(paginationData);
       this.$refs.paginationInfo.setPaginationData(paginationData);
     },

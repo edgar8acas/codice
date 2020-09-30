@@ -3,34 +3,13 @@
     <div class="learn--header">
       <div class="learn--header-left">
         <h2 class="learn--title">{{ text.title }}</h2>
-        <dropdown-menu
-          class="learn--header-text-actions"
-          :active="optionsMenuActive"
-        >
-          <template v-slot:button>
-            <button @click="toggleOptionsMenu" class="dropdown-button">
-              <img
-                src="../assets/menu.svg"
-                alt="Opciones del texto"
-                width="30px"
-                height="30px"
-              />
-            </button>
-          </template>
-          <li>
-            <button @click="toggleAddOccurrence">
-              Agregar palabra
-            </button>
-          </li>
-        </dropdown-menu>
       </div>
     </div>
     <div class="learn--text">
-      <!-- TODO: Stick title to the top when scrolling -->
       <text-content
         class="learn--text-content"
-        @changeOccurrence="changeOccurrence"
-        :current="occurrence"
+        :text="text"
+        :isLearning="true"
       ></text-content>
     </div>
     <div class="learn--tab-component">
@@ -51,68 +30,29 @@
         <component
           v-bind:is="this.currentTab.component"
           :occurrence="occurrence"
-          @onSelectMeaning="selectMeaning"
-          @onDeleteOccurrence="deleteOccurrence"
-          @onToggleVisibility="toggleVisibility"
-          @onToggleIsLearned="toggleIsLearned"
         >
         </component>
       </keep-alive>
     </div>
-
-    <sui-modal v-model="activeSelectMeaning">
-      <sui-modal-header>Cambiar significado</sui-modal-header>
-      <sui-modal-content class="scrolling">
-        <word-details
-          class="word-details"
-          :occurrence="occurrence"
-          :selection="true"
-          @changedMeaning="onChangedMeaning"
-        >
-        </word-details>
-      </sui-modal-content>
-      <sui-modal-actions>
-        <sui-button positive @click.native="selectMeaning">
-          Aceptar
-        </sui-button>
-      </sui-modal-actions>
-    </sui-modal>
-
-    <sui-modal v-model="activeAddingOccurrence">
-      <sui-modal-header>Añadir ocurrencia</sui-modal-header>
-      <sui-modal-content class="scrolling">
-        <div class="ui info message" v-if="activeAddingOccurrence">
-          <div class="header">
-            Instrucciones
-          </div>
-          <p>
-            Selecciona la ocurrencia y da click en <b>Añadir seleccionado</b>.
-          </p>
-        </div>
-        <pre>{{ text.rawContent }}</pre>
-      </sui-modal-content>
-      <sui-modal-actions>
-        <button
-          class="primary ui button"
-          v-if="activeAddingOccurrence"
-          @click="addSelectedOccurrence"
-        >
-          Añadir seleccionado
-        </button>
-      </sui-modal-actions>
-    </sui-modal>
+    <div class="learn--symbology">
+      <symbology :items="contentSymbology"/>
+    </div>
+    
   </div>
 </template>
 
 <script>
 import TextContent from "@/components/TextContent";
-import SelectedOccurrenceInfo from "@/components/SelectedOccurrenceInfo";
+import WordMeanings from "@/components/WordMeanings";
 import LearnDictionary from "@/components/LearnDictionary";
 import WordDetails from "@/components/WordDetails";
 import DropdownMenu from "@/components/DropdownMenu";
-import { getSelectedWordDetails } from "@/utils/template";
+import Symbology from "@/components/Symbology";
+import LearnButton from "@/components/LearnButton";
 
 import { mapState, mapActions } from "vuex";
+import { colors } from "@/assets/colors"
+
 import {
   GET_DATA_FOR_LEARNING,
   UPDATE_DICTIONARY,
@@ -121,50 +61,43 @@ import {
   ADD_USER_OCCURRENCE,
   GET_TEXT_BY_ID,
   DELETE_USER_OCCURRENCE,
+  TOGGLE_ADDING_WORD,
 } from "./../store/action-types";
 
 export default {
   components: {
     TextContent,
-    SelectedOccurrenceInfo,
+    WordMeanings,
     LearnDictionary,
     WordDetails,
     DropdownMenu,
+    LearnButton,
+    Symbology
   },
   data() {
     return {
       textId: this.$route.params.id,
       occurrence: {},
-      isLearnt: false,
-      activeSelectMeaning: false,
-      activeAddingOccurrence: false,
-      optionsMenuActive: false,
       currentTab: {
         name: "Palabra actual",
-        component: "selected-occurrence-info",
+        component: "word-meanings",
       },
       tabs: [
-        { name: "Palabra actual", component: "selected-occurrence-info" },
+        { name: "Palabra actual", component: "word-meanings" },
         { name: "Diccionario", component: "learn-dictionary" },
       ],
+      contentSymbology: [
+        { color: colors.BLUE, description: 'Palabra aprendida' },
+        { color: colors.RED, description: 'Palabra no aprendida' }
+      ]
     };
   },
   computed: {
     ...mapState("texts", ["texts"]),
     ...mapState(["template"]),
+    ...mapState("textContent", ["selected"]),
     text() {
-      return this.texts.find((text) => text.textId === Number(this.textId));
-    },
-    formatEssential() {
-      return this.occurrence.essential ? "Esencial" : "No esencial";
-    },
-    formatAvailableMeanings() {
-      return this.occurrence.availableMeanings
-        ? "Definiciones disponibles"
-        : "Sin definiciones";
-    },
-    formatVisible() {
-      return this.occurrence.visible ? "Visible" : "No visible";
+      return this.texts.find((text) => text.textId === Number(this.textId)) || {};
     },
   },
   async mounted() {
@@ -173,26 +106,16 @@ export default {
   },
   methods: {
     ...mapActions("texts", [GET_TEXT_BY_ID]),
-    ...mapActions("learn", [GET_DATA_FOR_LEARNING, ADD_USER_OCCURRENCE]),
+    ...mapActions("learn", [
+      GET_DATA_FOR_LEARNING,
+      ADD_USER_OCCURRENCE,
+      TOGGLE_ADDING_WORD
+    ]),
     ...mapActions([
       GET_MEANINGS_FOR_WORD,
       UPDATE_OCCURRENCE,
       DELETE_USER_OCCURRENCE,
     ]),
-    changeOccurrence(start) {
-      this.occurrence = this.template.occurrences.find(
-        (o) => o.start === start
-      );
-    },
-    toggleOptionsMenu() {
-      this.optionsMenuActive = !this.optionsMenuActive;
-    },
-    async selectMeaning() {
-      if (!this.activeSelectMeaning) {
-        await this[GET_MEANINGS_FOR_WORD](this.occurrence);
-      }
-      this.activeSelectMeaning = !this.activeSelectMeaning;
-    },
     async deleteOccurrence(id) {
       await this[DELETE_USER_OCCURRENCE](id);
       // TODO: Avoid reloading the page
@@ -205,21 +128,7 @@ export default {
     async toggleIsLearned(dictionaryWord) {
       dictionaryWord.isLearned = !dictionaryWord.isLearned;
       await this[UPDATE_DICTIONARY](dictionaryWord);
-    },
-    toggleAddOccurrence() {
-      this.activeAddingOccurrence = true;
-    },
-    async addSelectedOccurrence() {
-      const details = getSelectedWordDetails(this.text);
-      await this[ADD_USER_OCCURRENCE](details);
-      // TODO: Avoid reloading the page
-      window.location.reload();
-    },
-    onChangedMeaning() {
-      this.occurrence = this.template.occurrences.find(
-        (o) => o.start === this.occurrence.start
-      );
-    },
+    }
   },
 };
 </script>
@@ -232,9 +141,19 @@ export default {
 .learn.main {
   grid-column: 2 / span 8;
   font-family: "Mulish", sans-serif;
+  display: grid;
+  grid-template-areas:
+                "hd hd hd hd"
+                "a a c c"
+                "a a c c"
+                "a a c c"
+                "b b c c";
+  height: 80vh;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 .learn--header {
+  grid-area: hd;
   padding-bottom: 20px;
   margin-bottom: 10px;
   border-bottom: 3px solid var(--learn-secondary);
@@ -248,11 +167,12 @@ export default {
 }
 
 .learn--text {
-  width: 40%;
-  float: left;
+  grid-area: a;
+  // width: 40%;
+  // float: left;
   overflow: scroll;
   overflow-x: hidden;
-  height: 100%;
+  // height: 100%;
 }
 
 .learn--text-content {
@@ -269,9 +189,10 @@ export default {
 }
 
 .learn--tab-component {
-  width: 60%;
-  float: right;
-  height: 80vh;
+  grid-area: c;
+  // width: 60%;
+  // float: right;
+  // height: 80vh;
 }
 
 .learn--tab-component-nav {
@@ -315,15 +236,18 @@ export default {
   }
 }
 
+.learn--symbology {
+  grid-area: b;
+}
+
 .central {
   display: grid;
-  grid-template-columns: 20% 40% 20%;
+  grid-template-columns: 25% 50% 25%;
   justify-content: center;
   column-gap: 0.5em;
 }
 .side-info {
   border-radius: 5px;
-  border: 1px solid #c2c2c2;
   text-align: center;
 
   .word-detailed-info {

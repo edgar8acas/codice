@@ -3,10 +3,10 @@
     <div class="dictionary--word-list">
       <span
         v-for="word in template.dictionary"
-        :key="word.dictionaryId"
+        :key="word.word"
         :class="['dictionary-word', { learned: word.isLearned }]"
       >
-        {{ word.selectedWordObject.word }}
+        {{ word.word }}
         <!-- Dev purposes -->
         <span v-if="development">
           <sub style="color: white;">{{ "w" + word.wordId }}</sub>
@@ -23,8 +23,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["development", "template"]),
-    ...mapState("learn"),
+    ...mapState(["development", "template"])
   },
 };
 </script>

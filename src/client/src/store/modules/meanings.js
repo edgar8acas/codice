@@ -2,6 +2,7 @@ import {
   GET_MEANINGS_FOR_WORD,
   SAVE_MEANING,
   DELETE_MEANING,
+  UPDATE_MEANING, SET_SUCCESS, SET_ERROR
 } from "../action-types";
 import {
   SET_MEANINGS,
@@ -36,6 +37,15 @@ const actions = {
       console.log(error);
     }
   },
+  async [UPDATE_MEANING] ({ commit }, word) {
+    try {
+      const res = await axios.put(`/api/words/${word.wordId}`, word);
+      commit(SET_SUCCESS, res);
+    } catch (error) {
+      commit(SET_ERROR);
+      return new Promise.reject(new Error('Algo salió mal...'));
+    }
+  }
 };
 
 const mutations = {

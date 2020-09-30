@@ -1,13 +1,11 @@
 export default function DictionaryWord({
   dictionaryId,
-  wordId,
+  word,
   userId,
   isLearned,
-  Word,
 }) {
   this.dictionaryId = dictionaryId;
-  this.selectedWordObject = Word;
-  this.wordId = wordId;
+  this.word = word;
   this.userId = userId;
   this.isLearned = isLearned;
 }

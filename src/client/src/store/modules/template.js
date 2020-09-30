@@ -3,20 +3,27 @@ import {
   UPDATE_OCCURRENCE,
   UPDATE_DICTIONARY,
   DELETE_USER_OCCURRENCE,
+  DELETE_USER_OCCURRENCES_BY_WORD
 } from "../action-types";
 import {
   SET_TOKENIZED_TEXT,
   SET_OCCURRENCES,
+  SET_ESSENTIAL_WORDS,
   SET_MEANINGS,
   SET_DICTIONARY,
   DELETE_TEMPLATE_STATE,
   REPLACE_OCCURRENCE_WITH_UPDATED,
   REPLACE_DICTIONARY_WITH_UPDATED,
 } from "../mutation-types";
-import { GET_DICTIONARY_BY_WORD_ID } from "../getter-types";
+import { 
+  GET_DICTIONARY_BY_WORD_ID,
+  ESSENTIAL_WORDS,
+  GET_OCCURRENCE_BY_POSITION,
+  GET_DICTIONARY_BY_WORD,
+  GET_OCCURRENCES_BY_WORD
+} from "../getter-types";
 
 import axios from "./../axios";
-import { getTokenizedContent, generateOccurrences } from "@/utils/template";
 import UserOccurrence from "@/utils/user_occurrence";
 import DictionaryWord from "@/utils/dictionary_word";
 
@@ -25,17 +32,11 @@ const actions = {
     commit(DELETE_TEMPLATE_STATE);
 
     const {
-      data: { templateOccurrences, availableWords },
+      data: { availableWords, templateOccurrences },
     } = await axios.get(`/api/templates/?text=${text.textId}`);
 
-    const occurrences = generateOccurrences({
-      occurrences: templateOccurrences,
-      template: true,
-    });
-
-    commit(SET_OCCURRENCES, occurrences);
+    commit(SET_OCCURRENCES, templateOccurrences);
     commit(SET_MEANINGS, availableWords, { root: true });
-    commit(SET_TOKENIZED_TEXT, { occurrences, text });
   },
   async [UPDATE_OCCURRENCE]({ commit }, occurrence) {
     try {
@@ -55,7 +56,11 @@ const actions = {
       }
     }
   },
-  async [UPDATE_DICTIONARY]({ commit }, dictionaryWord) {
+  async [UPDATE_DICTIONARY]({ commit, state }, word) {
+    const dictionaryWord  = state.dictionary.find(
+      (d) => d.word === word
+    );
+    dictionaryWord.isLearned = !dictionaryWord.isLearned;
     const { data: updated } = await axios.put(
       `/api/dictionary-words/`,
       dictionaryWord
@@ -69,17 +74,25 @@ const actions = {
       console.log(error);
     }
   },
+  async [DELETE_USER_OCCURRENCES_BY_WORD] ({ state }, word) {
+    try {
+      const occurrences = state.occurrences.filter(
+        (o) => o.word === word
+      );
+      const ids = occurrences.map(o => o.userOccurrenceId).join('-')
+      await axios.delete(`/api/user-occurrences/${word}/?word=true&ids=${ids}`);
+    } catch (error) { 
+      console.log(error);
+    }
+  }
 };
 
 const mutations = {
-  [SET_TOKENIZED_TEXT](state, { occurrences, text, update = false }) {
-    state.tokenizedText = getTokenizedContent({
-      ocurrences: update ? state.occurrences : occurrences,
-      text: update ? state.currentTemplateText : text,
-    });
-  },
   [SET_OCCURRENCES](state, occurrences) {
     state.occurrences = occurrences;
+  },
+  [SET_ESSENTIAL_WORDS](state, essentialWords) {
+    state.essentialWords = essentialWords;
   },
   [SET_DICTIONARY](state, dictionary) {
     state.dictionary = dictionary.map((w) => {
@@ -111,12 +124,34 @@ const mutations = {
 const state = () => ({
   tokenizedText: [],
   occurrences: [],
+  essentialWords: [],
   dictionary: [],
+  text: {}
 });
 
 const getters = {
   [GET_DICTIONARY_BY_WORD_ID]: (state) => (wordId) => {
-    return state.dictionary.find((w) => w.wordId === wordId);
+    return state.dictionary.find(
+      (d) => d.selectedWordId === wordId
+    );
+  },
+  [GET_DICTIONARY_BY_WORD]: (state) => (word) => {
+    return state.dictionary.find(
+      (d) => d.word === word
+    );
+  },
+  [ESSENTIAL_WORDS]: (state, getters, rootState) => {
+    return Object.keys(rootState.meanings.meanings);
+  },
+  [GET_OCCURRENCE_BY_POSITION]: (state) => (position) => {
+    return state.occurrences.find(
+      (o) => o.positionInText === position
+    );
+  },
+  [GET_OCCURRENCES_BY_WORD]: (state) => (word) => {
+    return state.occurrences.find(
+      (o) => o.word === word
+    );
   },
 };
 

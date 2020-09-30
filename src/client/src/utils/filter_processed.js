@@ -24,17 +24,12 @@ const exclusivo = {
   segundo: [],
 };
 
-export function getExclusiveWords(processed) {
-  for (const key in processed.conflicts) {
-    if (!exclusivo.primero.find((word) => word === key)) {
-      delete processed.conflicts[key];
+export function filterExclusiveWords(processed) {
+  let result = [];
+  processed.forEach(word =>{
+    if (exclusivo.primero.find(exclusive => exclusive === word)) {
+      result.push(word);
     }
-  }
-  for (const key in processed.ready) {
-    if (!exclusivo.primero.find((word) => word === key)) {
-      delete processed.ready[key];
-    }
-  }
-  console.log(processed);
-  return processed;
+  })
+  return result;
 }

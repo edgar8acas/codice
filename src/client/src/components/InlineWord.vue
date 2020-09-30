@@ -1,23 +1,24 @@
-<template>
-  <span @click="selectMeaning" :class="classObject">
-    {{ word }}
-    <!-- Dev purposes -->
-    <span v-if="development">
-      <sup style="color: blue;">{{ this.occurrence.userOccurrenceId }}</sup>
-      <sub style="color: green;">{{ this.occurrence.selectedWordId }}</sub>
-    </span>
-  </span>
-</template>
-
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
+import { CHANGE_SELECTED_WORD } from '../store/action-types';
 
 import {
+  GET_DICTIONARY_BY_WORD,
   GET_MEANINGS_BY_WORD,
-  GET_DICTIONARY_BY_WORD_ID,
 } from "./../store/getter-types";
 
 export default {
+  /* eslint-disable no-unused-vars */
+  render(h) {
+    return (
+      <span 
+        vOn:click={() => this[CHANGE_SELECTED_WORD](this.occurrence.word)}
+        class={this.classObject}
+      >
+        {this.word}
+      </span>
+    )
+  },
   data() {
     return {};
   },
@@ -26,10 +27,11 @@ export default {
   },
   computed: {
     ...mapState(["development", "meanings"]),
+    ...mapState("textContent", ["selected"]),
     ...mapGetters([GET_MEANINGS_BY_WORD]),
-    ...mapGetters([GET_DICTIONARY_BY_WORD_ID]),
+    ...mapGetters([GET_DICTIONARY_BY_WORD]),
     dictionary() {
-      return this[GET_DICTIONARY_BY_WORD_ID](this.occurrence.selectedWordId);
+      return this[GET_DICTIONARY_BY_WORD](this.occurrence.word);
     },
     meanings() {
       return this[GET_MEANINGS_BY_WORD](this.word);
@@ -37,8 +39,8 @@ export default {
     word() {
       return this.occurrence.word;
     },
-    start() {
-      return this.occurrence.start;
+    position() {
+      return this.occurrence.position;
     },
     classObject() {
       return {
@@ -53,7 +55,7 @@ export default {
           this.occurrence.visible !== undefined
             ? !this.occurrence.visible
             : false,
-        current: this.occurrence.current,
+        "currently-selected": this.occurrence.word === this.selected,
         learned:
           this.dictionary !== undefined
             ? this.dictionary.isLearned
@@ -66,7 +68,6 @@ export default {
               ? true
               : false
             : false,
-        "unselected-meaning": !this.occurrence.selectedWordId,
         process:
           (!this.occurrence.occurrenceId &&
             !this.occurrence.userOccurrenceId) ||
@@ -75,9 +76,7 @@ export default {
     },
   },
   methods: {
-    selectMeaning() {
-      this.$emit("changeOccurrence", this.start);
-    },
+    ...mapActions("textContent", [CHANGE_SELECTED_WORD])
   },
 };
 </script>
@@ -85,33 +84,11 @@ export default {
 <style lang="scss" scoped>
 .inline-word {
   display: inline-block;
+  font-weight: bolder;
 }
 
 .inline-word:hover {
   cursor: pointer;
-}
-
-.inline-word.learned {
-  color: hsl(197, 71%, 46%);
-  border-bottom: 3px solid hsl(197, 71%, 46%);
-}
-
-.inline-word.not-learned {
-  color: #ff3737;
-  border-bottom: 3px solid #ff3737;
-}
-
-.inline-word.unselected-meaning {
-  color: #edc800;
-  border-bottom: 3px solid #edc800;
-}
-
-.inline-word.current {
-  font-weight: bolder;
-  color: white;
-  background-color: purple;
-  border-bottom: none;
-  border-radius: 5px;
 }
 
 .inline-word.invisible {
@@ -126,27 +103,53 @@ export default {
   }
 }
 
+.inline-word.currently-selected {
+  border-bottom: none;
+  border-radius: 5px;
+}
+
 .inline-word.process.available-meanings {
-  background-color: #21ba45;
-  color: white;
-  border-bottom: 3px solid #21ba45;
+  color: #21ba45;
   border-radius: 5px;
 }
 
 .inline-word.process.not-available-meanings {
-  background-color: #f2711c;
-  color: white;
-  border-bottom: 3px solid #f2711c;
+  color: #f2711c;
   border-radius: 5px;
 }
 
-.inline-word.conflicts {
+.inline-word.process.available-meanings.currently-selected {
   color: white;
-  background-color: red;
+  border-radius: 5px;
+  background-color: #21ba45;
 }
 
-.inline-word.ready {
+.inline-word.process.not-available-meanings.currently-selected {
   color: white;
-  background-color: green;
+  border-radius: 5px;
+  background-color: #f2711c;
 }
+
+.inline-word.learned.currently-selected {
+  color: white;
+  background-color: hsl(197, 71%, 46%) !important;
+}
+
+.inline-word.not-learned.currently-selected {
+  color: white;
+  background-color: #ff3737 !important;
+}
+
+.inline-word.learned {
+  color: hsl(197, 71%, 46%);
+  background: transparent;
+}
+
+.inline-word.not-learned {
+  color: #ff3737;
+  background: transparent;
+}
+
+
+
 </style>

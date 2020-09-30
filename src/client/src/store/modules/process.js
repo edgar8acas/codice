@@ -1,45 +1,53 @@
-import { PROCESS_TEXT, SAVE_PROCESSED_TEXT } from "../action-types";
+import { 
+  PROCESS_TEXT,
+  SAVE_PROCESSED_TEXT,
+  SET_FOUND_OCCURRENCES
+} from "../action-types";
 import {
-  SET_OCCURRENCES,
-  SET_MEANINGS,
-  SET_TOKENIZED_TEXT,
+  SET_ESSENTIAL_WORDS,
+  SET_MEANINGS
 } from "../mutation-types";
 
-import { findOccurrencesInText } from "@/utils/template";
-import { getExclusiveWords } from "@/utils/filter_processed";
+import { filterExclusiveWords } from "@/utils/filter_processed";
 import axios from "../axios";
 
 const actions = {
   async [PROCESS_TEXT]({ state, commit }, textId) {
     const {
-      data: { conflicts, ready, availableWords, text },
+      data: { essentialWords, availableMeanings },
     } = await axios.post(`/api/texts/${textId}/process`);
 
     const processed = state.options.lexicoExclusivo
-      ? getExclusiveWords({ conflicts, ready })
-      : { conflicts, ready };
-    const occurrences = findOccurrencesInText({ ...processed, text });
-    commit(SET_OCCURRENCES, occurrences, { root: true });
-    commit(SET_MEANINGS, availableWords, { root: true });
-    commit(SET_TOKENIZED_TEXT, { occurrences, text }, { root: true });
+      ? filterExclusiveWords(essentialWords)
+      : essentialWords;
+    commit(SET_ESSENTIAL_WORDS, processed, { root: true });
+    commit(SET_MEANINGS, availableMeanings, { root: true });
   },
-  async [SAVE_PROCESSED_TEXT]({ rootState }, textId) {
+  async [SAVE_PROCESSED_TEXT]({ state }, textId) {
     try {
       await axios.post(`/api/texts/${textId}/process/save`, {
-        occurrences: rootState.template.occurrences,
+        occurrences: state.foundOccurrences
       });
     } catch (error) {
       console.log(error);
     }
   },
+  [SET_FOUND_OCCURRENCES] ({ commit }, occurrences) {
+    commit(SET_FOUND_OCCURRENCES, occurrences);
+  }
 };
 
-const mutations = {};
+const mutations = {
+  [SET_FOUND_OCCURRENCES] (state, occurrences) {
+    state.foundOccurrences = occurrences;
+  }
+};
 
 const state = () => ({
   options: {
     lexicoExclusivo: false,
   },
+  foundOccurrences: []
 });
 
 const getters = {};

@@ -2,40 +2,16 @@
   <div class="home">
     <div class="info"></div>
     <div>
-      <!-- TODO: Refactor alerts -->
-      <sui-message
-        class="negative"
-        v-if="errorVisible"
-        dismissable
-        @dismiss="dismissErrors"
-      >
-        <sui-message-header>Error al guardar</sui-message-header>
-        <p>Corrija lo siguiente</p>
-        <ul class="list">
-          <li v-for="msg in errors" :key="msg">{{ msg }}</li>
-        </ul>
-      </sui-message>
-
-      <sui-message
-        class="positive"
-        v-if="successVisible"
-        dismissable
-        @dismiss="dismissSuccess"
-      >
-        <sui-message-header>Texto creado</sui-message-header>
-        <p>El texto fue creado exitosamente</p>
-      </sui-message>
-
-      <h1>Añadir texto</h1>
+      <h1>Nuevo texto</h1>
       <p>Completa los datos para agregar un nuevo texto a la plataforma</p>
-      <form class="ui form">
+      <form class="ui form" @submit="validateAndSend">
         <div class="field">
           <label>Título</label>
           <input
             type="text"
             name="title"
             v-model="text.title"
-            placeholder='"El planeta tierra" ó "La fotosíntesis"'
+            placeholder='"El planeta tierra"'
           />
         </div>
         <div class="field">
@@ -44,7 +20,7 @@
             type="text"
             name="category"
             v-model="text.category"
-            placeholder='"Español" ó "Conocimiento del medio"'
+            placeholder='"Español"'
           />
         </div>
         <div class="field">
@@ -57,18 +33,27 @@
           ></sui-dropdown>
         </div>
         <div class="field">
-          <label>Contenido</label>
+          <label>Contenido (mínimo 500 caracteres)</label>
           <textarea
             name="rawContent"
             cols="30"
             rows="10"
             v-model="text.rawContent"
-            placeholder="Copia y pega aquí el contenido del texto sin formato"
+            placeholder="Copia y pega aquí el contenido del texto"
           ></textarea>
         </div>
-        <button class="ui button" type="submit" @click.prevent="add">
-          Añadir
-        </button>
+        <div class="alert-wrapper">
+          <alert :active="alertSuccess" :color="`success`">
+            La definición se guardó correctamente.
+          </alert>
+          <alert :active="alertError" :color="`error`">
+            Algo salió mal, intenta de nuevo.
+            <ul>
+              <li v-for="e in errors" :key="e">{{ e }}</li>
+            </ul>
+          </alert>
+        </div>
+        <input class="ui button primary" type="submit" value="Guardar"/>
       </form>
     </div>
     <div class="more-info"></div>
@@ -76,9 +61,14 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions } from 'vuex';
+import Alert from "@/components/Alert.vue";
+import { ADD_TEXT } from '../store/action-types';
 
 export default {
+  components: {
+    Alert
+  },
   data() {
     return {
       gradeOptions: [
@@ -92,39 +82,42 @@ export default {
       text: {
         addedBy: 1,
         grade: 1,
+        rawContent: ''
       },
-      successVisible: false,
-      errorVisible: false,
+      alertSuccess: false,
+      alertError: false,
+      errors: []
     };
   },
   computed: {
-    ...mapState(["errors", "success"]),
   },
   watch: {
-    errors() {
-      this.errorVisible = true;
-    },
-    success() {
-      this.errorVisible = false;
-      this.successVisible = true;
-      this.text = {
-        addedBy: 1,
-        grade: 1,
-      };
-    },
   },
   methods: {
-    add() {
-      this.$store.dispatch("addText", this.text);
-    },
-    dismissErrors() {
-      this.errorVisible = false;
-    },
-    dismissSuccess() {
-      this.successVisible = false;
-    },
+    ...mapActions("texts", [ADD_TEXT]),
+    validateAndSend(e) {
+      e.preventDefault();
+      
+      this.errors = [];
+      this.alertError = false;
+      if (this.text.rawContent.length < 500) {
+        this.errors.push('El texto debe contener un mínimo de 500 caracteres.')
+      }
+
+      if(this.errors.length === 0) {
+        console.log(this.errors);
+        this[ADD_TEXT](this.text);
+        this.$router.replace({ name: "Texts" });
+        return;
+      }
+      this.alertError = true;
+    }
   },
 };
 </script>
 
-<style></style>
+<style>
+.alert-wrapper {
+  margin-bottom: 1rem;
+}
+</style>

@@ -3,7 +3,7 @@
     <h3>Añadir definición</h3>
     <div class="field">
       <label>Palabra</label>
-      <input type="text" name="title" v-model="forWord" disabled />
+      <input type="text" name="title" v-model="selected" disabled />
     </div>
     <div class="field">
       <label>Definición</label>
@@ -18,20 +18,17 @@
         v-model="type"
       ></sui-dropdown>
     </div>
-    <button class="ui button" type="submit" @click.prevent="saveWord">
+    <button class="ui button" type="submit" @click.prevent="saveMeaning">
       Guardar
     </button>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import { SAVE_MEANING } from "../store/action-types";
 
 export default {
-  props: {
-    forWord: String,
-  },
   data() {
     return {
       definition: "",
@@ -49,11 +46,14 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState("textContent", ["selected"])
+  },
   methods: {
     ...mapActions([SAVE_MEANING]),
-    saveWord() {
+    saveMeaning() {
       this[SAVE_MEANING]({
-        word: this.forWord,
+        word: this.selected,
         definition: this.definition,
         type: this.type,
       });
