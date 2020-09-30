@@ -4,6 +4,9 @@ Client side of Codice project built, aimed at aiding deaf people to improve thei
 ## Requirements
 Node >= 10 
 
+## Install yarn (package manager)
+[Guide](https://classic.yarnpkg.com/en/docs/install/#windows-stable)
+
 ## Project setup
 ```
 yarn install
