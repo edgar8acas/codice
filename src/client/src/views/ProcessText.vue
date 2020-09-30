@@ -23,7 +23,7 @@
       <div class="template">
         <h2 class="section-title">{{ text.title }}</h2>
         <text-content
-          class="content"
+          class="text-content"
           :isProcessing="true"
           :text="text"
           v-if="showTextContent"

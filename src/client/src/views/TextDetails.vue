@@ -69,7 +69,7 @@
     <div class="template">
       <h2 class="title">{{ text.title }}</h2>
       <text-content
-        class="content"
+        class="text-content"
         :filterOptions="filter"
         :isProcessing="false"
         :text="text"
@@ -212,7 +212,7 @@ export default {
   column-gap: 0.5em;
 }
 
-.content {
+.text-content {
   height: 60vh;
   overflow: scroll;
   overflow-x: hidden;
