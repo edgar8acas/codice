@@ -1,12 +1,10 @@
-//const express = require('express');
-import express from 'express';
-const app = express();
-import morgan from 'morgan';
+import app from './app.js';
 
-const port = 3000;
+const HOST = process.env.HOST || 'localhost';
+const PORT = process.env.PORT || 3000;
 
-app.use(morgan('tiny'))
-
-app.get('/', (req, res) => res.send('Hello World!'));
-
-app.listen(port, () => console.log(`Server listening on port ${port}`));
+export default app
+  .listen(PORT, HOST, () => {
+    console.log(`Listening on ${HOST}:${PORT}`)
+  });
+  

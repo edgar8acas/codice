@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Test title of text 1",
+    "category": "Español",
+    "addedBy": 1,
+    "grade": 2
+  },
+  {
+    "title": "Test title of text 2",
+    "category": "Matemáticas",
+    "addedBy": 1,
+    "grade": 3
+  },
+  {
+    "title": "Test title of text 3",
+    "category": "Ciencias",
+    "addedBy": 1,
+    "grade": 4
+  },
+  {
+    "title": "Test title of text 4",
+    "category": "Ciencias",
+    "addedBy": 1,
+    "grade": 4
+  },
+  {
+    "title": "test title of text 5",
+    "category": "Historia",
+    "addedBy": 1,
+    "grade": 5  
+  },
+  {
+    "title": "test title of text 6",
+    "category": "Historia",
+    "addedBy": 1,
+    "grade": 5
+  },
+  {
+    "title": "test title of text 7",
+    "category": "Historia",
+    "addedBy": 1,
+    "grade": 5
+  }
+]

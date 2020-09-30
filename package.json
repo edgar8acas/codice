@@ -6,16 +6,53 @@
   "author": "eochoa3@ucol.mx",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon",
-    "eslint": "eslint"
+    "dev": "cross-env NODE_ENV=development nodemon ./index.js",
+    "debug": "cross-env NODE_ENV=development nodemon --inspect ./index.js",
+    "eslint": "eslint --fix src/ tests/",
+    "test": "cross-env NODE_ENV=development ava",
+    "migrate": "cross-env NODE_ENV=development ./node_modules/.bin/sequelize db:migrate",
+    "migrate:undo": "cross-env NODE_ENV=development ./node_modules/.bin/sequelize-cli db:migrate:undo",
+    "migrate:generate": "./node_modules/.bin/sequelize migration:generate --name",
+    "seed:all": "./node_modules/.bin/sequelize db:seed:all"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.8.7",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.2",
     "express": "^4.17.1",
-    "morgan": "^1.9.1"
+    "got": "^10.7.0",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.2",
+    "pg": "^8.0.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.21.5",
+    "sequelize-cli": "^5.5.1"
   },
   "devDependencies": {
+    "@ava/babel": "^1.0.1",
     "@babel/core": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
-    "@babel/register": "^7.8.6"
+    "@babel/register": "^7.8.6",
+    "ava": "^3.6.0",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^25.2.6",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "eslint": "^7.0.0",
+    "jest": "^25.2.7",
+    "mocha": "^7.1.1",
+    "supertest": "^4.0.2",
+    "test-listen": "^1.1.0"
+  },
+  "ava": {
+    "require": [
+      "@babel/register"
+    ]
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "src/processing/r/io/*"
+    ],
+    "delay": "2500"
   }
 }
