@@ -26,8 +26,8 @@ export function validateText(text) {
     throw Error('La categoría no puede estar vacía o contener más de 50 caracteres');
   }
 
-  if(text.rawContent.length === 0 || text.rawContent.length > 2500) {
-    throw Error('El contenido no puede estar vacío o contener más de 2500 caracteres');
+  if(text.rawContent.length === 0 || text.rawContent.length > 3500) {
+    throw Error('El contenido no puede estar vacío o contener más de 3500 caracteres');
   }
 
   return text;
