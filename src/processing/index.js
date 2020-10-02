@@ -1,12 +1,18 @@
 import { promises as fs} from 'fs';
+import path from 'path';
 import { spawn } from 'child_process';
 
 async function spawnGoffman() {
   return new Promise(
     (resolve, reject) => {
-      const script = __dirname + '/r/goffman';
-      const dir = __dirname + '/r';
-      const child = spawn(script, { 
+      let command = path.join(__dirname, 'r', 'goffman')
+      const dir = path.join(__dirname, 'r');
+
+      if(process.platform === 'win32') {
+        command = 'Rscript.exe ' + command;
+      }
+      
+      const child = spawn(command, { 
         cwd: dir,
         shell: true
       });
@@ -62,6 +68,7 @@ export async function processTexts(texts) {
                             });
     return essentialWords;
   } catch (err) {
+    console.log(err)
     return err;
   } finally {
     //TODO: Delete file, left for debug

@@ -1,14 +1,7 @@
 #! /usr/bin/Rscript
-# options(warn=-1)
-#suppressWarnings("all")
-#suppressPackageStartupMessages("all")
-# suppressMessages("all")
-suppressPackageStartupMessages( library(tm))
-suppressPackageStartupMessages(library(hunspell))
-suppressPackageStartupMessages(library(tokenizers))
-#library(syllable)
+suppressPackageStartupMessages(library(tm))
 suppressPackageStartupMessages(library(jsonlite))
-suppressPackageStartupMessages( library(quanteda))
+suppressPackageStartupMessages(library(quanteda))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(tibble))
 
@@ -142,6 +135,7 @@ for(doc_id in  input$doc_id) {
 # toJSON(df, flatten = TRUE, simplifyVector = TRUE)
 # str(c('a', 'b'))
 con_out <- file("./io/output.json", open = "wb")
+output
 converted <- toJSON(output)
 write(converted, con_out)
 
