@@ -16,14 +16,14 @@ module.exports = function(sequelize, DataTypes) {
       },
       definition: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       type: {
         type: DataTypes.ENUM(
           'artículo', 'sustantivo', 'pronombre',
           'adjetivo', 'verbo', 'adverbio',
           'preposición', 'conjunción', 'intersección'),
-        allowNull: false,
+        allowNull: true,
       },
       imageUrl: {
         type: DataTypes.STRING,
@@ -36,7 +36,7 @@ module.exports = function(sequelize, DataTypes) {
       deprecated: {
         type: DataTypes.STRING,
         default: false,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {

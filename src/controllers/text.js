@@ -35,9 +35,11 @@ export default router
   .post('/', async (req, res) => {
     const { body } = req;
     try {
+      const validatedBody = validateText(body);
       const item = await Text.create(
-        validateText(body)
+        validatedBody
       );
+
       return res
       .status(201)
       .json(item);
@@ -132,6 +134,7 @@ export default router
     }
 
     //TODO: Validate occurrences
+    
 
     const transaction = await sequelize.transaction();
     try {
@@ -146,6 +149,17 @@ export default router
           }
         })
       const savedInTemplate = await TemplateOccurrence.bulkCreate(toSaveInTemplate);
+      
+      const uniqueWords = Array.from( new Set( occurrences.map(o => o.word )));
+
+      const createdWords = await Promise.all(
+        uniqueWords.map(word => {
+          return Word.findOrCreate({
+            where: { word },
+            defaults: { word }
+          })
+        })
+      );
 
       let text = await Text.findByPk(textId);
       text = await text.update({
@@ -154,8 +168,9 @@ export default router
       await transaction.commit();
       return res
         .status(200)
-        .json(savedInTemplate);
+        .json({savedInTemplate, createdWords});
     } catch (error) {
+      console.log(error);
       await transaction.rollback();
       return res
         .status(500)

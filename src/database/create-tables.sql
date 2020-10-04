@@ -28,10 +28,10 @@ CREATE TABLE words (
     word_id serial PRIMARY KEY,
     word varchar NOT NULL,
     definition varchar NULL,
-    type word_type NOT NULL,
+    type word_type NULL,
     image_url varchar NULL,
     video_url varchar NULL,
-    deprecated boolean DEFAULT false NOT NULL,
+    deprecated boolean DEFAULT false NULL,
     created_at timestamp NOT NULL DEFAULT now(),
     updated_at timestamp NOT NULL
 );
