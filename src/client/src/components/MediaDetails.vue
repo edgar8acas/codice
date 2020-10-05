@@ -1,5 +1,5 @@
 <template>
-  <div class="Meaning-media">
+  <div class="Meaning-media media-details">
     <img
       v-if="word.imageUrl"
       :src="word.imageUrl"
@@ -53,7 +53,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+
 .Meaning-media {
   display: flex;
   flex-direction: column;
