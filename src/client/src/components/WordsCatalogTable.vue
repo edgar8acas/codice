@@ -62,7 +62,7 @@ export default {
           apiUrl: this.apiUrl,
           fields: this.fields,
           paginationPath: "",
-          perPage: 4,
+          perPage: 8,
           sortOrder: this.sortOrder,
           queryParams: this.queryParams,
           trackBy: 'wordId'
@@ -112,7 +112,7 @@ export default {
       );
     },
     formatUrl(value) {
-      return value ? value.substring(0, 30) + "..." : "Sin url";
+      return value ? value.substring(0, 30) + "..." : "";
     },
     onPaginationData(paginationData) {
       this.$refs.pagination.setPaginationData(paginationData);

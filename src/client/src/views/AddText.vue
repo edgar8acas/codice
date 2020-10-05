@@ -33,14 +33,16 @@
           ></sui-dropdown>
         </div>
         <div class="field">
-          <label>Contenido (mínimo 500 caracteres)</label>
+          <label>Contenido (500 - 3500 caracteres)</label>
           <textarea
             name="rawContent"
             cols="30"
             rows="10"
+            maxlength="3500"
             v-model="text.rawContent"
             placeholder="Copia y pega aquí el contenido del texto"
           ></textarea>
+          <span>{{ charactersLeft }}</span>
         </div>
         <div class="alert-wrapper">
           <alert :active="alertSuccess" :color="`success`">
@@ -80,6 +82,8 @@ export default {
         { text: "Sexto", value: 6 },
       ],
       text: {
+        title: '',
+        category: '',
         addedBy: 1,
         grade: 1,
         rawContent: ''
@@ -90,6 +94,11 @@ export default {
     };
   },
   computed: {
+    charactersLeft() {
+    var char = this.text.rawContent.length,
+      limit = 3500;
+      return (limit - char) + " / " + limit + " caracteres restantes";
+  }
   },
   watch: {
   },
@@ -100,8 +109,17 @@ export default {
       
       this.errors = [];
       this.alertError = false;
-      if (this.text.rawContent.length < 500) {
-        this.errors.push('El texto debe contener un mínimo de 500 caracteres.')
+      
+      if (this.text.title.length === 0) {
+        this.errors.push('El título no puede estar vacío.')
+      }
+
+      if (this.text.category.length === 0) {
+        this.errors.push('La categoría no puede estar vacía.')
+      }
+
+      if (this.text.rawContent.length < 500 || this.text.rawContent.length > 3500) {
+        this.errors.push('El contenido debe tener entre 500 y 3500 caracteres.')
       }
 
       if(this.errors.length === 0) {

@@ -18,6 +18,14 @@
         v-model="type"
       ></sui-dropdown>
     </div>
+    <div class="field">
+      <label>URL de imagen</label>
+      <input type="url" name="imageUrl" v-model="imageUrl"/>
+    </div>
+    <div class="field">
+      <label>URL de video</label>
+      <input type="url" name="videoUrl" v-model="videoUrl"/>
+    </div>
     <button class="ui button" type="submit" @click.prevent="saveMeaning">
       Guardar
     </button>
@@ -33,6 +41,8 @@ export default {
     return {
       definition: "",
       type: "",
+      imageUrl: "",
+      videoUrl: "",
       typeOptions: [
         { text: "Artículo", value: "artículo" },
         { text: "Sustantivo", value: "sustantivo" },
@@ -56,6 +66,8 @@ export default {
         word: this.selected,
         definition: this.definition,
         type: this.type,
+        imageUrl: this.imageUrl,
+        videoUrl: this.videoUrl
       });
     },
   },
