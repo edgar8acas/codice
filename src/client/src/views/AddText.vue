@@ -34,6 +34,7 @@
         </div>
         <div class="field">
           <label>Contenido (500 - 3500 caracteres)</label>
+          <label>Contenido (mínimo 500 caracteres)</label>
           <textarea
             name="rawContent"
             cols="30"
@@ -43,6 +44,17 @@
             placeholder="Copia y pega aquí el contenido del texto"
           ></textarea>
           <span>{{ charactersLeft }}</span>
+        </div>
+        <div class="alert-wrapper">
+          <alert :active="alertSuccess" :color="`success`">
+            La definición se guardó correctamente.
+          </alert>
+          <alert :active="alertError" :color="`error`">
+            Algo salió mal, intenta de nuevo.
+            <ul>
+              <li v-for="e in errors" :key="e">{{ e }}</li>
+            </ul>
+          </alert>
         </div>
         <div class="alert-wrapper">
           <alert :active="alertSuccess" :color="`success`">

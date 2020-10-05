@@ -54,6 +54,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .Meaning-media {
   display: flex;
   flex-direction: column;
