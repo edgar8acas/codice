@@ -5,14 +5,13 @@ import cors from 'cors';
 
 export default function initializeServer(router) {
   const app = express();
-
+  const isProduction = process.env.NODE_ENV === 'production';
+  const origin = { origin: isProduction ? false : '*' };
+  
   app.use(morgan('tiny'));
   app.use(bodyParser.json());
+  app.use(cors(origin));
   app.use('/api', router);
   
-  if(!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    app.use(cors());
-  }
-
-   return app;
+  return app;
 }
