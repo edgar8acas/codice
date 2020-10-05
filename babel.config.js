@@ -15,10 +15,10 @@ module.exports = {
       {
         root: ['./'],
         alias: {
-          "@models": './src/models',
-          "@config": './src/config',
-          "@processing": './src/processing',
-          "@utils": './src/utils'
+          "@models": './src/server/models',
+          "@config": './src/server/config',
+          "@processing": './src/server/processing',
+          "@utils": './src/server/utils'
         }
       }
     ]

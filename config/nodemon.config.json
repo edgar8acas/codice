@@ -1,0 +1,14 @@
+{
+  "ignore": [
+    ".git",
+    ".eslintrc.js",
+    "node_modules/**",
+    "src/client/**",
+    "tests/**",
+    "public/**",
+    "*.test.js",
+    "webpack.*.js"
+  ],
+  "watch": ["src/server/"],
+  "exec": "cross-env NODE_ENV=development node --inspect -r @babel/register src/server/"
+}

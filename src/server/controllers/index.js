@@ -5,9 +5,9 @@ import wordController from './word.js';
 import dictionaryController from './dictionary.js';
 import userOccurrencesController from './user_occurrence.js';
 
-const app = express();
+const router = express.Router();
 
-export default app
+export default router
   .use('/texts', textController)
   .use('/templates', templateController)
   .use('/words', wordController)
