@@ -137,9 +137,9 @@
 </template>
 
 <script>
-import ColoredCard from "@/components/ColoredCard";
-import DropdownMenu from "@/components/DropdownMenu";
-import UserOccurrence from "@/utils/user_occurrence";
+import ColoredCard from "@components/ColoredCard";
+import DropdownMenu from "@components/DropdownMenu";
+import UserOccurrence from "@utils/user_occurrence";
 import { mapGetters } from "vuex";
 import { GET_DICTIONARY_BY_WORD_ID } from "../store/getter-types";
 export default {

@@ -1,4 +1,4 @@
-import { GET_DATA_FOR_LEARNING, ADD_USER_OCCURRENCE, TOGGLE_ADDING_WORD, CHANGE_SELECTED_TO_ADD_WORD, SET_TO_ADD_OCCURRENCES, DESELECT_TO_ADD_WORD } from "../action-types";
+import { GET_DATA_FOR_LEARNING, ADD_USER_OCCURRENCE, TOGGLE_ADDING_WORD, SET_TO_ADD_OCCURRENCES } from "../action-types";
 import {
   SET_OCCURRENCES,
   SET_MEANINGS,
@@ -35,15 +35,9 @@ const actions = {
   [TOGGLE_ADDING_WORD] ({ commit }) {
     commit(TOGGLE_ADDING_WORD);
   },
-  [CHANGE_SELECTED_TO_ADD_WORD] ({ commit }, selected) {
-    commit(CHANGE_SELECTED_TO_ADD_WORD, selected);
-  },
   [SET_TO_ADD_OCCURRENCES] ({ commit }, occurrences) {
     commit(SET_TO_ADD_OCCURRENCES, occurrences);
   },
-  [DESELECT_TO_ADD_WORD] ({ commit }) {
-    commit(DESELECT_TO_ADD_WORD);
-  }
 };
 
 const mutations = {
@@ -53,15 +47,9 @@ const mutations = {
   [TOGGLE_ADDING_WORD] (state) {
     state.addingWord = !state.addingWord;
   },
-  [CHANGE_SELECTED_TO_ADD_WORD] (state, selected) {
-    state.selectedToAdd = selected;
-  },
   [SET_TO_ADD_OCCURRENCES] (state, occurrences) {
     state.toAddOccurrences = occurrences;
   },
-  [DESELECT_TO_ADD_WORD] (state) {
-    state.selectedToAdd = '';
-  }
 };
 
 const state = () => ({

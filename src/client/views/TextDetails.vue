@@ -112,15 +112,15 @@
 </template>
 
 <script>
-import TextContent from "@/components/TextContent";
-import WordDetails from "@/components/WordDetails";
-import CreateWord from "@/components/CreateWord";
-import Symbology from "@/components/Symbology";
+import TextContent from "@components/TextContent";
+import WordDetails from "@components/WordDetails";
+import CreateWord from "@components/CreateWord";
+import Symbology from "@components/Symbology";
 
 import { mapState, mapActions } from "vuex";
 import { GET_TEMPLATE_DATA, GET_TEXT_BY_ID } from "./../store/action-types";
 
-import { colors } from "@/assets/colors"
+import { colors } from "@assets/colors"
 
 export default {
   components: {

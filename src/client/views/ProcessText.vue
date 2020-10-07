@@ -39,13 +39,13 @@
 </template>
 
 <script>
-import WordDetails from "@/components/WordDetails";
-import CreateWord from "@/components/CreateWord";
-import TextContent from "@/components/TextContent";
-import Symbology from "@/components/Symbology";
+import WordDetails from "@components/WordDetails";
+import CreateWord from "@components/CreateWord.vue";
+import TextContent from "@components/TextContent";
+import Symbology from "@components/Symbology";
 import { mapState, mapActions } from "vuex";
 
-import { colors } from "@/assets/colors"
+import { colors } from "@assets/colors"
 
 import {
   GET_TEXT_BY_ID,

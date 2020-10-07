@@ -38,11 +38,11 @@
 </template>
 
 <script>
-import CatalogTable from "@/components/WordsCatalogTable.vue";
-import EditWord from "@/components/EditWord.vue";
-import MediaDetails from "@/components/MediaDetails.vue";
-import FieldDefs from "@/components/WordsFieldDefs.js";
-import Alert from "@/components/Alert.vue";
+import CatalogTable from "@components/WordsCatalogTable.vue";
+import EditWord from "@components/EditWord.vue";
+import MediaDetails from "@components/MediaDetails.vue";
+import FieldDefs from "@components/WordsFieldDefs.js";
+import Alert from "@components/Alert.vue";
 import { mapActions } from 'vuex';
 import { UPDATE_MEANING } from '../store/action-types';
 

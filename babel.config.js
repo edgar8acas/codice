@@ -1,26 +1,44 @@
-module.exports = {
-  presets: [
+module.exports = api => {
+  const isServer = api.cache(() => process.env.APP_ENV === 'server');
+  
+  const presets = [
     [
       '@babel/preset-env',
       {
-        targets: {
-          node: 'current'
-        }
-      }
-    ]
-  ],
-  plugins: [
-    [
-      require.resolve('babel-plugin-module-resolver'),
-      {
-        root: ['./'],
-        alias: {
-          "@models": './src/server/models',
-          "@config": './src/server/config',
-          "@processing": './src/server/processing',
-          "@utils": './src/server/utils'
-        }
+        targets: isServer
+          ? { node: 'current' }
+          : { chrome: '58' }
       }
     ]
   ]
+
+  const plugins = [];
+
+  if(isServer) {
+    plugins.push(
+      [
+        require.resolve('babel-plugin-module-resolver'),
+        {
+          root: ['./'],
+          alias: {
+            "@models": './src/server/models',
+            "@config": './src/server/config',
+            "@processing": './src/server/processing',
+            "@utils": './src/server/utils'
+          }
+        }
+      ]
+    );
+  } else {
+    presets.push(
+      [
+        '@vue/babel-preset-jsx'
+      ]
+    );
+  }
+
+  return {
+    presets,
+    plugins
+  }
 }

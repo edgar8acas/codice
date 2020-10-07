@@ -24,8 +24,8 @@ import {
 } from "../getter-types";
 
 import axios from "./../axios";
-import UserOccurrence from "@/utils/user_occurrence";
-import DictionaryWord from "@/utils/dictionary_word";
+import UserOccurrence from "@utils/user_occurrence";
+import DictionaryWord from "@utils/dictionary_word.js";
 
 const actions = {
   async [GET_TEMPLATE_DATA]({ commit }, text) {

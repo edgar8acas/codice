@@ -10,5 +10,5 @@
     "webpack.*.js"
   ],
   "watch": ["src/server/"],
-  "exec": "cross-env NODE_ENV=development node --inspect -r @babel/register src/server/"
+  "exec": "cross-env APP_ENV='server' NODE_ENV=development node --inspect -r @babel/register src/server/"
 }

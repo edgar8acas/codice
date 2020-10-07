@@ -42,16 +42,16 @@
 </template>
 
 <script>
-import TextContent from "@/components/TextContent";
-import WordMeanings from "@/components/WordMeanings";
-import LearnDictionary from "@/components/LearnDictionary";
-import WordDetails from "@/components/WordDetails";
-import DropdownMenu from "@/components/DropdownMenu";
-import Symbology from "@/components/Symbology";
-import LearnButton from "@/components/LearnButton";
+import TextContent from "@components/TextContent";
+import WordMeanings from "@components/WordMeanings";
+import LearnDictionary from "@components/LearnDictionary";
+import WordDetails from "@components/WordDetails";
+import DropdownMenu from "@components/DropdownMenu";
+import Symbology from "@components/Symbology";
+import LearnButton from "@components/LearnButton";
 
 import { mapState, mapActions } from "vuex";
-import { colors } from "@/assets/colors"
+import { colors } from "@assets/colors"
 
 import {
   GET_DATA_FOR_LEARNING,

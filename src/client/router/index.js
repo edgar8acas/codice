@@ -28,21 +28,21 @@ const routes = [
     path: "/dashboard",
     name: "Dashboard",
     component: () =>
-      import(/* webpackChunkName: "dashboard" */ "@/views/Dashboard.vue"),
+      import(/* webpackChunkName: "dashboard" */ "@views/Dashboard.vue"),
     children: [
       {
         path: "texts",
         alias: "",
         name: "Texts",
         component: () =>
-          import(/* webpackChunkName: "dashboard" */ "@/views/Texts.vue"),
+          import(/* webpackChunkName: "dashboard" */ "@views/Texts.vue"),
       },
       {
         path: "words",
         alias: "",
         name: "Words",
         component: () =>
-          import(/* webpackChunkName: "dashboard" */ "@/views/Words.vue"),
+          import(/* webpackChunkName: "dashboard" */ "@views/Words.vue"),
       },
       {
         path: "details/:id",
@@ -50,7 +50,7 @@ const routes = [
         name: "TextDetails",
         component: () =>
           import(
-            /* webpackChunkName: "text-details" */ "@/views/TextDetails.vue"
+            /* webpackChunkName: "text-details" */ "@views/TextDetails.vue"
           ),
       },
       {
@@ -59,7 +59,7 @@ const routes = [
         name: "ProcessText",
         component: () =>
           import(
-            /* webpackChunkName: "process-text" */ "@/views/ProcessText.vue"
+            /* webpackChunkName: "process-text" */ "@views/ProcessText.vue"
           ),
       },
       {
@@ -67,14 +67,14 @@ const routes = [
         alias: "/learn/:id",
         name: "Learn",
         component: () =>
-          import(/* webpackChunkName: "learn-text" */ "@/views/Learn.vue"),
+          import(/* webpackChunkName: "learn-text" */ "@views/Learn.vue"),
       },
       {
         path: "learn/add",
         alias: "/learn/add",
         name: "AddText",
         component: () =>
-          import(/* webpackChunkName: "add-text" */ "@/views/AddText.vue"),
+          import(/* webpackChunkName: "add-text" */ "@views/AddText.vue"),
       },
     ],
   },

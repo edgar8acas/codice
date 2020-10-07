@@ -76,7 +76,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import Alert from "@/components/Alert.vue";
+import Alert from "@components/Alert.vue";
 import { ADD_TEXT } from '../store/action-types';
 
 export default {

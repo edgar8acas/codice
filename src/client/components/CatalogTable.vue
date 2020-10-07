@@ -2,7 +2,7 @@
 import Vuetable from "vuetable-2/src/components/Vuetable";
 import VuetablePagination from "vuetable-2/src/components/VuetablePagination";
 import VuetablePaginationInfo from "vuetable-2/src/components/VuetablePaginationInfo";
-import TextRowActions from "@/components/TextRowActions";
+import TextRowActions from "@components/TextRowActions";
 import { createNamespacedHelpers } from "vuex";
 const { mapActions } = createNamespacedHelpers("texts");
 import { SET_FETCHED_TEXTS } from "./../store/action-types";

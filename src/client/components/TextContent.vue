@@ -1,6 +1,6 @@
 <script>
-import InlineWord from "@/components/InlineWord";
-import ToAddWord from "@/components/ToAddWord";
+import InlineWord from "@components/InlineWord";
+import ToAddWord from "@components/ToAddWord";
 import VueSimpleContextMenu from "vue-simple-context-menu";
 import { mapState, mapActions, mapGetters } from "vuex";
 import { SET_FOUND_OCCURRENCES, SET_TO_ADD_OCCURRENCES, DESELECT_INLINE_WORD, CHANGE_SELECTED_WORD, ADD_USER_OCCURRENCE, DELETE_USER_OCCURRENCES_BY_WORD, UPDATE_DICTIONARY } from "../store/action-types";

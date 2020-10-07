@@ -2,7 +2,7 @@
 import Vuetable from "vuetable-2/src/components/Vuetable";
 import VuetablePagination from "vuetable-2/src/components/VuetablePagination";
 import VuetablePaginationInfo from "vuetable-2/src/components/VuetablePaginationInfo";
-import WordRowActions from "@/components/WordRowActions";
+import WordRowActions from "@components/WordRowActions";
 export default {
   components: {
     Vuetable,

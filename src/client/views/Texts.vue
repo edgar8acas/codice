@@ -14,8 +14,8 @@
 
 <script>
 // @ is an alias to /src
-import CatalogTable from "@/components/CatalogTable.vue";
-import FieldDefs from "@/components/FieldDefs.js";
+import CatalogTable from "@components/CatalogTable.vue";
+import FieldDefs from "@components/FieldDefs.js";
 
 export default {
   components: {

@@ -8,7 +8,7 @@ import {
   SET_MEANINGS
 } from "../mutation-types";
 
-import { filterExclusiveWords } from "@/utils/filter_processed";
+import { filterExclusiveWords } from "@utils/filter_processed";
 import axios from "../axios";
 
 const actions = {
