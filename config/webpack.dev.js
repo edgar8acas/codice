@@ -1,16 +1,15 @@
-const path = require('path');
-const webpack = require('webpack');
-const { merge } = require('webpack-merge');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require("path");
+const { merge } = require("webpack-merge");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-const common = require('./webpack.common.js');
+const common = require("./webpack.common.js");
 
 module.exports = merge(common, {
   /**
    * Enables development optimizations.
    */
-  mode: 'development',
-  
+  mode: "development",
+
   /** Source map generation. */
   // devtool: 'eval-source-map',
 
@@ -24,12 +23,12 @@ module.exports = merge(common, {
       {
         test: /\.(scss|css)$/,
         use: [
-          'style-loader',
+          "style-loader",
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: { sourceMap: true, importLoaders: 1 },
           },
-          { loader: 'sass-loader', options: { sourceMap: true } },
+          { loader: "sass-loader", options: { sourceMap: true } },
         ],
       },
       /**
@@ -38,12 +37,12 @@ module.exports = merge(common, {
        */
       {
         test: /\.(?:ico|gif|png|jpg|jpeg|webp|svg)$/i,
-        loader: 'file-loader',
+        loader: "file-loader",
         options: {
-          name: 'images/[name].[ext]'
-        }
-      }
-    ]
+          name: "images/[name].[ext]",
+        },
+      },
+    ],
   },
 
   /**
@@ -53,18 +52,18 @@ module.exports = merge(common, {
     // contentBase: path.join(__dirname, '../dist'),
     /** Proxy API in dev mod to different port */
     proxy: {
-      '/api': 'http://localhost:5000'
+      "/api": "http://localhost:5000",
     },
     compress: true,
     hot: true,
     port: 3000,
-    stats: 'errors-warnings'
+    stats: "errors-warnings",
   },
 
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, '../src/client/public/index.html'),
-      favicon: path.join(__dirname, '../src/client/public/favicon.ico')
-    })
-  ]
-})
+      template: path.join(__dirname, "../src/client/public/index.html"),
+      favicon: path.join(__dirname, "../src/client/public/favicon.ico"),
+    }),
+  ],
+});
