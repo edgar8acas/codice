@@ -1,6 +1,13 @@
-# Codice Server
+# Códice
 
-Server side of web application Codice, aimed at aiding deaf people to improve their vocabulary through interactive readings.
+Full stack web application, aimed at aiding deaf people to improve their vocabulary through interactive readings.
+
+## Built with
+
+- NodeJS
+- R
+- Vue
+- PostgreSQL
 
 ## Required OS
 
@@ -93,17 +100,19 @@ To prepare the project for production, we will need the following commands:
 yarn build
 ```
 
-This command will bundle our frontend sources and place them in the <project-root>/dist folder,
+This command will bundle our frontend sources and place them in the \<root>/dist folder,
 where they will be served.
 
-Now the project can be started with, both server and frontend will be available in the same port.
+Now the project can be started with:
 
 ```
 yarn start
 ```
 
+Both server and frontend will be available in the same port.
+
 **NOTE**: In a _production_ environment, the database credentials should be placed in a text file called _.env_
-that should be located in the root folder of the codice project, following this format:
+that should be located in the root folder of the project, following this format:
 
 ```
 PROD_DB_DATABASE=example_db
