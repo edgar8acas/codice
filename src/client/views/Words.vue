@@ -4,13 +4,13 @@
       <form class="ui form word-search">
         <div class="field search-field">
           <label>Búsqueda</label>
-          <input type="text" name="word" v-model="search" placeholder=""/>
+          <input type="text" name="word" v-model="search" placeholder="" />
         </div>
       </form>
       <!-- <button class="primary ui button add-definition-button">Nueva definición</button> -->
     </div>
     <catalog-table
-      :api-url="`http://localhost:3000/api/words?search=${search}`"
+      :api-url="`/api/words?search=${search}`"
       :fields="fields"
       @showWordDetails="this.showWordDetails"
       ref="table"
@@ -43,24 +43,24 @@ import EditWord from "@components/EditWord.vue";
 import MediaDetails from "@components/MediaDetails.vue";
 import FieldDefs from "@components/WordsFieldDefs.js";
 import Alert from "@components/Alert.vue";
-import { mapActions } from 'vuex';
-import { UPDATE_MEANING } from '../store/action-types';
+import { mapActions } from "vuex";
+import { UPDATE_MEANING } from "../store/action-types";
 
 export default {
   components: {
     CatalogTable,
     EditWord,
     Alert,
-    MediaDetails
+    MediaDetails,
   },
   data() {
     return {
       fields: FieldDefs,
       showDetailsModal: false,
       word: {},
-      search: '',
+      search: "",
       alertSuccess: false,
-      alertError: false
+      alertError: false,
     };
   },
   methods: {
@@ -75,14 +75,13 @@ export default {
           this.$refs.table.$refs.vuetable.reload();
           this.showDetailsModal = !this.showDetailsModal;
           this.alertSuccess = true;
-          setTimeout(() => this.alertSuccess = false, 4000);
+          setTimeout(() => (this.alertSuccess = false), 4000);
         })
         .catch(() => {
           this.alertError = true;
-          setTimeout(() => this.alertError = false, 4000);
-        })
-      
-    }
+          setTimeout(() => (this.alertError = false), 4000);
+        });
+    },
   },
 };
 </script>
@@ -108,5 +107,4 @@ export default {
   font-size: 1.1rem !important;
   align-self: flex-end;
 }
-
 </style>

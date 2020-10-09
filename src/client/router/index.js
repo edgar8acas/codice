@@ -70,8 +70,8 @@ const routes = [
           import(/* webpackChunkName: "learn-text" */ "@views/Learn.vue"),
       },
       {
-        path: "learn/add",
-        alias: "/learn/add",
+        path: "texts/new",
+        alias: "/texts/new",
         name: "AddText",
         component: () =>
           import(/* webpackChunkName: "add-text" */ "@views/AddText.vue"),

@@ -62,7 +62,7 @@
       </div>
 
       <div class="side-card" v-if="processed">
-        <symbology :items="contentSymbology"/>
+        <symbology :items="contentSymbology" />
       </div>
     </div>
 
@@ -120,14 +120,14 @@ import Symbology from "@components/Symbology";
 import { mapState, mapActions } from "vuex";
 import { GET_TEMPLATE_DATA, GET_TEXT_BY_ID } from "./../store/action-types";
 
-import { colors } from "@assets/colors"
+import { colors } from "@assets/colors";
 
 export default {
   components: {
     TextContent,
     WordDetails,
     CreateWord,
-    Symbology
+    Symbology,
   },
   data() {
     return {
@@ -141,9 +141,9 @@ export default {
         noAvailableMeanings: false,
       },
       contentSymbology: [
-        { color: colors.GREEN, description: 'Ocurrencias con significado' },
-        { color: colors.ORANGE, description: 'Ocurrencias sin significado' }
-      ]
+        { color: colors.GREEN, description: "Ocurrencias con significado" },
+        { color: colors.ORANGE, description: "Ocurrencias sin significado" },
+      ],
     };
   },
   computed: {
@@ -176,6 +176,7 @@ export default {
     },
   },
   async mounted() {
+    console.log(this.textId);
     await this[GET_TEXT_BY_ID](this.textId);
     await this[GET_TEMPLATE_DATA](this.text);
   },

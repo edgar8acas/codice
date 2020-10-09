@@ -9,12 +9,7 @@ import "semantic-ui-css/semantic.min.css";
 
 Vue.config.productionTip = false;
 Vue.use(SuiVue);
-Vue.use(
-  VueAxios,
-  axios.create({
-    baseURL: "http://localhost:5000",
-  })
-);
+Vue.use(VueAxios, axios.create());
 
 new Vue({
   router,

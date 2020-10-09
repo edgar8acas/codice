@@ -7,8 +7,7 @@
     >
       Nuevo texto
     </router-link>
-    <catalog-table api-url="http://localhost:3000/api/texts" :fields="fields">
-    </catalog-table>
+    <catalog-table api-url="/api/texts" :fields="fields"> </catalog-table>
   </div>
 </template>
 
