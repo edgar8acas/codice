@@ -19,7 +19,9 @@
           placeholder="Contraseña"
         />
       </div>
-      <button class="fluid ui button blue">Ingresar</button>
+      <button class="fluid ui button blue" @click.prevent="login">
+        Ingresar
+      </button>
       <br />
       <button class="fluid ui button">Registro</button>
     </form>
@@ -27,11 +29,21 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+import { LOGIN } from "../store/action-types";
+
 export default {
   data() {
     return {
       user: {},
     };
+  },
+  methods: {
+    login() {
+      this[LOGIN]();
+      this.$router.push(this.$route.query.redirect || "/dashboard");
+    },
+    ...mapActions("auth", [LOGIN]),
   },
 };
 </script>

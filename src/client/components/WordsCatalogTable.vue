@@ -37,10 +37,10 @@ export default {
       },
     },
     queryParams: {
-      sort: '',
-      page: 'page',
-      perPage: 'per_page'
-    }
+      sort: "",
+      page: "page",
+      perPage: "per_page",
+    },
   },
   render(h) {
     return h(
@@ -48,10 +48,7 @@ export default {
       {
         class: { "table-container": true },
       },
-      [
-        this.renderVuetable(h),
-        this.renderPagination(h),
-      ]
+      [this.renderVuetable(h), this.renderPagination(h)]
     );
   },
   methods: {
@@ -65,11 +62,10 @@ export default {
           perPage: 8,
           sortOrder: this.sortOrder,
           queryParams: this.queryParams,
-          trackBy: 'wordId'
+          trackBy: "wordId",
         },
         on: {
           "vuetable:pagination-data": this.onPaginationData,
-          "vuetable:load-success": this.onLoadSuccess,
           "vuetable:row-clicked": this.showWordDetails,
         },
         scopedSlots: {

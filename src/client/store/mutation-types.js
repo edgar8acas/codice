@@ -25,3 +25,5 @@ export const SET_ONLY_EXCLUSIVE = "SET_ONLY_EXCLUSIVE";
 export const ADD_ERROR = "ADD_ERROR";
 export const ADD_SUCCESS = "ADD_SUCCESS";
 export const TOGGLE_USER_TYPE = "TOGGLE_USER_TYPE";
+
+export const SET_AUTH = "SET_AUTH";

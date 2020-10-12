@@ -3,7 +3,7 @@
     <header class="dash-header">
       <div class="logo">CÓDICE</div>
       <div class="top-buttons">
-        <router-link to="/">Salir</router-link>
+        <button @click="logout">Salir</button>
         <button @click="changeUserType">{{ formatUserType }}</button>
       </div>
     </header>
@@ -20,7 +20,10 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
+import { LOGOUT } from "../store/action-types";
+import VueRouter from "vue-router";
+const { isNavigationFailure } = VueRouter;
 
 export default {
   computed: {
@@ -32,6 +35,18 @@ export default {
   methods: {
     changeUserType() {
       this.$store.dispatch("toggleUserType");
+    },
+    ...mapActions("auth", [LOGOUT]),
+    logout() {
+      this[LOGOUT]()
+        .then(() => {
+          return this.$router.push({ name: "Home" });
+        })
+        .catch((failure) => {
+          if (isNavigationFailure(failure)) {
+            console.log("Inicia sesión para continuar");
+          }
+        });
     },
   },
 };

@@ -11,8 +11,7 @@ module.exports = merge(common, {
   mode: "development",
 
   /** Source map generation. */
-  // devtool: 'eval-source-map',
-
+  devtool: "eval-source-map",
   module: {
     rules: [
       /**
@@ -51,6 +50,7 @@ module.exports = merge(common, {
   devServer: {
     // contentBase: path.join(__dirname, '../dist'),
     /** Proxy API in dev mod to different port */
+    historyApiFallback: true,
     proxy: {
       "/api": "http://localhost:5000",
     },

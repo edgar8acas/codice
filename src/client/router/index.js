@@ -3,6 +3,9 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
+import store from "../store/index";
+
+import { IS_AUTHENTICATED } from "../store/getter-types";
 
 Vue.use(VueRouter);
 
@@ -11,6 +14,17 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+    meta: {
+      requiresAuth: false,
+    },
+    beforeEnter: (to, from, next) => {
+      if (store.getters[`auth/${IS_AUTHENTICATED}`]) {
+        next({
+          name: "Dashboard",
+        });
+      }
+      next();
+    },
     children: [
       {
         path: "login",
@@ -29,6 +43,9 @@ const routes = [
     name: "Dashboard",
     component: () =>
       import(/* webpackChunkName: "dashboard" */ "@views/Dashboard.vue"),
+    meta: {
+      requiresAuth: true,
+    },
     children: [
       {
         path: "texts",
@@ -84,6 +101,19 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((rec) => rec.meta.requiresAuth)) {
+    if (!store.getters[`auth/${IS_AUTHENTICATED}`]) {
+      next({
+        name: "Login",
+        query: { redirect: to.fullPath },
+      });
+    }
+    next();
+  }
+  next();
 });
 
 export default router;

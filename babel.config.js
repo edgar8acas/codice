@@ -1,6 +1,6 @@
 module.exports = (api) => {
   const isServer = api.cache(() => process.env.APP_ENV === "server");
-  console.log(isServer);
+
   const presets = [
     [
       "@babel/preset-env",
