@@ -1,1 +1,1 @@
-INSERT INTO users (username, updated_at) VALUES ('Frank Valkyria', now());
+INSERT INTO users (username, password, admin, updated_at) VALUES ('Main admin', '$2b$10$H7l4qJiET7fbDiyehGuTLeoxhrv6RX/CGeg2JRihq9GaZK4T6EnOu', true, now());
