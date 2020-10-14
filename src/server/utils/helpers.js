@@ -9,15 +9,8 @@ export const hashPasswordHook = (user) => {
   return bcrypt
     .hash(user.getDataValue("password"), 10)
     .then((hash) => user.setDataValue("password", hash));
-  // return new Promise((resolve, reject) => {
-  //   if(user.changed('password')) {
-  //     bcrypt.hash(user.getDataValue('password'), 10, (err, hashed) => {
-  //       if (err) reject(err);
-  //       resolve(hashed);
-  //     })
-  //   }
-  //   return
-  // }).then((hashed) => {
-  //   user.setDataValue('password', hashed);
-  // })
+};
+
+export const checkPassword = (encrypted, original) => {
+  return bcrypt.compare(original, encrypted);
 };
