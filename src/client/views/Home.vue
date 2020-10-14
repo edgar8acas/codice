@@ -4,8 +4,7 @@
       <div class="logo">CÓDICE</div>
       <div class="top-buttons">
         <router-link to="/login">Ingresar</router-link>
-        <router-link to="/register">Registro</router-link>
-        <router-link to="/dashboard">Panel principal</router-link>
+        <router-link to="/register">Registrarse</router-link>
       </div>
     </header>
     <div class="central">

@@ -23,7 +23,7 @@
         Ingresar
       </button>
       <br />
-      <button class="fluid ui button">Registro</button>
+      <button class="fluid ui button">Registrarse</button>
     </form>
   </div>
 </template>
