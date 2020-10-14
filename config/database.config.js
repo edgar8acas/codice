@@ -1,4 +1,4 @@
-import path from "path";
+const path = require("path");
 
 module.exports = {
   development: {
@@ -11,6 +11,8 @@ module.exports = {
     migrationStoragePath: path.resolve(
       __dirname,
       "..",
+      "src",
+      "server",
       "migrations",
       "sequelize-meta.json"
     ),
@@ -25,6 +27,8 @@ module.exports = {
     migrationStoragePath: path.resolve(
       __dirname,
       "..",
+      "src",
+      "server",
       "migrations",
       "sequelize-meta-test.json"
     ),
