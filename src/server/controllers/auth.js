@@ -1,6 +1,7 @@
 import express from "express";
 import { User } from "@models";
 import { checkPassword } from "../utils/helpers";
+import { generateToken } from "../utils/jwt";
 
 const router = express.Router();
 
@@ -23,7 +24,11 @@ export default router.post("/", async (req, res) => {
 
     if (match) {
       //Issue token
-      return res.status(200).json({ msg: "Usuario autenticado." });
+      const token = await generateToken(user);
+      return res
+        .status(200)
+        .cookie("Authorization", token, { httpOnly: true })
+        .json({ msg: "Usuario autenticado.", token });
     } else {
       throw Error("Password does not match.");
     }
