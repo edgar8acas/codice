@@ -1,9 +1,9 @@
 import express from "express";
 import multer from "multer";
-import { Text, Word, TemplateOccurrence, sequelize } from "@models";
-import { processTexts } from "@processing";
-import { paginate } from "@utils";
-import { validateText } from "@utils/validation";
+import { Text, Word, TemplateOccurrence, sequelize } from "@/models";
+import { processTexts } from "@/processing";
+import { paginate } from "@/utils";
+import { validateText } from "@/utils/validation";
 
 const router = express.Router();
 const upload = multer();
@@ -64,12 +64,10 @@ export default router
         return res.status(404).json({ msg: "Texto no encontrado" });
 
       if (text.status === "processed" || !text.rawContent) {
-        return res
-          .status(500)
-          .json({
-            msg:
-              "Este texto ya fue procesado o el contenido no ha sido proporcionado",
-          });
+        return res.status(500).json({
+          msg:
+            "Este texto ya fue procesado o el contenido no ha sido proporcionado",
+        });
       }
 
       const texts = await Text.getTextsToProcess(text.textId);
@@ -97,12 +95,10 @@ export default router
       return res.status(404).json({ msg: "Texto no encontrado" });
 
     if (item.status === "processed" || !item.rawContent) {
-      return res
-        .status(500)
-        .json({
-          msg:
-            "Este texto ya fue procesado o el contenido no ha sido proporcionado",
-        });
+      return res.status(500).json({
+        msg:
+          "Este texto ya fue procesado o el contenido no ha sido proporcionado",
+      });
     }
 
     //TODO: Validate occurrences

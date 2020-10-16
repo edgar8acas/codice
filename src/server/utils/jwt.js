@@ -22,7 +22,7 @@ export const generateToken = (user) => {
       data,
       secret,
       {
-        expiresIn: "24h",
+        expiresIn: "12h",
       },
       (err, decoded) => {
         if (err) reject(err);
@@ -31,7 +31,10 @@ export const generateToken = (user) => {
     );
   });
 };
-
+/**
+ *
+ * @param {string} token
+ */
 export const verifyToken = (token) => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, secret, (err, decoded) => {

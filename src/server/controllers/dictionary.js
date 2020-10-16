@@ -1,5 +1,5 @@
 import express from "express";
-import { Dictionary } from "@models";
+import { Dictionary } from "@/models";
 
 const router = express.Router();
 

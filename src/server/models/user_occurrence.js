@@ -1,4 +1,4 @@
-import { Word, Text, User } from "@models";
+import { Word, Text, User } from "@/models";
 
 module.exports = function (sequelize, DataTypes) {
   const UserOccurrence = sequelize.define(
