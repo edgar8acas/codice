@@ -16,12 +16,13 @@ module.exports = (api) => {
     plugins.push([
       require.resolve("babel-plugin-module-resolver"),
       {
-        root: ["./"],
+        root: ["."],
         alias: {
-          "@models": "./src/server/models",
-          "@config": "./config",
-          "@processing": "./src/server/processing",
-          "@utils": "./src/server/utils",
+          "@/models": "./src/server/models",
+          "@/config": "./config",
+          "@/processing": "./src/server/processing",
+          "@/middleware": "./src/server/middleware",
+          "@/utils": "./src/server/utils",
         },
       },
     ]);
