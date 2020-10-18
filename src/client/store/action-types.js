@@ -49,3 +49,5 @@ export const DELETE_SUCCESS = "DELETE_SUCCESS";
 
 export const LOGIN = "LOGIN";
 export const LOGOUT = "LOGOUT";
+
+export const CHECK_AUTHENTICATION = "CHECK_AUTHENTICATION";

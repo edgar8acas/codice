@@ -3,6 +3,8 @@ import Vuetable from "vuetable-2/src/components/Vuetable";
 import VuetablePagination from "vuetable-2/src/components/VuetablePagination";
 import VuetablePaginationInfo from "vuetable-2/src/components/VuetablePaginationInfo";
 import WordRowActions from "@components/WordRowActions";
+import { http } from "../utils/axios-wrapper";
+
 export default {
   components: {
     Vuetable,
@@ -63,6 +65,7 @@ export default {
           sortOrder: this.sortOrder,
           queryParams: this.queryParams,
           trackBy: "wordId",
+          httpFetch: http,
         },
         on: {
           "vuetable:pagination-data": this.onPaginationData,

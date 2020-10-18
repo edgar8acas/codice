@@ -6,6 +6,7 @@ import TextRowActions from "@components/TextRowActions";
 import { createNamespacedHelpers } from "vuex";
 const { mapActions } = createNamespacedHelpers("texts");
 import { SET_FETCHED_TEXTS } from "./../store/action-types";
+import { http } from "../utils/axios-wrapper";
 
 export default {
   components: {
@@ -65,6 +66,7 @@ export default {
           paginationPath: "",
           perPage: 4,
           sortOrder: this.sortOrder,
+          httpFetch: http,
         },
         on: {
           "vuetable:pagination-data": this.onPaginationData,

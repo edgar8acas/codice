@@ -3,9 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
-import store from "../store/index";
-
-import { IS_AUTHENTICATED } from "../store/getter-types";
+import { authGuard } from "./auth-guard";
 
 Vue.use(VueRouter);
 
@@ -16,14 +14,6 @@ const routes = [
     component: Home,
     meta: {
       requiresAuth: false,
-    },
-    beforeEnter: (to, from, next) => {
-      if (store.getters[`auth/${IS_AUTHENTICATED}`]) {
-        next({
-          name: "Dashboard",
-        });
-      }
-      next();
     },
     children: [
       {
@@ -97,23 +87,16 @@ const routes = [
   },
 ];
 
-const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes,
-});
+let router;
 
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((rec) => rec.meta.requiresAuth)) {
-    if (!store.getters[`auth/${IS_AUTHENTICATED}`]) {
-      next({
-        name: "Login",
-        query: { redirect: to.fullPath },
-      });
-    }
-    next();
-  }
-  next();
-});
+if (!router) {
+  router = new VueRouter({
+    mode: "history",
+    base: process.env.BASE_URL,
+    routes,
+  });
+}
+
+router.beforeEach(authGuard);
 
 export default router;

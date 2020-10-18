@@ -9,9 +9,30 @@
 
 <script>
 import store from "@store";
+import { mapActions, mapGetters } from "vuex";
+import { CHECK_AUTHENTICATION } from "./store/action-types";
+import { IS_AUTHENTICATED } from "./store/getter-types";
 
 export default {
   store,
+  mounted() {
+    this.CHECK_AUTHENTICATION();
+  },
+  methods: {
+    ...mapActions("auth", [CHECK_AUTHENTICATION]),
+  },
+  computed: {
+    ...mapGetters("auth", [IS_AUTHENTICATED]),
+  },
+  watch: {
+    [IS_AUTHENTICATED](isAuthenticated) {
+      if (isAuthenticated) {
+        this.$router.push(this.$route.query.redirect || "/dashboard");
+      } else {
+        this.$router.push({ name: "Login" });
+      }
+    },
+  },
 };
 </script>
 

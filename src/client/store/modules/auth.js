@@ -1,10 +1,30 @@
-import { LOGIN, LOGOUT } from "../action-types";
+import { CHECK_AUTHENTICATION, LOGIN, LOGOUT } from "../action-types";
 import { IS_AUTHENTICATED } from "../getter-types";
-import { SET_AUTH } from "../mutation-types";
+import { SET_AUTH, SET_LOADING } from "../mutation-types";
+import axios from "../axios";
 
 const actions = {
-  [LOGIN]({ commit }) {
-    commit(SET_AUTH);
+  async [LOGIN]({ commit }, userData) {
+    try {
+      commit(SET_LOADING, true);
+      const { data } = await axios.post("/api/auth", userData);
+      commit(SET_AUTH, data);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      commit(SET_LOADING, false);
+    }
+  },
+  async [CHECK_AUTHENTICATION]({ commit }) {
+    try {
+      commit(SET_LOADING, true);
+      const { data } = await axios.get("/api/auth/me");
+      commit(SET_AUTH, data);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      commit(SET_LOADING, false);
+    }
   },
   [LOGOUT]({ commit }) {
     commit(LOGOUT);
@@ -12,24 +32,29 @@ const actions = {
 };
 
 const mutations = {
-  [SET_AUTH](state) {
-    state.user.isAuthenticated = true;
+  [SET_AUTH](state, data) {
+    state.user = data.user;
+    state.isAuthenticated = true;
   },
   [LOGOUT](state) {
-    state.user.isAuthenticated = false;
+    state.isAuthenticated = false;
+    state.user = null;
     return Promise.resolve();
+  },
+  [SET_LOADING](state, loading) {
+    state.loading = loading;
   },
 };
 
 const state = () => ({
-  user: {
-    isAuthenticated: false,
-  },
+  isAuthenticated: false,
+  loading: true,
+  user: {},
 });
 
 const getters = {
   [IS_AUTHENTICATED]: (state) => {
-    return state.user.isAuthenticated;
+    return state.isAuthenticated;
   },
 };
 

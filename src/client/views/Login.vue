@@ -6,7 +6,7 @@
         <input
           type="text"
           name="user"
-          v-model="user.user"
+          v-model="user.username"
           placeholder="Usuario"
         />
       </div>
@@ -40,8 +40,7 @@ export default {
   },
   methods: {
     login() {
-      this[LOGIN]();
-      this.$router.push(this.$route.query.redirect || "/dashboard");
+      this[LOGIN](this.user);
     },
     ...mapActions("auth", [LOGIN]),
   },

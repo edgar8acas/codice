@@ -1,6 +1,12 @@
-import { SET_FETCHED_TEXTS, ADD_TEXT, GET_TEXT_BY_ID, SET_SUCCESS, SET_ERROR } from "../action-types";
+import {
+  SET_FETCHED_TEXTS,
+  ADD_TEXT,
+  GET_TEXT_BY_ID,
+  SET_SUCCESS,
+  SET_ERROR,
+} from "../action-types";
 import { SET_TEXTS, ADD_OR_REPLACE_TEXT } from "../mutation-types";
-import axios from "./../axios";
+import axios from "../axios";
 
 const actions = {
   [SET_FETCHED_TEXTS]({ commit }, payload) {
@@ -12,8 +18,8 @@ const actions = {
       const res = await axios.post("/api/texts/", text);
       commit(SET_SUCCESS, res);
     } catch (error) {
-      commit(SET_ERROR)
-      return new Promise.reject(new Error('Algo salió mal...'));
+      commit(SET_ERROR);
+      return new Promise.reject(new Error("Algo salió mal..."));
     }
   },
   async [GET_TEXT_BY_ID]({ commit }, id) {
