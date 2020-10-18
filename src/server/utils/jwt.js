@@ -22,7 +22,7 @@ export const generateToken = (user) => {
       data,
       secret,
       {
-        expiresIn: "12h",
+        expiresIn: "6h",
       },
       (err, decoded) => {
         if (err) reject(err);

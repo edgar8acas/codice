@@ -2,6 +2,7 @@ import path from "path";
 import express from "express";
 import morgan from "morgan";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import history from "connect-history-api-fallback";
 
@@ -12,6 +13,7 @@ export default function initializeServer(router) {
 
   app.use(morgan("tiny"));
   app.use(bodyParser.json());
+  app.use(cookieParser());
   app.use(cors(origin));
   app.use(history());
 

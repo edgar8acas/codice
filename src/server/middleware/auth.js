@@ -3,9 +3,6 @@
 import { verifyToken } from "@/utils/jwt";
 
 /**
- * @requires express
- */
-/**
  *
  * @param {import("express").Request} req
  * @param {import("express").Response} res
@@ -13,16 +10,16 @@ import { verifyToken } from "@/utils/jwt";
  */
 export const authenticate = async (req, res, next) => {
   const {
-    headers: { authorization },
+    cookies: { authToken },
   } = req;
 
-  if (!authorization) {
+  if (!authToken) {
     return res.status(403).json({
       msg: "Forbidden",
     });
   } else {
     try {
-      const result = await verifyToken(authorization);
+      const result = await verifyToken(authToken);
 
       res.locals.user = result;
       res.locals.auth = true;
