@@ -4,6 +4,7 @@
     ".eslintrc.js",
     "node_modules/**",
     "src/client/**",
+    "src/server/processing/r/io/**",
     "tests/**",
     "public/**",
     "*.test.js",
