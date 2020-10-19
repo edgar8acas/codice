@@ -1,6 +1,6 @@
 import express from "express";
 import { Word } from "@/models";
-import { paginate } from "@/utils";
+import { paginate } from "@/utils/pagination";
 const router = express.Router();
 
 export default router

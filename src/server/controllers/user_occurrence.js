@@ -9,7 +9,13 @@ export default router
     const {
       body: { occurrences },
     } = req;
-    const userId = 1;
+
+    const {
+      locals: {
+        user: { userId },
+      },
+    } = res;
+
     try {
       // TODO: Will fail for different users
       const existent = await UserOccurrence.findOne({

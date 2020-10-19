@@ -19,10 +19,10 @@ export const authenticate = async (req, res, next) => {
     });
   } else {
     try {
-      const result = await verifyToken(authToken);
+      const { user } = await verifyToken(authToken);
 
-      res.locals.user = result;
-      res.locals.auth = true;
+      res.locals.user = user;
+      res.locals.isAuthenticated = true;
       next();
     } catch (e) {
       console.log(e);

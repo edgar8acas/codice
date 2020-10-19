@@ -16,7 +16,14 @@ export default router.get("/", async (req, res) => {
   const {
     query: { text: textId, user: userId },
   } = req;
+
+  const current = res.locals.user;
+
   try {
+    if (!current.admin && Number(userId) !== current.userId) {
+      return res.status(400).json({ msg: "Bad request." });
+    }
+
     const text = await Text.findByPk(textId);
 
     if (text === null)

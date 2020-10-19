@@ -2,7 +2,7 @@ import express from "express";
 import multer from "multer";
 import { Text, Word, TemplateOccurrence, sequelize } from "@/models";
 import { processTexts } from "@/processing";
-import { paginate } from "@/utils";
+import { paginate } from "@/utils/pagination";
 import { validateText } from "@/utils/validation";
 
 const router = express.Router();

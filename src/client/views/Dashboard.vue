@@ -4,14 +4,17 @@
       <div class="logo">CÓDICE</div>
       <div class="top-buttons">
         <button @click="logout">Salir</button>
-        <button @click="changeUserType">{{ formatUserType }}</button>
+        <button>{{ formatUserType }}</button>
       </div>
     </header>
     <nav class="nav">
       <router-link :to="{ name: 'Texts' }" exact-active-class="nav-active"
         >Textos</router-link
       >
-      <router-link :to="{ name: 'Words' }" exact-active-class="nav-active"
+      <router-link
+        :to="{ name: 'Words' }"
+        exact-active-class="nav-active"
+        v-if="user.admin"
         >Palabras</router-link
       >
     </nav>
@@ -27,15 +30,12 @@ const { isNavigationFailure } = VueRouter;
 
 export default {
   computed: {
-    ...mapState(["user"]),
+    ...mapState("auth", ["user"]),
     formatUserType() {
       return this.user.admin ? "Administrador" : "Estudiante";
     },
   },
   methods: {
-    changeUserType() {
-      this.$store.dispatch("toggleUserType");
-    },
     ...mapActions("auth", [LOGOUT]),
     logout() {
       this[LOGOUT]()
