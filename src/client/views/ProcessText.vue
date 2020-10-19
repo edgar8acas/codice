@@ -9,15 +9,17 @@
             obtenidas por el procesamiento.
           </p>
           <p class="instructions">
-            Al seleccionar una ocurrencia se mostrarán las definiciones disponibles en la sección Detalles de palabra.
+            Al seleccionar una ocurrencia se mostrarán las definiciones
+            disponibles en la sección Detalles de palabra.
           </p>
           <p class="instructions">
-            Es recomendable que cada ocurrencia tenga al menos una definición asociada.
+            Es recomendable que cada ocurrencia tenga al menos una definición
+            asociada.
           </p>
-          <symbology :items="contentSymbology"/>
-          <button class="ui button primary" @click="save" v-if="!processed"
-            >Guardar ocurrencias</button
-          >
+          <symbology :items="contentSymbology" />
+          <button class="ui button primary" @click="save" v-if="!processed">
+            Guardar ocurrencias
+          </button>
         </div>
       </div>
       <div class="template">
@@ -45,7 +47,7 @@ import TextContent from "@components/TextContent";
 import Symbology from "@components/Symbology";
 import { mapState, mapActions } from "vuex";
 
-import { colors } from "@assets/colors"
+import { colors } from "@assets/colors";
 
 import {
   GET_TEXT_BY_ID,
@@ -58,7 +60,7 @@ export default {
     CreateWord,
     WordDetails,
     TextContent,
-    Symbology
+    Symbology,
   },
   data() {
     return {
@@ -67,9 +69,9 @@ export default {
       occurrence: {},
       showTextContent: false,
       contentSymbology: [
-        { color: colors.GREEN, description: 'Ocurrencias con significado' },
-        { color: colors.ORANGE, description: 'Ocurrencias sin significado' }
-      ]
+        { color: colors.GREEN, description: "Palabras con significados" },
+        { color: colors.ORANGE, description: "Palabras sin significados" },
+      ],
     };
   },
   computed: {

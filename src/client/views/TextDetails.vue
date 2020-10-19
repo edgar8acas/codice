@@ -22,7 +22,8 @@
         <span class="more-info">+</span>
       </div>
 
-      <div class="side-card" v-if="processed">
+      <!--//TODO: Filter occurrences in text content-->
+      <div class="side-card" v-if="false">
         <h2>Ocurrencias</h2>
         <form class="ui form">
           <div class="field">
@@ -141,8 +142,8 @@ export default {
         noAvailableMeanings: false,
       },
       contentSymbology: [
-        { color: colors.GREEN, description: "Ocurrencias con significado" },
-        { color: colors.ORANGE, description: "Ocurrencias sin significado" },
+        { color: colors.GREEN, description: "Palabras con significados" },
+        { color: colors.ORANGE, description: "Palabras sin significados" },
       ],
     };
   },

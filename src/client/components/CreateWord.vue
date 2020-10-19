@@ -7,7 +7,7 @@
     </div>
     <div class="field">
       <label>Definición</label>
-      <input type="text" name="title" v-model="definition" />
+      <textarea type="text" name="title" v-model="definition" />
     </div>
     <div class="field">
       <label>Tipo</label>
@@ -20,11 +20,11 @@
     </div>
     <div class="field">
       <label>URL de imagen</label>
-      <input type="url" name="imageUrl" v-model="imageUrl"/>
+      <input type="url" name="imageUrl" v-model="imageUrl" />
     </div>
     <div class="field">
       <label>URL de video</label>
-      <input type="url" name="videoUrl" v-model="videoUrl"/>
+      <input type="url" name="videoUrl" v-model="videoUrl" />
     </div>
     <button class="ui button" type="submit" @click.prevent="saveMeaning">
       Guardar
@@ -57,7 +57,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("textContent", ["selected"])
+    ...mapState("textContent", ["selected"]),
   },
   methods: {
     ...mapActions([SAVE_MEANING]),
@@ -67,7 +67,7 @@ export default {
         definition: this.definition,
         type: this.type,
         imageUrl: this.imageUrl,
-        videoUrl: this.videoUrl
+        videoUrl: this.videoUrl,
       });
     },
   },

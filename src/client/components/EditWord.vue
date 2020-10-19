@@ -2,15 +2,15 @@
   <form class="ui form">
     <div class="field">
       <label>Id</label>
-      <input type="text" name="wordId" v-model="word.wordId" disabled/>
+      <input type="text" name="wordId" v-model="word.wordId" disabled />
     </div>
     <div class="field">
       <label>Palabra</label>
-      <input type="text" name="word" v-model="word.word"/>
+      <input type="text" name="word" v-model="word.word" />
     </div>
     <div class="field">
       <label>Definición</label>
-      <input type="text" name="definition" v-model="word.definition"/>
+      <textarea type="text" name="definition" v-model="word.definition" />
     </div>
     <div class="field">
       <label>Tipo</label>
@@ -23,11 +23,11 @@
     </div>
     <div class="field">
       <label>URL de imagen</label>
-      <input type="url" name="imageUrl" v-model="word.imageUrl"/>
+      <input type="url" name="imageUrl" v-model="word.imageUrl" />
     </div>
     <div class="field">
       <label>URL de video</label>
-      <input type="url" name="videoUrl" v-model="word.videoUrl"/>
+      <input type="url" name="videoUrl" v-model="word.videoUrl" />
     </div>
   </form>
 </template>
@@ -47,19 +47,15 @@ export default {
         { text: "Conjunción", value: "conjunción" },
         { text: "Intersección", value: "intersección" },
       ],
-    }
+    };
   },
   props: {
     word: {
-      type: Object
-    }
+      type: Object,
+    },
   },
-  methods: {
-    
-  }
-}
+  methods: {},
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

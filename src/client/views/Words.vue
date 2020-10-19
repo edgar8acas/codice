@@ -7,6 +7,14 @@
           <input type="text" name="word" v-model="search" placeholder="" />
         </div>
       </form>
+      <sui-message
+        class="blue"
+        header="¿Cómo encontrar palabras sin recursos?"
+        content="
+        Puedes ordenar los resultados dando click en la columna de imagen o video.
+        Una celda en blanco indica que falta el recurso.
+      "
+      />
       <!-- <button class="primary ui button add-definition-button">Nueva definición</button> -->
     </div>
     <catalog-table
@@ -31,6 +39,7 @@
         </div>
       </sui-modal-content>
       <sui-modal-actions>
+        <button class="ui button" @click="toggleModal">Cancelar</button>
         <button class="primary ui button" @click="saveWord">Guardar</button>
       </sui-modal-actions>
     </sui-modal>
@@ -67,6 +76,9 @@ export default {
     ...mapActions([UPDATE_MEANING]),
     showWordDetails(word) {
       this.word = Object.assign({}, word);
+      this.toggleModal();
+    },
+    toggleModal() {
       this.showDetailsModal = !this.showDetailsModal;
     },
     saveWord() {
