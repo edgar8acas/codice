@@ -1,4 +1,4 @@
-import { CHECK_AUTHENTICATION, LOGIN, LOGOUT } from "../action-types";
+import { CHECK_AUTHENTICATION, LOGIN, LOGOUT, REGISTER } from "../action-types";
 import { IS_AUTHENTICATED } from "../getter-types";
 import { SET_AUTH, SET_LOADING } from "../mutation-types";
 import axios from "../axios";
@@ -10,7 +10,7 @@ const actions = {
       const { data } = await axios.post("/api/auth", userData);
       commit(SET_AUTH, data);
     } catch (e) {
-      console.log(e);
+      return Promise.reject(e.response);
     } finally {
       commit(SET_LOADING, false);
     }
@@ -26,8 +26,22 @@ const actions = {
       commit(SET_LOADING, false);
     }
   },
+  async [REGISTER]({ commit }, userData) {
+    try {
+      commit(SET_LOADING, true);
+      const { data } = await axios.post("/api/users", userData);
+      return Promise.resolve(data);
+    } catch (e) {
+      return Promise.reject(e.response);
+    } finally {
+      commit(SET_LOADING, false);
+    }
+  },
   [LOGOUT]({ commit }) {
-    commit(LOGOUT);
+    return axios.get("/api/auth/logout").then((res) => {
+      commit(LOGOUT);
+      return res;
+    });
   },
 };
 
@@ -39,7 +53,6 @@ const mutations = {
   [LOGOUT](state) {
     state.isAuthenticated = false;
     state.user = null;
-    return Promise.resolve();
   },
   [SET_LOADING](state, loading) {
     state.loading = loading;

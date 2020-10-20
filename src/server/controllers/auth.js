@@ -4,6 +4,9 @@ import { checkPassword } from "../utils/helpers";
 import { generateToken, verifyToken } from "../utils/jwt";
 
 const router = express.Router();
+const cookieOptions = {
+  httpOnly: true,
+};
 
 export default router
   .post("/", async (req, res) => {
@@ -20,12 +23,9 @@ export default router
         //Issue token
         const token = await generateToken(user);
         const { admin, username, userId } = user;
-        return res
-          .status(200)
-          .cookie("authToken", token, { httpOnly: true })
-          .json({
-            user: { admin, username, userId },
-          });
+        return res.status(200).cookie("authToken", token, cookieOptions).json({
+          user: { admin, username, userId },
+        });
       } else {
         throw Error("Password does not match.");
       }
@@ -33,7 +33,7 @@ export default router
       console.log(e);
       return res
         .status(401)
-        .json({ msg: "No fue posible autenticar al usuario." });
+        .json({ error: "Contraseña o usuario incorrectos." });
     }
   })
   .get("/me", async (req, res) => {
@@ -59,4 +59,9 @@ export default router
         });
       }
     }
+  })
+  .get("/logout", async (req, res) => {
+    return res.status(200).clearCookie("authToken", cookieOptions).json({
+      msg: "Ha salido exitosamente.",
+    });
   });

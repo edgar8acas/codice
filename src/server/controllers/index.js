@@ -12,8 +12,8 @@ const router = express.Router();
 
 export default router
   .use("/auth", authController)
-  .use(authenticate)
   .use("/users", usersController)
+  .use(authenticate)
   .use("/texts", textController)
   .use("/templates", templateController)
   .use("/words", wordController)

@@ -9,6 +9,7 @@
     </header>
     <div class="central">
       <router-view></router-view>
+      <div class="any"></div>
     </div>
   </div>
 </template>

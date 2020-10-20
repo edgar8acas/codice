@@ -51,3 +51,4 @@ export const LOGIN = "LOGIN";
 export const LOGOUT = "LOGOUT";
 
 export const CHECK_AUTHENTICATION = "CHECK_AUTHENTICATION";
+export const REGISTER = "REGISTER";
