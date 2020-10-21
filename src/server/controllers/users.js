@@ -30,4 +30,22 @@ export default router
   })
   .get("/", [authenticate, paginate(User)], async (req, res) => {
     return res.status(200).json(res.paginatedResults);
+  })
+  .put("/:id", async (req, res) => {
+    //Currently only admin users are able to update other users.
+    const {
+      params: { id: userId },
+    } = req;
+
+    try {
+      await User.update(req.body, {
+        where: {
+          userId: Number(userId),
+        },
+      });
+      return res.status(200).json({ msg: "Usuario actualizado" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ msg: "Error al actualizar el elemento" });
+    }
   });
