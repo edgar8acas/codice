@@ -100,7 +100,7 @@ To prepare the project for production, we will need the following commands:
 yarn build
 ```
 
-This command will bundle our frontend sources and place them in the \<root>/dist folder,
+This command will bundle our frontend sources and place them in the src/server/dist folder,
 where they will be served.
 
 Now the project can be started with:
