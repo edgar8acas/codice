@@ -1,8 +1,8 @@
 import test from "ava";
 import { cleanupDatabase } from "./../helpers/initialization.js";
 import { extractIds, prepareEssentialWords } from "./../helpers/utils.js";
-import { Text } from "@models";
-import { processTexts } from "@processing";
+import { Text } from "@/models";
+import { processTexts } from "@/processing";
 
 test.before("prepare database", async () => {});
 

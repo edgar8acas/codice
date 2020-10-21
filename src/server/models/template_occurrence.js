@@ -1,4 +1,4 @@
-import { Text } from "@models";
+import { Text } from "@/models";
 
 module.exports = function (sequelize, DataTypes) {
   const TemplateOccurrence = sequelize.define(

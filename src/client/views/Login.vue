@@ -1,12 +1,13 @@
 <template>
   <div class="login" id="login">
+    <h2 class="form-title">Inicia sesión</h2>
     <form class="ui form">
       <div class="field">
         <label class="white">Usuario</label>
         <input
           type="text"
           name="user"
-          v-model="user.user"
+          v-model="user.username"
           placeholder="Usuario"
         />
       </div>
@@ -19,32 +20,51 @@
           placeholder="Contraseña"
         />
       </div>
-      <button class="fluid ui button blue">Ingresar</button>
+      <div style="color: red" v-if="error">{{ error }}</div>
+      <button class="fluid ui button blue" @click.prevent="login">
+        Ingresar
+      </button>
       <br />
-      <button class="fluid ui button">Registro</button>
+      <button
+        class="fluid ui button"
+        @click.prevent="$router.push({ name: 'Register' })"
+      >
+        Crea una cuenta
+      </button>
     </form>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+import { LOGIN } from "../store/action-types";
+
 export default {
   data() {
     return {
       user: {},
+      error: null,
     };
+  },
+  methods: {
+    login() {
+      this[LOGIN](this.user).catch((res) => {
+        this.error = res.data.error;
+      });
+    },
+    ...mapActions("auth", [LOGIN]),
   },
 };
 </script>
 
 <style lang="scss">
 .login {
-  width: 400px;
-  height: 50%;
+  width: 35vw;
   border-radius: 15px;
-  background-color: hsla(360, 100%, 100%, 0.3);
   padding: 10px;
+  background-color: #fff;
 }
-#login form.ui.form .field .white {
-  color: white;
+.form-title {
+  text-align: center;
 }
 </style>

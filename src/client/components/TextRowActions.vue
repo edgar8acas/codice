@@ -4,6 +4,7 @@
       :to="{ name: 'TextDetails', params: { id: rowData.textId } }"
       tag="button"
       class="ui button mini"
+      v-if="user.admin"
     >
       Detalles
     </router-link>
@@ -18,9 +19,13 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   props: {
     rowData: Object,
+  },
+  computed: {
+    ...mapState("auth", ["user"]),
   },
 };
 </script>

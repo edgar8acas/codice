@@ -3,9 +3,10 @@ import Vuetable from "vuetable-2/src/components/Vuetable";
 import VuetablePagination from "vuetable-2/src/components/VuetablePagination";
 import VuetablePaginationInfo from "vuetable-2/src/components/VuetablePaginationInfo";
 import TextRowActions from "@components/TextRowActions";
-import { createNamespacedHelpers } from "vuex";
+import { createNamespacedHelpers, mapState } from "vuex";
 const { mapActions } = createNamespacedHelpers("texts");
 import { SET_FETCHED_TEXTS } from "./../store/action-types";
+import { http } from "../utils/axios-wrapper";
 
 export default {
   components: {
@@ -37,9 +38,14 @@ export default {
     appendParams: {
       type: Object,
       default() {
-        return {};
+        return {
+          status: "processed",
+        };
       },
     },
+  },
+  computed: {
+    ...mapState("auth", ["user"]),
   },
   render(h) {
     return h(
@@ -65,6 +71,8 @@ export default {
           paginationPath: "",
           perPage: 4,
           sortOrder: this.sortOrder,
+          appendParams: !this.user.admin ? this.appendParams : {},
+          httpFetch: http,
         },
         on: {
           "vuetable:pagination-data": this.onPaginationData,

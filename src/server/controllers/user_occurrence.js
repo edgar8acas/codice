@@ -1,7 +1,7 @@
 import express from "express";
 import Sequelize from "sequelize";
 const Op = Sequelize.Op;
-import { UserOccurrence, Word, Dictionary } from "@models";
+import { UserOccurrence, Word, Dictionary } from "@/models";
 const router = express.Router();
 
 export default router
@@ -9,7 +9,13 @@ export default router
     const {
       body: { occurrences },
     } = req;
-    const userId = 1;
+
+    const {
+      locals: {
+        user: { userId },
+      },
+    } = res;
+
     try {
       // TODO: Will fail for different users
       const existent = await UserOccurrence.findOne({
@@ -26,11 +32,9 @@ export default router
       });
 
       if (existent) {
-        return res
-          .status(500)
-          .json({
-            error: "Error al crear ocurrencia: es posible que ya exista.",
-          });
+        return res.status(500).json({
+          error: "Error al crear ocurrencia: es posible que ya exista.",
+        });
       }
       //TODO: validate occurrence
       const userOccurrences = await UserOccurrence.bulkCreate(

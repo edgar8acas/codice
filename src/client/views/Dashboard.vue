@@ -2,17 +2,33 @@
   <div class="dashboard-container">
     <header class="dash-header">
       <div class="logo">CÓDICE</div>
-      <div class="top-buttons">
-        <router-link to="/">Salir</router-link>
-        <button @click="changeUserType">{{ formatUserType }}</button>
+      <div class="dash-header-right">
+        <div class="user-data">
+          <span class="user-name" style="color: white">{{
+            user.username
+          }}</span>
+          <span class="user-role" style="color: white">{{
+            formatUserType
+          }}</span>
+        </div>
+        <button class="ui button" @click="logout">Salir</button>
       </div>
     </header>
     <nav class="nav">
       <router-link :to="{ name: 'Texts' }" exact-active-class="nav-active"
         >Textos</router-link
       >
-      <router-link :to="{ name: 'Words' }" exact-active-class="nav-active"
+      <router-link
+        :to="{ name: 'Words' }"
+        exact-active-class="nav-active"
+        v-if="user.admin"
         >Palabras</router-link
+      >
+      <router-link
+        :to="{ name: 'Users' }"
+        exact-active-class="nav-active"
+        v-if="user.admin"
+        >Usuarios</router-link
       >
     </nav>
     <router-view class="main"></router-view>
@@ -20,18 +36,30 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
+import { LOGOUT } from "../store/action-types";
+import VueRouter from "vue-router";
+const { isNavigationFailure } = VueRouter;
 
 export default {
   computed: {
-    ...mapState(["user"]),
+    ...mapState("auth", ["user"]),
     formatUserType() {
       return this.user.admin ? "Administrador" : "Estudiante";
     },
   },
   methods: {
-    changeUserType() {
-      this.$store.dispatch("toggleUserType");
+    ...mapActions("auth", [LOGOUT]),
+    logout() {
+      this[LOGOUT]()
+        .then(() => {
+          return this.$router.push({ name: "Home" });
+        })
+        .catch((failure) => {
+          if (isNavigationFailure(failure)) {
+            console.log("Inicia sesión para continuar");
+          }
+        });
     },
   },
 };
@@ -41,16 +69,14 @@ export default {
 .dashboard-container {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: 5vh 5vh 85vh 5vh;
+  grid-template-rows: 90px 50px 82vh 6vh;
 
   .dash-header {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     background-color: #2185d0;
     grid-column: 1 / span 10;
-    height: auto;
-    font-size: 2em;
 
     > * {
       align-self: center;
@@ -58,6 +84,7 @@ export default {
 
     .logo {
       font-family: "Krona One";
+      font-size: 2em;
       padding: 10px;
       color: white;
     }
@@ -71,12 +98,34 @@ export default {
       color: white;
       padding: 10px;
     }
+
+    .dash-header-right {
+      font-size: 1em;
+      margin-right: 1em;
+      display: flex;
+      align-items: center;
+
+      .user-data {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        margin-right: 1em;
+        .user-name {
+          font-size: 1.3em;
+          font-weight: bold;
+        }
+        .user-role {
+          font-size: 1.2em;
+          text-transform: uppercase;
+        }
+      }
+    }
   }
 
   .nav {
     display: flex;
     grid-column: 1 / span 10;
-    background-color: #eee;
+    background-color: hsl(0, 0%, 90%);
     padding-left: 30px;
     > * {
       padding: 0.8em;
@@ -85,11 +134,12 @@ export default {
     }
 
     > *:hover {
-      border-bottom: 2px solid #2185d0;
+      background-color: hsl(0, 0%, 80%);
     }
 
     .nav-active {
       font-weight: bold;
+      border-bottom: 2px solid #2185d0;
     }
   }
 

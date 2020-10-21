@@ -3,6 +3,8 @@ import Vuetable from "vuetable-2/src/components/Vuetable";
 import VuetablePagination from "vuetable-2/src/components/VuetablePagination";
 import VuetablePaginationInfo from "vuetable-2/src/components/VuetablePaginationInfo";
 import WordRowActions from "@components/WordRowActions";
+import { http } from "../utils/axios-wrapper";
+
 export default {
   components: {
     Vuetable,
@@ -37,10 +39,10 @@ export default {
       },
     },
     queryParams: {
-      sort: '',
-      page: 'page',
-      perPage: 'per_page'
-    }
+      sort: "",
+      page: "page",
+      perPage: "per_page",
+    },
   },
   render(h) {
     return h(
@@ -48,10 +50,7 @@ export default {
       {
         class: { "table-container": true },
       },
-      [
-        this.renderVuetable(h),
-        this.renderPagination(h),
-      ]
+      [this.renderVuetable(h), this.renderPagination(h)]
     );
   },
   methods: {
@@ -65,11 +64,11 @@ export default {
           perPage: 8,
           sortOrder: this.sortOrder,
           queryParams: this.queryParams,
-          trackBy: 'wordId'
+          trackBy: "wordId",
+          httpFetch: http,
         },
         on: {
           "vuetable:pagination-data": this.onPaginationData,
-          "vuetable:load-success": this.onLoadSuccess,
           "vuetable:row-clicked": this.showWordDetails,
         },
         scopedSlots: {

@@ -19,7 +19,9 @@ CREATE TABLE texts (
 
 CREATE TABLE users (
     user_id serial PRIMARY KEY,
-    username varchar NOT NULL,
+    username varchar NOT NULL UNIQUE,
+    password char(60) NOT NULL,
+    admin boolean NOT NULL,
     created_at timestamp NOT NULL DEFAULT now(),
     updated_at timestamp NOT NULL
 );

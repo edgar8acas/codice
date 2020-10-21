@@ -1,4 +1,4 @@
-import { User } from "@models";
+import { User } from "@/models";
 
 module.exports = function (sequelize, DataTypes) {
   const Dictionary = sequelize.define(

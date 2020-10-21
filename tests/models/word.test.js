@@ -1,7 +1,7 @@
 import test from "ava";
 import { insertWords, deleteWords } from "./../helpers/initialization.js";
 import { prepareWordsToChoose } from "./../helpers/utils.js";
-import { Word } from "@models";
+import { Word } from "@/models";
 
 test.before("prepare database", async (t) => {
   t.context.words = await insertWords("words1");

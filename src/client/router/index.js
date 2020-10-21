@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
+import { authGuard } from "./auth-guard";
 
 Vue.use(VueRouter);
 
@@ -11,6 +12,9 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+    meta: {
+      requiresAuth: false,
+    },
     children: [
       {
         path: "login",
@@ -29,6 +33,9 @@ const routes = [
     name: "Dashboard",
     component: () =>
       import(/* webpackChunkName: "dashboard" */ "@views/Dashboard.vue"),
+    meta: {
+      requiresAuth: true,
+    },
     children: [
       {
         path: "texts",
@@ -43,6 +50,13 @@ const routes = [
         name: "Words",
         component: () =>
           import(/* webpackChunkName: "dashboard" */ "@views/Words.vue"),
+      },
+      {
+        path: "users",
+        alias: "",
+        name: "Users",
+        component: () =>
+          import(/* webpackChunkName: "dashboard" */ "@views/Users.vue"),
       },
       {
         path: "details/:id",
@@ -80,10 +94,16 @@ const routes = [
   },
 ];
 
-const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes,
-});
+let router;
+
+if (!router) {
+  router = new VueRouter({
+    mode: "history",
+    base: process.env.BASE_URL,
+    routes,
+  });
+}
+
+router.beforeEach(authGuard);
 
 export default router;
