@@ -40,6 +40,15 @@ export function paginate(model) {
         };
       }
 
+      if (name === "users") {
+        query.attributes = [
+          "userId",
+          "username",
+          "admin",
+          "createdAt",
+          "updatedAt",
+        ];
+      }
       // It only supports one column ordering for now
       const [sort_by, order] = sort.split("|");
       query.order = [[sort_by, order.toUpperCase()]];

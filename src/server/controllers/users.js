@@ -38,10 +38,9 @@ export default router
     } = req;
 
     try {
-      await User.update(req.body, {
-        where: {
-          userId: Number(userId),
-        },
+      const found = await User.findByPk(Number(userId));
+      await found.update(req.body, {
+        individualHooks: true,
       });
       return res.status(200).json({ msg: "Usuario actualizado" });
     } catch (error) {

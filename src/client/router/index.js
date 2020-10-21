@@ -52,6 +52,13 @@ const routes = [
           import(/* webpackChunkName: "dashboard" */ "@views/Words.vue"),
       },
       {
+        path: "users",
+        alias: "",
+        name: "Users",
+        component: () =>
+          import(/* webpackChunkName: "dashboard" */ "@views/Users.vue"),
+      },
+      {
         path: "details/:id",
         alias: "/details/:id",
         name: "TextDetails",

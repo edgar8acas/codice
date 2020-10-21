@@ -4,6 +4,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 import texts from "./modules/texts";
+import users from "./modules/users";
 import learn from "./modules/learn";
 import template from "./modules/template";
 import meanings from "./modules/meanings";
@@ -18,6 +19,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
     texts,
+    users,
     learn,
     template,
     meanings,
