@@ -44,6 +44,11 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      noDataTemplate: "",
+    };
+  },
   computed: {
     ...mapState("auth", ["user"]),
   },
@@ -53,11 +58,7 @@ export default {
       {
         class: { "table-container": true },
       },
-      [
-        this.renderPaginationTop(h),
-        this.renderVuetable(h),
-        this.renderPagination(h),
-      ]
+      [this.renderVuetable(h), this.renderPagination(h)]
     );
   },
   methods: {
@@ -73,6 +74,7 @@ export default {
           sortOrder: this.sortOrder,
           appendParams: !this.user.admin ? this.appendParams : {},
           httpFetch: http,
+          noDataTemplate: "No hay textos disponibles para aprender",
         },
         on: {
           "vuetable:pagination-data": this.onPaginationData,
@@ -106,38 +108,11 @@ export default {
             ref: "paginationInfo",
             props: {
               infoTemplate: "Mostrando {from} a {to} de {total} textos",
+              noDataTemplate: this.noDataTemplate,
             },
           }),
           h("vuetable-pagination", {
             ref: "pagination",
-            on: {
-              "vuetable-pagination:change-page": this.onChangePage,
-            },
-          }),
-        ]
-      );
-    },
-    renderPaginationTop(h) {
-      return h(
-        "div",
-        {
-          class: {
-            "vuetable-pagination": true,
-            ui: true,
-            basic: true,
-            segment: true,
-            grid: true,
-          },
-        },
-        [
-          h("vuetable-pagination-info", {
-            ref: "paginationInfoTop",
-            props: {
-              infoTemplate: "Mostrando {from} a {to} de {total} textos",
-            },
-          }),
-          h("vuetable-pagination", {
-            ref: "paginationTop",
             on: {
               "vuetable-pagination:change-page": this.onChangePage,
             },
@@ -155,9 +130,6 @@ export default {
       return value === "processed" ? "Procesado" : "No procesado";
     },
     onPaginationData(paginationData) {
-      this.$refs.paginationTop.setPaginationData(paginationData);
-      this.$refs.paginationInfoTop.setPaginationData(paginationData);
-
       this.$refs.pagination.setPaginationData(paginationData);
       this.$refs.paginationInfo.setPaginationData(paginationData);
     },

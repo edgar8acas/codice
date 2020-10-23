@@ -21,8 +21,20 @@
             placeholder="Contraseña"
           />
         </div>
-        <div style="color: red" v-if="error">{{ error }}</div>
-        <button class="fluid ui button blue" @click.prevent="register">
+        <div style="color: red" v-if="error" class="form-error">
+          {{ error }}.
+          <div class="validation-tips">
+            <ul>
+              <li>El nombre de usuario debe tener entre 6 y 20 caracteres.</li>
+              <li>La contraseña debe tener al menos 8 caracteres.</li>
+            </ul>
+          </div>
+        </div>
+        <button
+          class="fluid ui button blue"
+          type="submit"
+          @click.prevent="register"
+        >
           Crear
         </button>
         <br />
@@ -63,5 +75,9 @@ export default {
 .login-link {
   text-align: center;
   cursor: pointer;
+}
+
+.form-error {
+  margin-bottom: 1em;
 }
 </style>

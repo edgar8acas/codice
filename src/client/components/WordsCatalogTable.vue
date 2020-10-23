@@ -66,6 +66,7 @@ export default {
           queryParams: this.queryParams,
           trackBy: "wordId",
           httpFetch: http,
+          noDataTemplate: "No hay palabras disponibles",
         },
         on: {
           "vuetable:pagination-data": this.onPaginationData,

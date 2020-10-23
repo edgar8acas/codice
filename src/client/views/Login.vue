@@ -9,6 +9,8 @@
           name="user"
           v-model="user.username"
           placeholder="Usuario"
+          required
+          minlength="6"
         />
       </div>
       <div class="field">
@@ -18,6 +20,8 @@
           name="password"
           v-model="user.password"
           placeholder="Contraseña"
+          required
+          minlength="8"
         />
       </div>
       <div style="color: red" v-if="error">{{ error }}</div>

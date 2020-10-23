@@ -17,7 +17,7 @@ module.exports = function (sequelize) {
         validate: {
           len: {
             args: [6, 20],
-            msg: "El nombre de usuario debe tener entre 6 y 20 caracteres",
+            msg: "El nombre de usuario debe tener entre 6 y 20 caracteres.",
           },
         },
       },
@@ -26,9 +26,8 @@ module.exports = function (sequelize) {
         allowNull: false,
         validate: {
           is: {
-            args: /^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.{8,})/i,
-            msg:
-              "La contraseña debe contener al menos un número, una letra mayúscula y minúscula, y mínimo 8 caracteres.",
+            args: /^.{8,}/i,
+            msg: "La contraseña debe tener mínimo 8 caracteres.",
           },
         },
       },
