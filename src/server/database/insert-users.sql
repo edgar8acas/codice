@@ -1,1 +1,2 @@
-INSERT INTO users (username, password, admin, updated_at) VALUES ('Main admin', '$2b$10$H7l4qJiET7fbDiyehGuTLeoxhrv6RX/CGeg2JRihq9GaZK4T6EnOu', true, now());
+-- The password is hashed, the actual pass is Admin123 which should be changed
+INSERT INTO users (username, password, admin, updated_at) VALUES ('admin1', '$2b$10$MzVE6X2Tbj2YuV0ETpJ2NuGpEePYNYLvuvnjsXyJkN9kMdcym1Sna', true, now());

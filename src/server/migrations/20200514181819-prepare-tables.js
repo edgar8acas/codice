@@ -8,9 +8,6 @@ module.exports = {
       const tables = await fs.readFile(
         __dirname + "/../database/create-tables.sql"
       );
-      const triggers = await fs.readFile(
-        __dirname + "/../database/create-triggers.sql"
-      );
       const texts = await fs.readFile(
         __dirname + "/../database/insert-texts.sql"
       );
@@ -21,7 +18,6 @@ module.exports = {
         __dirname + "/../database/insert-words.sql"
       );
       await queryInterface.sequelize.query(tables.toString());
-      await queryInterface.sequelize.query(triggers.toString());
       await queryInterface.sequelize.query(texts.toString());
       await queryInterface.sequelize.query(users.toString());
       await queryInterface.sequelize.query(words.toString());
@@ -38,11 +34,7 @@ module.exports = {
       const tables = await fs.readFile(
         __dirname + "/../database/delete-tables.sql"
       );
-      const triggers = await fs.readFile(
-        __dirname + "/../database/delete-triggers.sql"
-      );
       await queryInterface.sequelize.query(tables.toString());
-      await queryInterface.sequelize.query(triggers.toString());
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();
