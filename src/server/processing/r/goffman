@@ -7,7 +7,10 @@ suppressPackageStartupMessages(library(tibble))
 
 #Reads and converts the input file
 #TODO: pass filename as argument
-input <- fromJSON(file("./io/input.json"))
+args <- commandArgs(trailingOnly = TRUE)
+inputPath <- args[1]
+outputPath <- args[2]
+input <- fromJSON(file(inputPath))
 
 #Create tmCorpus
 tmCorpus <- Corpus( DataframeSource(input), readerControl=list(language="es"))
@@ -134,7 +137,7 @@ for(doc_id in  input$doc_id) {
 # df[["words"]]
 # toJSON(df, flatten = TRUE, simplifyVector = TRUE)
 # str(c('a', 'b'))
-con_out <- file("./io/output.json", open = "wb")
+con_out <- file(outputPath, open = "wb")
 output
 converted <- toJSON(output)
 write(converted, con_out)
