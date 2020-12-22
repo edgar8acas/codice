@@ -21,6 +21,7 @@ const actions = {
       const { data } = await axios.get("/api/auth/me");
       commit(SET_AUTH, data);
     } catch (e) {
+      /* eslint-disable no-console */
       console.log(e);
     } finally {
       commit(SET_LOADING, false);

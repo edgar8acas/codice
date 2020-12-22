@@ -1,12 +1,9 @@
-import { 
+import {
   PROCESS_TEXT,
   SAVE_PROCESSED_TEXT,
-  SET_FOUND_OCCURRENCES
+  SET_FOUND_OCCURRENCES,
 } from "../action-types";
-import {
-  SET_ESSENTIAL_WORDS,
-  SET_MEANINGS
-} from "../mutation-types";
+import { SET_ESSENTIAL_WORDS, SET_MEANINGS } from "../mutation-types";
 
 import { filterExclusiveWords } from "@utils/filter_processed";
 import axios from "../axios";
@@ -26,28 +23,29 @@ const actions = {
   async [SAVE_PROCESSED_TEXT]({ state }, textId) {
     try {
       await axios.post(`/api/texts/${textId}/process/save`, {
-        occurrences: state.foundOccurrences
+        occurrences: state.foundOccurrences,
       });
     } catch (error) {
+      /* eslint-disable no-console */
       console.log(error);
     }
   },
-  [SET_FOUND_OCCURRENCES] ({ commit }, occurrences) {
+  [SET_FOUND_OCCURRENCES]({ commit }, occurrences) {
     commit(SET_FOUND_OCCURRENCES, occurrences);
-  }
+  },
 };
 
 const mutations = {
-  [SET_FOUND_OCCURRENCES] (state, occurrences) {
+  [SET_FOUND_OCCURRENCES](state, occurrences) {
     state.foundOccurrences = occurrences;
-  }
+  },
 };
 
 const state = () => ({
   options: {
     lexicoExclusivo: false,
   },
-  foundOccurrences: []
+  foundOccurrences: [],
 });
 
 const getters = {};

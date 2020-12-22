@@ -27,6 +27,7 @@ const actions = {
       const { data } = await axios.get(`/api/texts/${id}`);
       commit(ADD_OR_REPLACE_TEXT, data);
     } catch (error) {
+      /* eslint-disable no-console */
       console.log(error.response.data.error);
     }
   },

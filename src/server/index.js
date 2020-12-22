@@ -9,7 +9,7 @@ import initializeServer from "./initializeServer";
 (function createIoProcessingDirectory() {
   const dir = path.join(__dirname, "processing", "r", "io");
   if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
+    fs.mkdirSync(dir, { recursive: true });
   }
 })();
 

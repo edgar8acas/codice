@@ -3,7 +3,7 @@ import {
   UPDATE_OCCURRENCE,
   UPDATE_DICTIONARY,
   DELETE_USER_OCCURRENCE,
-  DELETE_USER_OCCURRENCES_BY_WORD
+  DELETE_USER_OCCURRENCES_BY_WORD,
 } from "../action-types";
 import {
   SET_TOKENIZED_TEXT,
@@ -15,12 +15,12 @@ import {
   REPLACE_OCCURRENCE_WITH_UPDATED,
   REPLACE_DICTIONARY_WITH_UPDATED,
 } from "../mutation-types";
-import { 
+import {
   GET_DICTIONARY_BY_WORD_ID,
   ESSENTIAL_WORDS,
   GET_OCCURRENCE_BY_POSITION,
   GET_DICTIONARY_BY_WORD,
-  GET_OCCURRENCES_BY_WORD
+  GET_OCCURRENCES_BY_WORD,
 } from "../getter-types";
 
 import axios from "./../axios";
@@ -57,9 +57,7 @@ const actions = {
     }
   },
   async [UPDATE_DICTIONARY]({ commit, state }, word) {
-    const dictionaryWord  = state.dictionary.find(
-      (d) => d.word === word
-    );
+    const dictionaryWord = state.dictionary.find((d) => d.word === word);
     dictionaryWord.isLearned = !dictionaryWord.isLearned;
     const { data: updated } = await axios.put(
       `/api/dictionary-words/`,
@@ -71,20 +69,20 @@ const actions = {
     try {
       await axios.delete(`/api/user-occurrences/${id}`);
     } catch (error) {
+      /* eslint-disable no-console */
       console.log(error);
     }
   },
-  async [DELETE_USER_OCCURRENCES_BY_WORD] ({ state }, word) {
+  async [DELETE_USER_OCCURRENCES_BY_WORD]({ state }, word) {
     try {
-      const occurrences = state.occurrences.filter(
-        (o) => o.word === word
-      );
-      const ids = occurrences.map(o => o.userOccurrenceId).join('-')
+      const occurrences = state.occurrences.filter((o) => o.word === word);
+      const ids = occurrences.map((o) => o.userOccurrenceId).join("-");
       await axios.delete(`/api/user-occurrences/${word}/?word=true&ids=${ids}`);
-    } catch (error) { 
+    } catch (error) {
+      /* eslint-disable no-console */
       console.log(error);
     }
-  }
+  },
 };
 
 const mutations = {
@@ -126,32 +124,24 @@ const state = () => ({
   occurrences: [],
   essentialWords: [],
   dictionary: [],
-  text: {}
+  text: {},
 });
 
 const getters = {
   [GET_DICTIONARY_BY_WORD_ID]: (state) => (wordId) => {
-    return state.dictionary.find(
-      (d) => d.selectedWordId === wordId
-    );
+    return state.dictionary.find((d) => d.selectedWordId === wordId);
   },
   [GET_DICTIONARY_BY_WORD]: (state) => (word) => {
-    return state.dictionary.find(
-      (d) => d.word === word
-    );
+    return state.dictionary.find((d) => d.word === word);
   },
   [ESSENTIAL_WORDS]: (state, getters, rootState) => {
     return Object.keys(rootState.meanings.meanings);
   },
   [GET_OCCURRENCE_BY_POSITION]: (state) => (position) => {
-    return state.occurrences.find(
-      (o) => o.positionInText === position
-    );
+    return state.occurrences.find((o) => o.positionInText === position);
   },
   [GET_OCCURRENCES_BY_WORD]: (state) => (word) => {
-    return state.occurrences.find(
-      (o) => o.word === word
-    );
+    return state.occurrences.find((o) => o.word === word);
   },
 };
 

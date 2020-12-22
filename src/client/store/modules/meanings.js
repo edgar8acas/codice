@@ -2,7 +2,9 @@ import {
   GET_MEANINGS_FOR_WORD,
   SAVE_MEANING,
   DELETE_MEANING,
-  UPDATE_MEANING, SET_SUCCESS, SET_ERROR
+  UPDATE_MEANING,
+  SET_SUCCESS,
+  SET_ERROR,
 } from "../action-types";
 import {
   SET_MEANINGS,
@@ -22,6 +24,7 @@ const actions = {
       } = await axios.get(`/api/words/?word=${occurrence.word}`);
       commit(UPDATE_MEANINGS_FOR_WORD, words);
     } catch (error) {
+      /* eslint-disable no-console */
       console.log(error);
     }
   },
@@ -34,18 +37,19 @@ const actions = {
       await axios.delete(`/api/words/${word.wordId}`);
       commit(DELETE_MEANING_FOR_WORD, word);
     } catch (error) {
+      /* eslint-disable no-console */
       console.log(error);
     }
   },
-  async [UPDATE_MEANING] ({ commit }, word) {
+  async [UPDATE_MEANING]({ commit }, word) {
     try {
       const res = await axios.put(`/api/words/${word.wordId}`, word);
       commit(SET_SUCCESS, res);
     } catch (error) {
       commit(SET_ERROR);
-      return new Promise.reject(new Error('Algo salió mal...'));
+      return new Promise.reject(new Error("Algo salió mal..."));
     }
-  }
+  },
 };
 
 const mutations = {

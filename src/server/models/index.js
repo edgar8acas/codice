@@ -1,13 +1,17 @@
 import { Sequelize } from "sequelize";
 import config from "@/config/database.config";
-const env = process.env.NODE_ENV || "development";
 
-const { database, username, password, host, dialect } = config[env];
+const { database, username, password, host, dialect } = config[
+  process.env.NODE_ENV
+];
 
-const sequelize = new Sequelize(database, username, password, {
-  host,
-  dialect,
-});
+const sequelize =
+  process.env.NODE_ENV === "production"
+    ? new Sequelize(process.env.DATABASE_URL, { dialect })
+    : new Sequelize(database, username, password, {
+        host,
+        dialect,
+      });
 
 const Text = sequelize.import("./text.js");
 const Word = sequelize.import("./word.js");
