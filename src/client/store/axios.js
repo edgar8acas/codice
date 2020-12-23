@@ -4,7 +4,12 @@ import { LOGOUT } from "../store/action-types";
 
 let instance;
 if (!instance) {
-  instance = axios.create();
+  instance = axios.create({
+    baseURL:
+      process.env.NODE_ENV === "production"
+        ? "https://codice-api.edgarochoa.dev"
+        : "",
+  });
 }
 
 instance.interceptors.response.use(
