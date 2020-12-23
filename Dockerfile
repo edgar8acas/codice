@@ -1,5 +1,7 @@
 FROM mhart/alpine-node:12
 WORKDIR /app
+
+ENV PORT=5000
 COPY package.json yarn.lock ./
 
 RUN npm install -g yarn
