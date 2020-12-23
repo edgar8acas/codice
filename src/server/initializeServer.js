@@ -9,7 +9,9 @@ import history from "connect-history-api-fallback";
 export default function initializeServer(router) {
   const app = express();
   const isProduction = process.env.NODE_ENV === "production";
-  const origin = { origin: isProduction ? false : "*" };
+  const origin = {
+    origin: isProduction ? "https://codice.edgarochoa.dev" : "*",
+  };
 
   app.use(morgan("tiny"));
   app.use(bodyParser.json());
