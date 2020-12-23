@@ -15,5 +15,6 @@ import initializeServer from "./initializeServer";
 
 const app = initializeServer(router);
 const HOST = process.env.HOST || "localhost";
+console.log(process.env.PORT);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, HOST, () => console.log(`Listening on ${HOST}:${PORT}`));
