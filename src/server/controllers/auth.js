@@ -6,6 +6,8 @@ import { generateToken, verifyToken } from "../utils/jwt";
 const router = express.Router();
 const cookieOptions = {
   httpOnly: true,
+  maxAge: 1000 * 60 * 60 * 24 * 7,
+  secure: process.env.NODE_ENV === "production",
 };
 
 export default router

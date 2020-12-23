@@ -10,7 +10,9 @@ export default function initializeServer(router) {
   const app = express();
   const isProduction = process.env.NODE_ENV === "production";
   const origin = {
+    credentials: true,
     origin: isProduction ? "https://codice.edgarochoa.dev" : "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
   };
 
   app.use(morgan("tiny"));
