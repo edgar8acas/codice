@@ -15,6 +15,9 @@ export default function initializeServer(router) {
     methods: ["GET", "POST", "PUT", "DELETE"],
   };
 
+  if (isProduction) {
+    app.set("trust proxy", 1);
+  }
   app.use(morgan("tiny"));
   app.use(bodyParser.json());
   app.use(cookieParser());
