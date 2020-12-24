@@ -9,6 +9,7 @@ if (!instance) {
       process.env.NODE_ENV === "production"
         ? "https://codice.api.edgarochoa.dev"
         : "",
+    withCredentials: true,
   });
 }
 
