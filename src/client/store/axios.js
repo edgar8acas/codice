@@ -7,7 +7,7 @@ if (!instance) {
   instance = axios.create({
     baseURL:
       process.env.NODE_ENV === "production"
-        ? "https://codice-api.edgarochoa.dev"
+        ? "https://codice.api.edgarochoa.dev"
         : "",
   });
 }
