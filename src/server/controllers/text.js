@@ -71,7 +71,7 @@ export default router
       }
 
       const texts = await Text.getTextsToProcess(text.textId);
-      const processed = await processTexts(texts, res.locals.user);
+      const processed = await processTexts(texts);
 
       const essentialWords = processed.find((p) => p.textId === Number(textId))
         .essentialWords;

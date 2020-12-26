@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs";
 import router from "./controllers";
 import initializeServer from "./initializeServer";
-
+require("dotenv").config();
 /**
  * Create the directory necessary to communicate with the R process through file reading and writing
  */
