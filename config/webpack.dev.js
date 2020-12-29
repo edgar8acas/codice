@@ -64,6 +64,7 @@ module.exports = merge(common, {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "../src/client/public/index.html"),
       favicon: path.join(__dirname, "../src/client/public/favicon.ico"),
+      title: "Codice",
     }),
   ],
 });
