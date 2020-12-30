@@ -38,7 +38,7 @@
           Crear
         </button>
         <br />
-        <a class="login-link" @click="$router.push({ name: 'Login' })"
+        <a class="login-link" @click="$router.push({ name: 'Landing' })"
           >¿Ya tienes una cuenta? Ingresa</a
         >
       </form>

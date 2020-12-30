@@ -1,8 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
+import Landing from "../views/Landing.vue";
 import { authGuard } from "./auth-guard";
 
 Vue.use(VueRouter);
@@ -17,9 +17,9 @@ const routes = [
     },
     children: [
       {
-        path: "login",
-        name: "Login",
-        component: Login,
+        path: "",
+        name: "Landing",
+        component: Landing,
       },
       {
         path: "register",

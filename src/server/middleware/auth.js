@@ -25,7 +25,7 @@ export const authenticate = async (req, res, next) => {
       res.locals.isAuthenticated = true;
       next();
     } catch (e) {
-      console.log(e);
+      console.log(e.message);
       return res.status(401).json({
         msg: "Unauthorized",
       });

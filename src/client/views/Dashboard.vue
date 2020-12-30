@@ -53,7 +53,7 @@ export default {
     logout() {
       this[LOGOUT]()
         .then(() => {
-          return this.$router.push({ name: "Home" });
+          return this.$router.push({ name: "Landing" });
         })
         .catch((failure) => {
           if (isNavigationFailure(failure)) {

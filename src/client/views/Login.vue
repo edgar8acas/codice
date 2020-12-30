@@ -63,12 +63,18 @@ export default {
 
 <style lang="scss">
 .login {
-  width: 35vw;
-  border-radius: 15px;
-  padding: 10px;
+  border-radius: 0.5rem;
+  min-width: 28rem;
+  padding: 1rem;
   background-color: #fff;
 }
 .form-title {
   text-align: center;
+}
+
+@media (max-width: 599px) {
+  .login {
+    min-width: 90%;
+  }
 }
 </style>
