@@ -61,7 +61,7 @@ export default {
     register() {
       this[REGISTER](this.user)
         .then(() => {
-          this.$router.push({ name: "Login" });
+          this.$router.push({ name: "Landing" });
         })
         .catch((res) => {
           this.error = res.data.error;
