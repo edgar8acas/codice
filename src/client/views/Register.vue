@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="Register">
     <div class="login" id="login">
       <h2 class="form-title">Crea una cuenta</h2>
       <form class="ui form">
@@ -79,5 +79,17 @@ export default {
 
 .form-error {
   margin-bottom: 1em;
+}
+
+.Register {
+  max-width: 28rem;
+  margin: 0 auto;
+  margin-top: 5rem;
+}
+
+@media (max-width: 440px) {
+  .Register {
+    max-width: 90%;
+  }
 }
 </style>
